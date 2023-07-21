@@ -11,7 +11,7 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
         <div className='border-r'>
           {sidebarSlot}
         </div>
-        <div className='w-full h-full bg-zinc-50'>
+        <div className='w-full h-full bg-zinc-50 p-4'>
           <Outlet/>
         </div>
       </div>
