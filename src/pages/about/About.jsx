@@ -11,6 +11,7 @@ import { AiOutlineInstagram } from 'react-icons/ai'
 import { AiOutlineWhatsApp } from 'react-icons/ai'
 import { pb } from 'shared/api'
 import { getPropertyKey } from 'shared/lib'
+import { Image } from 'shared/ui'
 
 async function getAbout () {
 
@@ -29,7 +30,8 @@ export const About = () => {
 
   const [about, setAbout] = React.useState({})
 
-  const [images, setImages] = React.useState({})
+  const [images, setImages] = React.useState([])
+  const [changedImages, setChangedImages] = React.useState([])
 
   const [headings, setHeadings] = React.useState({})
   const [text, setText] = React.useState({})
@@ -50,10 +52,40 @@ export const About = () => {
 
   }
 
+  function handleImagesChange (val, index) {
+    const newImages = images?.map((e, i) => {
+      if (i === index) {
+        return val 
+      } else {
+        return e
+      }
+    })
+    setChangedImages(newImages)
+  }
+
+  function handleImageDelete (index) {
+    const newImages = changedImages?.map((e, i) => {
+      if (i === index) {
+        return null 
+      } else {
+        return e
+      }
+    })
+    setChangedImages(newImages)
+  }
+
   async function saveAbout () {
-    await pb.collection('text').update(about?.text?.id, {
-      headings: changedHeadings, 
-      text: changedText
+    console.log(changedImages);
+    // await pb.collection('text').update(about?.text?.id, {
+    //   headings: changedHeadings, 
+    //   text: changedText
+    // })
+
+    const formData = new FormData()
+    formData.append('images', changedImages)
+
+    await pb.collection('images').update(about?.images?.id, {
+      images: formData
     })
   }
 
@@ -62,13 +94,19 @@ export const About = () => {
       setAbout(res);
       setHeadings(res?.text?.headings)
       setText(res?.text?.text)
+      setImages(res?.images)
     })
   }, [])
+  
 
   React.useEffect(() => {
     setChangedHeadings(headings)
     setChangedText(text)
   }, [headings, text])
+
+  React.useEffect(() => {
+    setChangedImages(images)
+  }, [images])
 
   return (
     <div className='w-full'>
@@ -94,8 +132,16 @@ export const About = () => {
           name='main2'
         />
 
-        <div className='grid grid-cols-3 gap-4'>
+        <div className='grid grid-cols-3 gap-4 my-10'>
           <div>
+            <Image
+              label={'Картинка'}
+              onChange={handleImagesChange}
+              record={about?.images}
+              images={images?.['1']}
+              onDelete={handleImageDelete}
+              index={0}
+            />  
             <TextInput
               label='Заголовок'
               value={changedHeadings?.grid ?? ''}
@@ -111,6 +157,14 @@ export const About = () => {
             />
           </div>
           <div>
+            <Image
+              label={'Картинка'}
+              onChange={handleImagesChange}
+              record={about?.images}
+              images={changedImages}
+              onDelete={handleImageDelete}
+              index={1}
+            />  
             <TextInput
               label='Заголовок'
               value={changedHeadings?.grid2 ?? ''}
@@ -127,6 +181,14 @@ export const About = () => {
             />
           </div>
           <div>
+            <Image
+              label={'Картинка'}
+              onChange={handleImagesChange}
+              record={about?.images}
+              images={changedImages}
+              onDelete={handleImageDelete}
+              index={2}
+            />  
             <TextInput
               label='Заголовок'
               value={changedHeadings?.grid3 ?? ''}
@@ -151,7 +213,6 @@ export const About = () => {
           onChange={(e) => handleAboutChange(e, 'heading')}
           name='task'
         />
-
         <Textarea
           label='Описание'
           value={changedText?.task ?? ''}
@@ -159,6 +220,14 @@ export const About = () => {
           name='task'
           autosize
         />
+      <Image
+        label={'Картинка'}
+        onChange={handleImagesChange}
+        record={about?.images}
+        images={changedImages}
+        onDelete={handleImageDelete}
+        index={3}
+      />  
       </section>
       <section className='mt-10'>
         <TextInput
