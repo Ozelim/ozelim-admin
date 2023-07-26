@@ -30,8 +30,8 @@ export const About = () => {
 
   const [about, setAbout] = React.useState({})
 
-  const [images, setImages] = React.useState([])
-  const [changedImages, setChangedImages] = React.useState([])
+  const [images, setImages] = React.useState({})
+  const [changedImages, setChangedImages] = React.useState({})
 
   const [headings, setHeadings] = React.useState({})
   const [text, setText] = React.useState({})
@@ -49,43 +49,34 @@ export const About = () => {
 
     setChangedText({...changedText, [name]: value})
     return 
-
   }
 
+  
   function handleImagesChange (val, index) {
-    const newImages = images?.map((e, i) => {
-      if (i === index) {
-        return val 
-      } else {
-        return e
-      }
-    })
-    setChangedImages(newImages)
+    setChangedImages({...changedImages, [`${index}`]: val})
   }
 
   function handleImageDelete (index) {
-    const newImages = changedImages?.map((e, i) => {
-      if (i === index) {
-        return null 
-      } else {
-        return e
-      }
-    })
-    setChangedImages(newImages)
+    setChangedImages({...changedImages, [index]: ''})
   }
 
   async function saveAbout () {
-    console.log(changedImages);
-    // await pb.collection('text').update(about?.text?.id, {
-    //   headings: changedHeadings, 
-    //   text: changedText
-    // })
 
-    const formData = new FormData()
-    formData.append('images', changedImages)
-
-    await pb.collection('images').update(about?.images?.id, {
-      images: formData
+    for (const index in changedImages) {
+      if (!isNaN(index)) {
+        if (changedImages?.[index] instanceof File) {
+          const formData = new FormData()
+          formData.append([`${index}`], changedImages?.[index])
+          await pb.collection('images').update(about?.images?.id, formData)
+          .then(res => {
+            console.log(res);
+          })
+        }
+      }
+    }
+    await pb.collection('text').update(about?.text?.id, {
+      headings: changedHeadings, 
+      text: changedText
     })
   }
 
@@ -138,9 +129,9 @@ export const About = () => {
               label={'Картинка'}
               onChange={handleImagesChange}
               record={about?.images}
-              images={images?.['1']}
+              image={changedImages?.['1']}
               onDelete={handleImageDelete}
-              index={0}
+              index={1}
             />  
             <TextInput
               label='Заголовок'
@@ -161,9 +152,9 @@ export const About = () => {
               label={'Картинка'}
               onChange={handleImagesChange}
               record={about?.images}
-              images={changedImages}
+              image={changedImages?.['2']}
               onDelete={handleImageDelete}
-              index={1}
+              index={2}
             />  
             <TextInput
               label='Заголовок'
@@ -185,9 +176,9 @@ export const About = () => {
               label={'Картинка'}
               onChange={handleImagesChange}
               record={about?.images}
-              images={changedImages}
+              image={changedImages?.['3']}
               onDelete={handleImageDelete}
-              index={2}
+              index={3}
             />  
             <TextInput
               label='Заголовок'
@@ -224,9 +215,9 @@ export const About = () => {
         label={'Картинка'}
         onChange={handleImagesChange}
         record={about?.images}
-        images={changedImages}
+        image={changedImages?.['4']}
         onDelete={handleImageDelete}
-        index={3}
+        index={4}
       />  
       </section>
       <section className='mt-10'>

@@ -34,7 +34,7 @@ export function Image({label, record, image, index, errors, onChange, onDelete, 
         :
           <FileInput
             label={label}
-            onChange={(e) => onChange(e, name)} 
+            onChange={(e) => onChange(e, index)} 
             variant='filled'
             className='max-w-[120px]'
             withAsterisk
