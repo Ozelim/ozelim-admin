@@ -1,30 +1,9 @@
 import React from 'react'
 
-import TravelIcon from 'shared/assets/images/travel.png'
-import ConstructorIcon from 'shared/assets/images/constructor.png'
-import DoctorIcon from 'shared/assets/images/doctor.png'
-import SportIcon from 'shared/assets/icons/sport.svg'
-import { Button, FileButton, TextInput, Textarea } from '@mantine/core'
+import { Button, TextInput, Textarea } from '@mantine/core'
 import { Link } from 'react-router-dom'
-import { AiOutlineYoutube } from 'react-icons/ai'
-import { AiOutlineInstagram } from 'react-icons/ai'
-import { AiOutlineWhatsApp } from 'react-icons/ai'
-import { pb } from 'shared/api'
-import { getPropertyKey } from 'shared/lib'
+import { getData, pb } from 'shared/api'
 import { Image } from 'shared/ui'
-
-async function getAbout () {
-
-  const slider = await pb.collection('slider').getFullList({filter: `page = 'about'`})
-  const images = await pb.collection('images').getFullList({filter: `page = 'about'`})
-  const text = await pb.collection('text').getFullList({filter: `page = 'about'`})
-
-  return {
-    slider: slider[0], 
-    images: images[0], 
-    text: text[0]
-  }
-}
 
 export const About = () => {
 
@@ -81,7 +60,7 @@ export const About = () => {
   }
 
   React.useEffect(() => {
-    getAbout().then(res => {
+    getData().then(res => {
       setAbout(res);
       setHeadings(res?.text?.headings)
       setText(res?.text?.text)
