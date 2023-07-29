@@ -1,15 +1,13 @@
 import React from 'react'
-import { Autocomplete, Button, Modal, NumberInput, Select, TextInput } from '@mantine/core'
+import { Autocomplete, Button, Chip, Modal, NumberInput, Select, TextInput } from '@mantine/core'
 import { regions } from 'shared/lib'
 import { pb } from 'shared/api'
+import { Image } from 'shared/ui'
+import { ResortCard } from 'widgets'
+import { ResortSlider } from 'pages/resort/ui/mainSection/ResortSlider'
 // import { useSearchParams } from 'react-router-dom'
 
 export const Resorts = () => {
-
-  // const [searchParams] = useSearchParams()
-
-  // console.log(searchParams.get('city'));
-  
 
   const [shitModal, setShitModal] = React.useState(false)
   const [modal, setModal] = React.useState(false)
@@ -24,7 +22,40 @@ export const Resorts = () => {
     title: '',
     adress: '',
     region: '',
+    cost: '',
+    duration: '',
+    tags: []
   })
+
+
+  function handleResortChange (val, name) {
+    setResort({...resort, [name]: val})
+  }
+
+  const [tag, setTag] = React.useState('')
+
+  function handleTagChange (val) {
+    setTag(val)
+  }
+
+  function addTag () {
+    setResort({...resort, tags: [...resort.tags, tag]})
+    setTag('')
+  }
+
+  function handleTagClick (index) {
+    setResort({...resort, tags: resort.tags.filter((_, i) => i != index)})
+  }
+
+  const [images, setImages] = React.useState({})
+
+  function handleImageChange (val, index) {
+    setImages({...images, [index]: val})
+  }
+
+  function handleImageDelete (index) {
+    setImages({...images, [index]: null})
+  }
 
   async function createBomjResort () {
     await pb.collection('resorts').create({
@@ -38,7 +69,32 @@ export const Resorts = () => {
       ...resort, 
       status: 'good'
     })
+    .then(async res => {
+      for (const index in images) {
+        if (!isNaN(index)) {
+          if (images?.[index] instanceof File) {
+            const formData = new FormData()
+            formData.append([`${index}`], images?.[index])
+            await pb.collection('resorts').update(res.id, formData)
+            .then(res => {
+              console.log(res);
+            })
+          }
+        }
+      }
+    })
   }
+  
+  const [preview, setPreview] = React.useState({})
+
+  React.useEffect(() => {
+    setPreview({
+      ...resort, 
+      [1]: images?.[1]
+    })
+  }, [resort, images])
+
+  const [description, setDescription] = React.useState('')
 
   return (
     <>
@@ -96,23 +152,99 @@ export const Resorts = () => {
         centered
         title='Добавление курорта'
         fullScreen
-      l>
-        <TextInput
-          label='Название'
+      >
+
+        <div className='grid grid-cols-2'>
+          <div className='max-w-sm'>
+            <TextInput
+              label='Название'
+              value={resort.title ?? ''}
+              onChange={e => handleResortChange( e.currentTarget.value, 'title')}
+            />
+            <Select
+              data={regions}
+              label='Область'
+              value={resort.region ?? ''}
+              onChange={e => handleResortChange(e, 'region')}
+            />
+            <TextInput
+              label='Адрес'
+              value={resort.adress ?? ''}
+              onChange={e => handleResortChange( e.currentTarget.value, 'adress')}
+            />
+            <NumberInput
+              label='Длительность'
+              value={resort.duration ?? ''}
+              onChange={e => handleResortChange(e, 'duration')}
+            />
+            <NumberInput
+              label='Стоимость'
+              value={resort.cost ?? ''}
+              onChange={e => handleResortChange(e, 'cost')}
+            />
+
+            <div className='flex gap-4 flex-wrap'>
+              {resort.tags.map((tag, i) => {
+                return (
+                  <Chip 
+                    key={i} 
+                    checked 
+                    onClick={() => handleTagClick(i)}
+                  >
+                    {tag}
+                  </Chip>
+                )
+              })}
+            </div>
+            <div className='flex max-w-[250px] items-end'> 
+              <TextInput 
+                label='Теги'
+                value={tag}
+                onChange={e => handleTagChange(e.currentTarget.value)}
+              />
+              <Button
+                onClick={addTag}
+              >
+                Добавить
+              </Button>
+            </div>
+          </div>
+          <div>
+            <ResortCard
+              resort={preview}
+            />
+          </div>
+        </div>
+        <Image
+          image={images?.['1']}
+          onChange={handleImageChange}
+          label={'Главное фото'}
+          index={1}
+          onDelete={handleImageDelete}
+          // record={''}
         />
-        <Select
-          data={regions}
-          label='Область'
-        />
-        <TextInput
-          label='Адрес'
-        />
-        <NumberInput
-          label='Стоимость'
-        />
+        <div className='grid grid-cols-6 gap-4'>
+          {Array(10).fill(1).map((_, i) => {
+
+          const index = i + 2
+
+            return (
+              <Image
+                image={images?.[index]}
+                onChange={handleImageChange}
+                label={`Фото ${i + 1}`}
+                index={index}
+                onDelete={handleImageDelete}
+                key={i}
+              />
+            )
+          })}
+        </div>
         
         <div className='mt-5'>
-          <Button>
+          <Button
+            onClick={createGoodResort}
+          >
             Добавить курорт
           </Button>
         </div>
