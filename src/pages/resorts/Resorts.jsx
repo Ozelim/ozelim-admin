@@ -1,11 +1,15 @@
 import React from 'react'
-import { Autocomplete, Button, Chip, Modal, NumberInput, Select, TextInput } from '@mantine/core'
+import { Autocomplete, Button, Chip, Modal, NumberInput, Select, TextInput, Textarea } from '@mantine/core'
 import { regions } from 'shared/lib'
 import { pb } from 'shared/api'
 import { Image } from 'shared/ui'
 import { ResortCard } from 'widgets'
 import { ResortSlider } from 'pages/resort/ui/mainSection/ResortSlider'
+import { diseases } from 'shared/lib/db'
 // import { useSearchParams } from 'react-router-dom'
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export const Resorts = () => {
 
@@ -16,17 +20,19 @@ export const Resorts = () => {
     title: '',
     adress: '',
     region: '',
+    diseas: '',
   })
 
   const [resort, setResort] = React.useState({
     title: '',
     adress: '',
     region: '',
+    diseas: '',
     cost: '',
     duration: '',
-    tags: []
+    tags: [],
+    description: ''
   })
-
 
   function handleResortChange (val, name) {
     setResort({...resort, [name]: val})
@@ -94,8 +100,6 @@ export const Resorts = () => {
     })
   }, [resort, images])
 
-  const [description, setDescription] = React.useState('')
-
   return (
     <>
       <div className='w-full'>
@@ -132,6 +136,14 @@ export const Resorts = () => {
             value={shit.region ?? ''}
             onChange={e => setShit({...shit, region: e})}
           />
+          <Select
+            data={diseases}
+            label='Заболевание'
+            dropdownPosition='bottom'
+            searchable
+            value={shit.diseas ?? ''}
+            onChange={e => setShit({...shit, diseas: e})}
+          />
           <TextInput
             label='Адрес'
             value={shit.adress ?? ''}
@@ -153,8 +165,8 @@ export const Resorts = () => {
         title='Добавление курорта'
         fullScreen
       >
-
-        <div className='grid grid-cols-2'>
+        <div className='grid grid-cols-3'>
+          <div/>
           <div className='max-w-sm'>
             <TextInput
               label='Название'
@@ -166,6 +178,12 @@ export const Resorts = () => {
               label='Область'
               value={resort.region ?? ''}
               onChange={e => handleResortChange(e, 'region')}
+            />
+            <Select
+              data={diseases}
+              label='Заболевание'
+              value={resort.diseas ?? ''}
+              onChange={e => handleResortChange(e, 'diseas')}
             />
             <TextInput
               label='Адрес'
@@ -209,7 +227,7 @@ export const Resorts = () => {
               </Button>
             </div>
           </div>
-          <div>
+          <div className=''>
             <ResortCard
               resort={preview}
             />
@@ -223,7 +241,7 @@ export const Resorts = () => {
           onDelete={handleImageDelete}
           // record={''}
         />
-        <div className='grid grid-cols-6 gap-4'>
+        <div className='grid grid-cols-5 gap-6'>
           {Array(10).fill(1).map((_, i) => {
 
           const index = i + 2
@@ -236,9 +254,17 @@ export const Resorts = () => {
                 index={index}
                 onDelete={handleImageDelete}
                 key={i}
+                className={'!w-60'}
               />
             )
           })}
+        </div>
+        <div className='max-w-[750px] mx-auto mt-5'>
+          <ReactQuill 
+            value={resort?.description ?? ''}
+            onChange={e => handleResortChange(e, 'description')} 
+            className='h-full'
+          />
         </div>
         
         <div className='mt-5'>
