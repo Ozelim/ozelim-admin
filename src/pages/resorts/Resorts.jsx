@@ -1,20 +1,46 @@
 import React from 'react'
 import { Autocomplete, Button, Chip, Modal, NumberInput, Select, TextInput, Textarea } from '@mantine/core'
-import { regions } from 'shared/lib'
 import { pb } from 'shared/api'
 import { Image } from 'shared/ui'
 import { ResortCard } from 'widgets'
 import { ResortSlider } from 'pages/resort/ui/mainSection/ResortSlider'
-import { diseases } from 'shared/lib/db'
 // import { useSearchParams } from 'react-router-dom'
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+async function getRegionsAndDiseases () {
+  let regions = []
+  let diseases = []
+  
+  await pb.collection('utils').getOne('111111111111111')
+  .then((res) => {
+    regions = res.regions ?? [], 
+    diseases = res.diseases ?? []
+  })
+
+  return {
+    regions, 
+    diseases
+  }
+}
+
 export const Resorts = () => {
 
   const [shitModal, setShitModal] = React.useState(false)
   const [modal, setModal] = React.useState(false)
+
+  const [regions, setRegions] = React.useState([])
+  const [diseases, setDiseases] = React.useState([])
+
+  React.useEffect(() => {
+    getRegionsAndDiseases()
+    .then(res => {
+      console.log(res);
+      setRegions(res.regions)
+      setDiseases(res.diseases)
+    })
+  }, [])
 
   const [shit, setShit] = React.useState({
     title: '',
