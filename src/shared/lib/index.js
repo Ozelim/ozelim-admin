@@ -1,4 +1,5 @@
 export { compress } from './compressor'
 export { getImageUrl } from './getImageUrl'
-export { cities, regions } from './cities'
+export { cities, regions } from './db'
 export { getPropertyKey } from './keys'
+export { formatNumber } from './formatNumber'

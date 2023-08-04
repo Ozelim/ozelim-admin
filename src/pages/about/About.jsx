@@ -60,7 +60,7 @@ export const About = () => {
   }
 
   React.useEffect(() => {
-    getData().then(res => {
+    getData('about').then(res => {
       setAbout(res);
       setHeadings(res?.text?.headings)
       setText(res?.text?.text)
