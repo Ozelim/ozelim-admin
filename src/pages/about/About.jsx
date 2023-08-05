@@ -94,14 +94,12 @@ export const About = () => {
           name='main'
           autosize
         />
-
         <TextInput
           label='Заголовок'
           value={changedHeadings?.main2 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
           name='main2'
         />
-
         <div className='grid grid-cols-3 gap-4 my-10'>
           <div>
             <Image
