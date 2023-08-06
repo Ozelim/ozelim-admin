@@ -12,7 +12,7 @@ async function getData (page, withSlider) {
   const text = await pb.collection('text').getFullList({filter: `page = '${page}'`})
 
   return {
-    slider: slider[0], 
+    // slider: slider[0], 
     images: images[0], 
     text: text[0]
   }
