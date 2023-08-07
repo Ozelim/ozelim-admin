@@ -6,7 +6,7 @@ import { LiaCalendarAlt, LiaConciergeBellSolid } from 'react-icons/lia'
 import { CiPlane } from 'react-icons/ci'
 import { formatNumber, getImageUrl } from 'shared/lib'
 
-export const Card = ({resort}) => {
+export const Card = ({resort, deleteable, handleDelete}) => {
 
   const [image, setImage] = React.useState(null)
 
@@ -14,7 +14,7 @@ export const Card = ({resort}) => {
     if (resort?.[1] instanceof File) {
       setImage(URL.createObjectURL(resort?.[1]))
     } else {
-      setImage(null)
+      setImage(getImageUrl(resort, resort?.[1]))
     }
   }, [resort])
 
@@ -58,11 +58,21 @@ export const Card = ({resort}) => {
           <span className='text-xl text-primary-600'>{formatNumber(resort?.cost)} ₸</span>
         </div>
         <div className='mt-4'>
-          <Button 
-            fullWidth
-          >
-            Подробнее
-          </Button>
+          {deleteable 
+            ?
+              <Button 
+                fullWidth
+                onClick={() => handleDelete(resort?.id)}
+              >
+                Удалить
+              </Button>
+            :
+              <Button 
+                fullWidth
+              >
+                Подробнее
+              </Button>
+          }
         </div>
       </div>
     </div>

@@ -1,13 +1,21 @@
 import React from 'react'
-import { Autocomplete, Button, Chip, Modal, NumberInput, Select, TextInput, Textarea } from '@mantine/core'
+import { ActionIcon, Autocomplete, Button, Chip, Modal, NumberInput, Pagination, Select, Tabs, TextInput, Textarea } from '@mantine/core'
 import { pb } from 'shared/api'
 import { Image } from 'shared/ui'
-import { ResortCard } from 'widgets'
+import { BomjCard, ResortCard } from 'widgets'
 import { ResortSlider } from 'pages/resort/ui/mainSection/ResortSlider'
 // import { useSearchParams } from 'react-router-dom'
-
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { openConfirmModal } from '@mantine/modals'
+
+import { MdDelete } from 'react-icons/md'
+
+async function getResorts (page, list) {
+  return await pb.collection('resorts').getList(page, 12, {
+    filter: `status = '${list ? 'bomj' : 'good'}'`
+  })
+}
 
 async function getRegionsAndDiseases () {
   let regions = []
@@ -33,14 +41,31 @@ export const Resorts = () => {
   const [regions, setRegions] = React.useState([])
   const [diseases, setDiseases] = React.useState([])
 
+  const [tab, setTab] = React.useState('list')
+
+  const [resorts, setResorts] = React.useState({})
+
+  function handleResorts (page) {
+    getResorts(page, tab === 'list' ? true : false)
+    .then(res => {
+      setResorts(res)
+    })
+  }
+
   React.useEffect(() => {
+    handleResorts(1)
     getRegionsAndDiseases()
     .then(res => {
-      console.log(res);
       setRegions(res.regions)
       setDiseases(res.diseases)
     })
+
+    pb.collection('resorts').subscribe('*', () => handleResorts(resorts?.page ?? 1)) 
   }, [])
+
+  React.useEffect(() => {
+    handleResorts(1)
+  }, [tab])
 
   const [shit, setShit] = React.useState({
     title: '',
@@ -126,6 +151,26 @@ export const Resorts = () => {
     })
   }, [resort, images])
 
+  async function deleteResort (resortId) {
+    await pb.collection('resorts').delete(resortId)
+  }
+
+  function deleteConfirm (id) {
+    openConfirmModal({
+      title: 'Подтверждение удаление',
+      centered: true,
+      labels: {confirm: 'Удалить', cancel: 'Отмена'},
+      onConfirm: () => deleteResort(id)
+    })
+  }
+
+  const [filteredRegions, setFilteredRegions] = React.useState('')
+  const [filteredDiseases, setFilteredDiseases] = React.useState('')
+
+  function filterByRegions () {
+    
+  }
+
   return (
     <>
       <div className='w-full'>
@@ -141,6 +186,70 @@ export const Resorts = () => {
             Добавить курорт
           </Button>
         </div>
+        <Tabs
+          className='mt-4'
+          value={tab}
+          onTabChange={setTab}
+        >
+          <Tabs.List grow>
+            <Tabs.Tab value='list'>Список курортов</Tabs.Tab>
+            <Tabs.Tab value='resorts'>Курорты</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value='list' p={'md'}>
+            <div className='flex items-center justify-end gap-2'>
+              <Select
+                data={regions}
+                label='По областям'
+              />
+              <Select
+                data={diseases}
+                label='По болезням'
+              />
+            </div>
+            <div className='space-y-4 flex flex-col items-center mt-4'>
+              {resorts?.items?.map((resort, i) => {
+                return (
+                  <div 
+                    key={i}
+                    className='flex gap-2'
+                  >
+                    <BomjCard resort={resort} />
+                    <ActionIcon
+                      color='red'
+                      size='md'
+                      onClick={() => deleteConfirm(resort?.id)}
+                    >
+                      <MdDelete/>
+                    </ActionIcon>
+                  </div>
+                )
+              })}
+            </div>
+            <div className='mt-5 flex justify-center'>
+              <Pagination
+                value={resorts?.page}
+                onChange={e => handleResorts(e)}
+                total={resorts?.totalPages}
+              />
+            </div>
+          </Tabs.Panel>
+          <Tabs.Panel value='resorts' p={'md'}>
+            <div className='grid grid-cols-4'>
+              {resorts?.items?.map((resort, i) => {
+                return (
+                  <ResortCard resort={resort} key={i} deleteable handleDelete={deleteConfirm}/>
+                )
+              })}
+            </div>
+            <div className='mt-5 flex justify-center'>
+              <Pagination
+                value={resorts?.page}
+                onChange={e => handleResorts(e)}
+                total={resorts?.totalPages}
+              />
+            </div>
+          </Tabs.Panel>
+        </Tabs>
       </div>
       <Modal
         opened={shitModal}
@@ -270,7 +379,7 @@ export const Resorts = () => {
         <div className='grid grid-cols-5 gap-6'>
           {Array(10).fill(1).map((_, i) => {
 
-          const index = i + 2
+            const index = i + 2
 
             return (
               <Image
