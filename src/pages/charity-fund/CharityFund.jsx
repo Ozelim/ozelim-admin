@@ -36,6 +36,7 @@ export const CharityFund = () => {
   }
 
   async function saveCharity() {
+    console.log(charity);
     for (const index in changedImages) {
       if (!isNaN(index)) {
         if (changedImages?.[index] instanceof File) {
@@ -50,6 +51,9 @@ export const CharityFund = () => {
         }
       }
     }
+
+    
+
     await pb.collection("text").update(charity?.text?.id, {
       headings: changedHeadings,
       text: changedText,
