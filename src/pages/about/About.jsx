@@ -66,7 +66,6 @@ export const About = () => {
     })
   }, [])
   
-
   React.useEffect(() => {
     setChangedHeadings(headings)
     setChangedText(text)
