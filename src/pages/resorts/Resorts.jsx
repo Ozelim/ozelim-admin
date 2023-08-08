@@ -337,7 +337,7 @@ export const Resorts = () => {
             />
 
             <div className='flex gap-4 flex-wrap'>
-              {resort.tags.map((tag, i) => {
+              {resort?.tags?.map((tag, i) => {
                 return (
                   <Chip 
                     key={i} 

@@ -801,7 +801,7 @@ migrate((db) => {
     {
       "id": "b6vkhwhjrm8sqph",
       "created": "2023-07-27 09:31:09.843Z",
-      "updated": "2023-07-31 09:45:44.718Z",
+      "updated": "2023-08-07 06:26:55.373Z",
       "name": "resorts",
       "type": "base",
       "system": false,
@@ -853,7 +853,7 @@ migrate((db) => {
           "required": false,
           "unique": false,
           "options": {
-            "maxSelect": 2,
+            "maxSelect": 1,
             "values": [
               "bomj",
               "good"
@@ -1339,6 +1339,102 @@ migrate((db) => {
       "createRule": "",
       "updateRule": "",
       "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "bfu89j20g87db7m",
+      "created": "2023-08-07 11:04:24.196Z",
+      "updated": "2023-08-07 11:04:24.196Z",
+      "name": "news",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "ogxtttcd",
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "6cq2azfa",
+          "name": "title",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "y8cv2veo",
+          "name": "description",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "si1qvfvb",
+          "name": "image",
+          "type": "file",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "maxSize": 5242880,
+            "mimeTypes": [],
+            "thumbs": [],
+            "protected": false
+          }
+        },
+        {
+          "system": false,
+          "id": "erfatfsi",
+          "name": "date",
+          "type": "date",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": "",
+            "max": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "2uqp3mck",
+          "name": "link",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": null,
+      "viewRule": null,
+      "createRule": null,
+      "updateRule": null,
+      "deleteRule": null,
       "options": {}
     }
   ];
