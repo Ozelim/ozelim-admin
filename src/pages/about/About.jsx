@@ -1,7 +1,5 @@
 import React from 'react'
-
 import { Button, TextInput, Textarea } from '@mantine/core'
-import { Link } from 'react-router-dom'
 import { getData, pb } from 'shared/api'
 import { Image } from 'shared/ui'
 
