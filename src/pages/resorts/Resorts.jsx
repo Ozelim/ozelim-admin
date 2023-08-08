@@ -344,8 +344,8 @@ export const Resorts = () => {
               onChange={(e) => handleResortChange(e, "cost")}
             />
 
-            <div className="flex gap-4 flex-wrap">
-              {resort.tags.map((tag, i) => {
+            <div className='flex gap-4 flex-wrap'>
+              {resort?.tags?.map((tag, i) => {
                 return (
                   <Chip key={i} checked onClick={() => handleTagClick(i)}>
                     {tag}
