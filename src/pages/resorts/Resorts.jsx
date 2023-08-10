@@ -23,6 +23,7 @@ import { openConfirmModal } from "@mantine/modals";
 
 import { MdDelete } from "react-icons/md";
 import { red } from "tailwindcss/colors";
+import { useUtils } from "shared/hooks";
 
 async function getResorts(page, list) {
   return await pb.collection("resorts").getList(page, 12, {
@@ -30,29 +31,12 @@ async function getResorts(page, list) {
   });
 }
 
-async function getRegionsAndDiseases() {
-  let regions = [];
-  let diseases = [];
-
-  await pb
-    .collection("utils")
-    .getOne("111111111111111")
-    .then((res) => {
-      (regions = res.regions ?? []), (diseases = res.diseases ?? []);
-    });
-
-  return {
-    regions,
-    diseases,
-  };
-}
-
 export const Resorts = () => {
+
   const [shitModal, setShitModal] = React.useState(false);
   const [modal, setModal] = React.useState(false);
 
-  const [regions, setRegions] = React.useState([]);
-  const [diseases, setDiseases] = React.useState([]);
+  const {regions, diseases} = useUtils()
 
   const [tab, setTab] = React.useState("list");
 
@@ -66,11 +50,6 @@ export const Resorts = () => {
 
   React.useEffect(() => {
     handleResorts(1);
-    getRegionsAndDiseases().then((res) => {
-      setRegions(res.regions);
-      setDiseases(res.diseases);
-    });
-
     pb.collection("resorts").subscribe("*", () =>
       handleResorts(resorts?.page ?? 1)
     );

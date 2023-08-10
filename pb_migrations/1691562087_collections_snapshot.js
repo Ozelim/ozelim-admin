@@ -251,7 +251,7 @@ migrate((db) => {
     {
       "id": "dohznrx4zqairb8",
       "created": "2023-07-17 04:33:58.241Z",
-      "updated": "2023-08-06 16:33:48.591Z",
+      "updated": "2023-08-08 15:29:10.560Z",
       "name": "pyramid",
       "type": "base",
       "system": false,
@@ -276,7 +276,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "waail0fy",
-          "name": "b1",
+          "name": "1",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -293,7 +293,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "eipaoazq",
-          "name": "b2",
+          "name": "2",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -310,7 +310,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "5vhyvuss",
-          "name": "b3",
+          "name": "3",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -327,7 +327,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "rvegqiaf",
-          "name": "b4",
+          "name": "4",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -344,7 +344,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "ph7aglks",
-          "name": "b5",
+          "name": "5",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -361,7 +361,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "rmpmfjxr",
-          "name": "b6",
+          "name": "6",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -378,7 +378,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "gs8wa2yo",
-          "name": "b7",
+          "name": "7",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -395,7 +395,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "qepao6oo",
-          "name": "b8",
+          "name": "8",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -412,7 +412,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "0l5tog59",
-          "name": "b9",
+          "name": "9",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -429,7 +429,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "mreaj5p9",
-          "name": "b10",
+          "name": "10",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -446,7 +446,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "fgnt6pnk",
-          "name": "b11",
+          "name": "11",
           "type": "relation",
           "required": false,
           "unique": false,
@@ -463,7 +463,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "yhno0qws",
-          "name": "b12",
+          "name": "12",
           "type": "relation",
           "required": false,
           "unique": false,
