@@ -64,6 +64,8 @@ export const Resorts = () => {
     adress: "",
     region: "",
     diseas: "",
+    inst: "",
+    whats: "",
   });
 
   const [resort, setResort] = React.useState({
@@ -75,6 +77,8 @@ export const Resorts = () => {
     duration: "",
     tags: [],
     description: "",
+    inst: "",
+    whats: "",
   });
 
   function handleResortChange(val, name) {
@@ -271,6 +275,20 @@ export const Resorts = () => {
             value={shit.adress ?? ""}
             onChange={(e) => setShit({ ...shit, adress: e.target.value })}
           />
+          <TextInput
+            label="Instagram"
+            description='Имя аккаунта инстаграм'
+            value={shit.inst ?? ""}
+            onChange={(e) => setShit({ ...shit, inst: e.target.value })}
+            placeholder="ozelim"
+          />
+          <TextInput
+            label="Whatsapp"
+            description='Укажите только цифры'
+            value={shit.whats ?? ""}
+            onChange={(e) => setShit({ ...shit, whats: e.target.value })}
+            placeholder="87071218989"
+          />
         </div>
         <div className="mt-5">
           <Button onClick={createBomjResort}>Добавить курорт</Button>
@@ -321,6 +339,20 @@ export const Resorts = () => {
               label="Стоимость"
               value={resort.cost ?? ""}
               onChange={(e) => handleResortChange(e, "cost")}
+            />
+            <TextInput
+              label="Instagram"
+              description='Имя аккаунта инстаграм'
+              value={resort.inst ?? ""}
+              onChange={(e) => handleResortChange(e, 'inst')}
+              placeholder="ozelim"
+            />
+            <TextInput
+              label="Whatsapp"
+              description='Укажите только цифры'
+              value={resort.whats ?? ""}
+              onChange={(e) => handleResortChange(e, 'whats')}
+              placeholder="87071218989"
             />
 
             <div className='flex gap-4 flex-wrap'>
