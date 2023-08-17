@@ -8,7 +8,7 @@ async function getQuestions() {
 
 export const Construct = () => {
   const [questions, setQuestions] = React.useState({});
-  const [count, setCount] = React.useState(0);
+  // const [count, setCount] = React.useState(0);
 
   function handleQuestionChange(e) {
     const { value, name } = e?.currentTarget;
@@ -18,27 +18,27 @@ export const Construct = () => {
   async function saveQuestions() {
     await pb.collection("questions").update(questions?.id, {
       ...questions,
-      count: count,
+      // count: count,
     });
   }
 
   React.useEffect(() => {
     getQuestions().then((res) => {
       setQuestions(res);
-      setCount(res.count);
+      // setCount(res.count);
     });
   }, []);
 
   return (
     <div className="w-full">
       <div className="max-w-xs">
-        <NumberInput
+        {/* <NumberInput
           value={count}
           onChange={(e) => setCount(e)}
           label="Сколько вопросов отображать ?"
           type="number"
-        />
-        {Object.keys(questions).map((key, i) => {
+        /> */}
+        {Object?.keys(questions).map((key, i) => {
           if (!isNaN(key))
             return (
               <Textarea
