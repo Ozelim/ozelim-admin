@@ -251,7 +251,7 @@ migrate((db) => {
     {
       "id": "dohznrx4zqairb8",
       "created": "2023-07-17 04:33:58.241Z",
-      "updated": "2023-08-08 15:29:10.560Z",
+      "updated": "2023-08-08 23:14:52.849Z",
       "name": "pyramid",
       "type": "base",
       "system": false,
@@ -1132,7 +1132,7 @@ migrate((db) => {
     {
       "id": "rhxa53d4lrvj1rg",
       "created": "2023-08-06 07:35:02.854Z",
-      "updated": "2023-08-06 14:55:30.099Z",
+      "updated": "2023-08-16 12:12:18.870Z",
       "name": "questions",
       "type": "base",
       "system": false,
@@ -1140,7 +1140,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "vfvyd1ob",
-          "name": "1",
+          "name": "illness",
           "type": "text",
           "required": false,
           "unique": false,
@@ -1153,7 +1153,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "laqvavyu",
-          "name": "2",
+          "name": "region",
           "type": "text",
           "required": false,
           "unique": false,
@@ -1166,7 +1166,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "mlxqq2ut",
-          "name": "3",
+          "name": "name",
           "type": "text",
           "required": false,
           "unique": false,
@@ -1179,7 +1179,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "jp8xgmwd",
-          "name": "4",
+          "name": "phone",
           "type": "text",
           "required": false,
           "unique": false,
@@ -1331,6 +1331,18 @@ migrate((db) => {
             "max": null,
             "pattern": ""
           }
+        },
+        {
+          "system": false,
+          "id": "wvis4jvx",
+          "name": "count",
+          "type": "number",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null
+          }
         }
       ],
       "indexes": [],
@@ -1435,6 +1447,116 @@ migrate((db) => {
       "createRule": null,
       "updateRule": null,
       "deleteRule": null,
+      "options": {}
+    },
+    {
+      "id": "pgbcqhwgmjvuo0k",
+      "created": "2023-08-08 16:57:17.104Z",
+      "updated": "2023-08-08 17:07:33.784Z",
+      "name": "healthBids",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "4a8skpha",
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "cz8u3vnn",
+          "name": "email",
+          "type": "email",
+          "required": false,
+          "unique": false,
+          "options": {
+            "exceptDomains": null,
+            "onlyDomains": null
+          }
+        },
+        {
+          "system": false,
+          "id": "zt9o7xo9",
+          "name": "phone",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "w65l3lx0ttyt57p",
+      "created": "2023-08-13 08:54:27.013Z",
+      "updated": "2023-08-13 08:55:53.909Z",
+      "name": "courseBids",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "lbpvznhr",
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "tyutvlia",
+          "name": "email",
+          "type": "email",
+          "required": false,
+          "unique": false,
+          "options": {
+            "exceptDomains": null,
+            "onlyDomains": null
+          }
+        },
+        {
+          "system": false,
+          "id": "8o2vn2wr",
+          "name": "phone",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
       "options": {}
     }
   ];

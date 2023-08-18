@@ -1,14 +1,17 @@
 import React from 'react'
-import { Button, Textarea } from '@mantine/core'
+import { Button, NumberInput, Textarea } from '@mantine/core'
 import { pb } from 'shared/api'
 
 async function getQuestions () {
-  return (await pb.collection('questions').getFullList())[0]
+  return (await pb.collection('questions').getFullList({
+    filter: `question = true`
+  }))[0]
 }
 
 export const Construct = () => {
 
   const [questions, setQuestions] = React.useState({})
+  const [count, setCount] = React.useState(10)
 
   function handleQuestionChange (e) {
     const { value, name } = e?.currentTarget
@@ -16,7 +19,10 @@ export const Construct = () => {
   }
 
   async function saveQuestions () {
-    await pb.collection('questions').update(questions?.id, questions)
+    await pb.collection("questions").update(questions?.id, {
+      ...questions,
+      count: count
+    });
   }
 
   React.useEffect(() => {
@@ -29,9 +35,15 @@ export const Construct = () => {
   return (
     <div className='w-full'>
       <div className='max-w-xs'>
+        <NumberInput
+          value={count}
+          onChange={e => setCount(e)}
+          label='Сколько вопросов отображать? (первые:)'
+        />
         {Object.keys(questions).map((key, i) => {
           if (!isNaN(key)) return (
             <Textarea
+              key={i}
               label={`Вопрос ${i + 1}`}
               autosize
               name={`${i + 1}`}
