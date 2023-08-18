@@ -9,10 +9,9 @@ async function getQuestions () {
 }
 
 export const Construct = () => {
+  
   const [questions, setQuestions] = React.useState({});
-  // const [count, setCount] = React.useState(0);
-
-  const [questions, setQuestions] = React.useState({})
+ 
   const [count, setCount] = React.useState(10)
 
   function handleQuestionChange (e) {
