@@ -9,6 +9,8 @@ async function getQuestions () {
 }
 
 export const Construct = () => {
+  const [questions, setQuestions] = React.useState({});
+  // const [count, setCount] = React.useState(0);
 
   const [questions, setQuestions] = React.useState({})
   const [count, setCount] = React.useState(10)
@@ -26,11 +28,11 @@ export const Construct = () => {
   }
 
   React.useEffect(() => {
-    getQuestions()
-    .then(res => {
-      setQuestions(res)
-    })
-  }, [])
+    getQuestions().then((res) => {
+      setQuestions(res);
+      // setCount(res.count);
+    });
+  }, []);
 
   return (
     <div className='w-full'>
@@ -52,16 +54,8 @@ export const Construct = () => {
             />
           )
         })}
-
-        <Button
-          onClick={saveQuestions}
-        >
-          Сохранить
-        </Button>
-
       </div>
+      <Button onClick={saveQuestions}>Сохранить</Button>
     </div>
-  )
-}
-
-
+  );
+};

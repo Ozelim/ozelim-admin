@@ -52,8 +52,6 @@ export const CharityFund = () => {
       }
     }
 
-    
-
     await pb.collection("text").update(charity?.text?.id, {
       headings: changedHeadings,
       text: changedText,

@@ -1,27 +1,26 @@
-import { Pagination, Table, TextInput } from '@mantine/core'
-import { useDebouncedValue } from '@mantine/hooks'
-import dayjs from 'dayjs'
-import React from 'react'
-import { pb } from 'shared/api'
+import { Pagination, Table, TextInput } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
+import dayjs from "dayjs";
+import React from "react";
+import { pb } from "shared/api";
 
-async function getUsers (page) {
-  return await pb.collection('users').getList(page, 50)
+async function getUsers(page) {
+  return await pb.collection("users").getList(page, 50);
 }
 
 export const Users = () => {
+  const [users, setUsers] = React.useState([]);
+  const [page, setPage] = React.useState({});
 
-  const [users, setUsers] = React.useState([])
-  const [page, setPage] = React.useState({})
+  const [search, setSearch] = React.useState("");
+  const [searchValue] = useDebouncedValue(search, 1000);
 
-  const [search, setSearch] = React.useState('')
-  const [searchValue] = useDebouncedValue(search, 1000)
-
-  async function searchByValue () {
+  async function searchByValue() {
     if (!searchValue) {
-      handleUsers(1)
-      return
+      handleUsers(1);
+      return;
     }
-    const foundUsers = await pb.collection('users').getFullList({
+    const foundUsers = await pb.collection("users").getFullList({
       filter: `
         id = '${searchValue}' ||
         name ?~ '${searchValue}' ||
@@ -29,43 +28,42 @@ export const Users = () => {
         phone ?~ '${searchValue}' ||
         city ?~ '${searchValue}' ||
         iin ?~ '${searchValue}' 
-      `
-    })
+      `,
+    });
+
     if (foundUsers.length !== 0) {
-      setUsers(foundUsers)
-      setPage(null)
-    } 
+      setUsers(foundUsers);
+      setPage(null);
+    }
   }
 
   React.useEffect(() => {
-    searchByValue()
-  }, [searchValue])
+    searchByValue();
+  }, [searchValue]);
 
   React.useEffect(() => {
-    getUsers(1)
-    .then(res => {
-      setUsers(res.items)
-      setPage({...res, items: null})
-    })
-  }, [])
+    getUsers(1).then((res) => {
+      setUsers(res.items);
+      setPage({ ...res, items: null });
+    });
+  }, []);
 
-  function handleUsers (val) {
-    getUsers(val)
-    .then(res => {
-      setUsers(res.items)
-      setPage({...res, items: null})
-    })
+  function handleUsers(val) {
+    getUsers(val).then((res) => {
+      setUsers(res.items);
+      setPage({ ...res, items: null });
+    });
   }
 
   return (
     <>
-      <div className='w-full'>
+      <div className="w-full">
         <TextInput
-          label='Поиск'
+          label="Поиск"
           value={search}
-          onChange={e => setSearch(e.currentTarget.value)}
+          onChange={(e) => setSearch(e.currentTarget.value)}
         />
-        <Table className='mt-4'>
+        <Table className="mt-4">
           <thead>
             <tr>
               <th>ID</th>
@@ -84,13 +82,13 @@ export const Users = () => {
           <tbody>
             {users.map((user, i) => {
               return (
-                <tr 
+                <tr
                   key={i}
-                  // onClick={() => openChangeModal(user)}  
+                  // onClick={() => openChangeModal(user)}
                 >
                   <td>{user.id}</td>
                   <td>{user.name}</td>
-                  <td>{user.bin ? 'Да' : 'Нет'}</td>
+                  <td>{user.bin ? "Да" : "Нет"}</td>
                   <td>{user.balance}</td>
                   <td>{user.email}</td>
                   <td>{user.phone}</td>
@@ -100,7 +98,7 @@ export const Users = () => {
                   <td>{user.sponsor}</td>
                   <td>{dayjs(user.created).format(`DD.MM.YY, HH:mm`)}</td>
                 </tr>
-              )
+              );
             })}
           </tbody>
         </Table>
@@ -113,5 +111,5 @@ export const Users = () => {
         )}
       </div>
     </>
-  )
-}
+  );
+};

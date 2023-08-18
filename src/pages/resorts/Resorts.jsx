@@ -24,6 +24,7 @@ import { openConfirmModal } from "@mantine/modals";
 import { MdDelete } from "react-icons/md";
 import { red } from "tailwindcss/colors";
 import { useUtils } from "shared/hooks";
+import { BomjPlaza } from "widgets/BomjPlaza";
 
 async function getResorts(page, list) {
   return await pb.collection("resorts").getList(page, 12, {
@@ -32,11 +33,10 @@ async function getResorts(page, list) {
 }
 
 export const Resorts = () => {
-
   const [shitModal, setShitModal] = React.useState(false);
   const [modal, setModal] = React.useState(false);
 
-  const {regions, diseases} = useUtils()
+  const { regions, diseases } = useUtils();
 
   const [tab, setTab] = React.useState("list");
 
@@ -174,14 +174,16 @@ export const Resorts = () => {
       <div className="w-full">
         <div className="space-x-4">
           <Button onClick={() => setShitModal(true)}>
-            Добавить обычный курорт
+            Новая запись курорта
           </Button>
-          <Button onClick={() => setModal(true)}>Добавить курорт</Button>
+          <Button onClick={() => setModal(true)}>
+            Создать карточку курорта
+          </Button>
         </div>
         <Tabs className="mt-4" value={tab} onTabChange={setTab}>
           <Tabs.List grow>
-            <Tabs.Tab value="list">Список курортов</Tabs.Tab>
-            <Tabs.Tab value="resorts">Курорты</Tabs.Tab>
+            <Tabs.Tab value="list">Записи курортов</Tabs.Tab>
+            <Tabs.Tab value="resorts">Карточки курортов</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="list" p={"md"}>
             <div className="flex items-center justify-end gap-2">
@@ -192,7 +194,7 @@ export const Resorts = () => {
               {resorts?.items?.map((resort, i) => {
                 return (
                   <div key={i} className="flex gap-2">
-                    <BomjCard resort={resort} />
+                    <BomjPlaza />
                     <ActionIcon
                       color="red"
                       size="md"
@@ -213,7 +215,7 @@ export const Resorts = () => {
             </div>
           </Tabs.Panel>
           <Tabs.Panel value="resorts" p={"md"}>
-            <div className="grid grid-cols-4">
+            <div className="grid grid-cols-3">
               {resorts?.items?.map((resort, i) => {
                 return (
                   <ResortCard
@@ -277,14 +279,14 @@ export const Resorts = () => {
           />
           <TextInput
             label="Instagram"
-            description='Имя аккаунта инстаграм'
+            description="Имя аккаунта инстаграм"
             value={shit.inst ?? ""}
             onChange={(e) => setShit({ ...shit, inst: e.target.value })}
             placeholder="ozelim"
           />
           <TextInput
             label="Whatsapp"
-            description='Укажите только цифры'
+            description="Укажите только цифры"
             value={shit.whats ?? ""}
             onChange={(e) => setShit({ ...shit, whats: e.target.value })}
             placeholder="87071218989"
@@ -342,20 +344,20 @@ export const Resorts = () => {
             />
             <TextInput
               label="Instagram"
-              description='Имя аккаунта инстаграм'
+              description="Имя аккаунта инстаграм"
               value={resort.inst ?? ""}
-              onChange={(e) => handleResortChange(e, 'inst')}
+              onChange={(e) => handleResortChange(e, "inst")}
               placeholder="ozelim"
             />
             <TextInput
               label="Whatsapp"
-              description='Укажите только цифры'
+              description="Укажите только цифры"
               value={resort.whats ?? ""}
-              onChange={(e) => handleResortChange(e, 'whats')}
+              onChange={(e) => handleResortChange(e, "whats")}
               placeholder="87071218989"
             />
 
-            <div className='flex gap-4 flex-wrap'>
+            <div className="flex gap-4 flex-wrap">
               {resort?.tags?.map((tag, i) => {
                 return (
                   <Chip key={i} checked onClick={() => handleTagClick(i)}>
