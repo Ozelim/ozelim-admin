@@ -87,7 +87,7 @@ migrate((db) => {
     {
       "id": "_pb_users_auth_",
       "created": "2023-07-02 09:50:29.551Z",
-      "updated": "2023-08-06 16:18:56.678Z",
+      "updated": "2023-08-18 11:39:30.212Z",
       "name": "users",
       "type": "auth",
       "system": false,
@@ -211,7 +211,29 @@ migrate((db) => {
         },
         {
           "system": false,
-          "id": "wafuquku",
+          "id": "7bcpc48o",
+          "name": "bin",
+          "type": "bool",
+          "required": false,
+          "unique": false,
+          "options": {}
+        },
+        {
+          "system": false,
+          "id": "xcwjdqrn",
+          "name": "surname",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "gs8mzzck",
           "name": "balance",
           "type": "number",
           "required": false,
@@ -220,15 +242,6 @@ migrate((db) => {
             "min": null,
             "max": null
           }
-        },
-        {
-          "system": false,
-          "id": "7bcpc48o",
-          "name": "bin",
-          "type": "bool",
-          "required": false,
-          "unique": false,
-          "options": {}
         }
       ],
       "indexes": [],
@@ -801,7 +814,7 @@ migrate((db) => {
     {
       "id": "b6vkhwhjrm8sqph",
       "created": "2023-07-27 09:31:09.843Z",
-      "updated": "2023-08-07 06:26:55.373Z",
+      "updated": "2023-08-18 10:14:52.030Z",
       "name": "resorts",
       "type": "base",
       "system": false,
@@ -1084,6 +1097,96 @@ migrate((db) => {
             "max": null,
             "pattern": ""
           }
+        },
+        {
+          "system": false,
+          "id": "psi2e1r7",
+          "name": "departure",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "dgamw7ph",
+          "name": "from",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "hdz0dszw",
+          "name": "diet",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "tfvk793d",
+          "name": "season",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "y3mykroh",
+          "name": "whats",
+          "type": "number",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null
+          }
+        },
+        {
+          "system": false,
+          "id": "ot7jrbuc",
+          "name": "inst",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "e38hzxnv",
+          "name": "twogis",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
         }
       ],
       "indexes": [],
@@ -1132,7 +1235,7 @@ migrate((db) => {
     {
       "id": "rhxa53d4lrvj1rg",
       "created": "2023-08-06 07:35:02.854Z",
-      "updated": "2023-08-16 12:12:18.870Z",
+      "updated": "2023-08-18 07:37:11.306Z",
       "name": "questions",
       "type": "base",
       "system": false,
@@ -1140,7 +1243,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "vfvyd1ob",
-          "name": "illness",
+          "name": "1",
           "type": "text",
           "required": false,
           "unique": false,
@@ -1153,7 +1256,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "laqvavyu",
-          "name": "region",
+          "name": "2",
           "type": "text",
           "required": false,
           "unique": false,
@@ -1166,7 +1269,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "mlxqq2ut",
-          "name": "name",
+          "name": "3",
           "type": "text",
           "required": false,
           "unique": false,
@@ -1179,7 +1282,7 @@ migrate((db) => {
         {
           "system": false,
           "id": "jp8xgmwd",
-          "name": "phone",
+          "name": "4",
           "type": "text",
           "required": false,
           "unique": false,
@@ -1343,6 +1446,15 @@ migrate((db) => {
             "min": null,
             "max": null
           }
+        },
+        {
+          "system": false,
+          "id": "mleqjqqn",
+          "name": "question",
+          "type": "bool",
+          "required": false,
+          "unique": false,
+          "options": {}
         }
       ],
       "indexes": [],
@@ -1548,6 +1660,228 @@ migrate((db) => {
             "min": null,
             "max": null,
             "pattern": ""
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "gvn9s6cbp9p3263",
+      "created": "2023-08-18 10:25:17.716Z",
+      "updated": "2023-08-18 10:25:26.939Z",
+      "name": "resort_bids",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "nsuyynj3",
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "i4mncwmj",
+          "name": "phone",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "4xnowcbn",
+          "name": "resort",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "b6vkhwhjrm8sqph",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 1,
+            "displayFields": [
+              "id"
+            ]
+          }
+        },
+        {
+          "system": false,
+          "id": "7f35zzqk",
+          "name": "region",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "d8cme94imzx9wa6",
+      "created": "2023-08-18 11:19:27.419Z",
+      "updated": "2023-08-18 12:14:53.460Z",
+      "name": "withdraws",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "wsbhmaek",
+          "name": "owner",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "cqumf7ei",
+          "name": "sum",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "ifdm52oy",
+          "name": "card",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "seediqz8",
+          "name": "user",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 1,
+            "displayFields": [
+              "id"
+            ]
+          }
+        },
+        {
+          "system": false,
+          "id": "su9yhmxz",
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "values": [
+              "created",
+              "paid",
+              "rejected"
+            ]
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "r9wpdl2bslrl1rg",
+      "created": "2023-08-18 12:38:55.406Z",
+      "updated": "2023-08-18 12:48:33.865Z",
+      "name": "transfers",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "cdaaku4l",
+          "name": "sum",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "qdbp89aj",
+          "name": "taker",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 1,
+            "displayFields": []
+          }
+        },
+        {
+          "system": false,
+          "id": "33ubdvgg",
+          "name": "user",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 1,
+            "displayFields": []
           }
         }
       ],
