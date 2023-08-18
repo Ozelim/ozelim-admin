@@ -169,6 +169,8 @@ export const Resorts = () => {
 
   function filterByRegions() {}
 
+  console.log(resort?.description);
+
   return (
     <>
       <div className="w-full">
@@ -321,9 +323,52 @@ export const Resorts = () => {
             />
             <Select
               data={diseases}
-              label="Заболевание"
+              label="Патология"
               value={resort.diseas ?? ""}
               onChange={(e) => handleResortChange(e, "diseas")}
+            />
+
+            <NumberInput
+              label="Длительность тура"
+              value={resort.duration ?? ""}
+              onChange={(e) => handleResortChange(e, "duration")}
+            />
+            <TextInput
+              label="Питание"
+              description="Все включено - 2-х разовое"
+              value={resort.diet ?? ""}
+              onChange={(e) =>
+                handleResortChange(e.currentTarget.value, "diet")
+              }
+            />
+            <TextInput
+              label="Выезд с какого города"
+              value={resort.from ?? ""}
+              onChange={(e) =>
+                handleResortChange(e.currentTarget.value, "from")
+              }
+            />
+            <TextInput
+              label="Выезд"
+              description="Включен в стоимость - За свой счет"
+              value={resort.departure ?? ""}
+              onChange={(e) =>
+                handleResortChange(e.currentTarget.value, "departure")
+              }
+            />
+            <TextInput
+              label="Сезон тура"
+              description="Круглый год - Лето - Июль"
+              value={resort.season ?? ""}
+              onChange={(e) =>
+                handleResortChange(e.currentTarget.value, "season")
+              }
+            />
+            <NumberInput
+              label="Стоимость"
+              description="За одного человека"
+              value={resort.cost ?? ""}
+              onChange={(e) => handleResortChange(e, "cost")}
             />
             <TextInput
               label="Адрес"
@@ -332,15 +377,12 @@ export const Resorts = () => {
                 handleResortChange(e.currentTarget.value, "adress")
               }
             />
-            <NumberInput
-              label="Длительность"
-              value={resort.duration ?? ""}
-              onChange={(e) => handleResortChange(e, "duration")}
-            />
-            <NumberInput
-              label="Стоимость"
-              value={resort.cost ?? ""}
-              onChange={(e) => handleResortChange(e, "cost")}
+            <TextInput
+              label="Whatsapp"
+              description="Укажите только цифры"
+              value={resort.whats ?? ""}
+              onChange={(e) => handleResortChange(e, "whats")}
+              placeholder="87071218989"
             />
             <TextInput
               label="Instagram"
@@ -350,11 +392,10 @@ export const Resorts = () => {
               placeholder="ozelim"
             />
             <TextInput
-              label="Whatsapp"
-              description="Укажите только цифры"
-              value={resort.whats ?? ""}
-              onChange={(e) => handleResortChange(e, "whats")}
-              placeholder="87071218989"
+              label="2gis"
+              description="Ссылка на 2gis"
+              value={resort.twogis ?? ""}
+              onChange={(e) => handleResortChange(e, "twogis")}
             />
 
             <div className="flex gap-4 flex-wrap">
