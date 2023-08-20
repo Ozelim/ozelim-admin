@@ -20,50 +20,48 @@ export const PartnersCard = ({
 
   useAnimationOffsetEffect(embla, 200);
 
-  const [images, setImages] = React.useState({});
+  // const [images, setImages] = React.useState({});
 
-  const [headings, setHeadings] = React.useState({});
-  const [text, setText] = React.useState({});
+  // const [headings, setHeadings] = React.useState({});
+  // const [text, setText] = React.useState({});
 
-  function handlePartnersChange(val, type) {
-    const { value, name } = val?.target;
+  // function handlePartnersChange(val, type) {
+  //   const { value, name } = val?.target;
 
-    if (type === "heading") {
-      setChangedHeadings({ ...changedHeadings, [name]: value });
-      return;
-    }
+  //   if (type === "heading") {
+  //     setChangedHeadings({ ...changedHeadings, [name]: value });
+  //     return;
+  //   }
 
-    setChangedText({ ...changedText, [name]: value });
-    return;
-  }
+  //   setChangedText({ ...changedText, [name]: value });
+  //   return;
+  // }
 
-  function handleImagesChange(val, index) {
-    setChangedImages({ ...changedImages, [`${index}`]: val });
-  }
+  // function handleImagesChange(val, index) {
+  //   setChangedImages({ ...changedImages, [`${index}`]: val });
+  // }
 
-  function handleImageDelete(index) {
-    setChangedImages({ ...changedImages, [index]: "" });
-  }
+  // function handleImageDelete(index) {
+  //   setChangedImages({ ...changedImages, [index]: "" });
+  // }
 
-  React.useEffect(() => {
-    getData("partners").then((res) => {
-      setPartners(res);
-      setHeadings(res?.text?.headings);
-      setText(res?.text?.text);
-      setImages(res?.images);
-    });
-  }, []);
+  // React.useEffect(() => {
+  //   getData("partners").then((res) => {
+  //     setPartners(res);
+  //     setHeadings(res?.text?.headings);
+  //     setText(res?.text?.text);
+  //     setImages(res?.images);
+  //   });
+  // }, []);
 
-  React.useEffect(() => {
-    setChangedHeadings(headings);
-    setChangedText(text);
-  }, [headings, text]);
+  // React.useEffect(() => {
+  //   setChangedHeadings(headings);
+  //   setChangedText(text);
+  // }, [headings, text]);
 
-  React.useEffect(() => {
-    setChangedImages(images);
-  }, [images]);
-
-  console.log(partner);
+  // React.useEffect(() => {
+  //   setChangedImages(images);
+  // }, [images]);
 
   return (
     <div className="relative rounded-primary overflow-hidden space-y-2  w-full shadow-md pb-4">
