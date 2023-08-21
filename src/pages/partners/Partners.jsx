@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Modal, TextInput, Textarea } from "@mantine/core";
+import { Button, Modal, TextInput, Textarea, FileInput, ActionIcon } from "@mantine/core";
 import { pb } from "shared/api";
 import { PartnersCard } from "shared/ui/PartnersCard";
 
@@ -7,6 +7,8 @@ import { PartnersCard } from "shared/ui/PartnersCard";
 import { FiEdit } from 'react-icons/fi'
 import { MdDeleteForever } from 'react-icons/md'
 import { openConfirmModal } from "@mantine/modals";
+import { Image } from "shared/ui";
+import { AiOutlineDelete } from "react-icons/ai";
 
 
 async function getPartners () {
@@ -17,7 +19,7 @@ export const Partners = () => {
 
   const [partners, setPartners] = React.useState([]);
   const [partner, setPartner] = React.useState({})
-  const [images, setImage] = React.useState([])
+  const [images, setImages] = React.useState([])
 
   const [editModal, setEditModal] = React.useState(false)
 
@@ -41,12 +43,16 @@ export const Partners = () => {
   }, [])
 
   React.useEffect(() => {
-    const imageUrls = []
+    let imgs = {}
     for (const key in partner) {
       if (!isNaN(key)) {
-        imageUrls.push(URL.createObjectURL(partner))
+        imgs = {
+          ...imgs,
+          [key]: partner?.[key]
+        }
       }
     }
+    setImages(imgs)
   }, [partner])
 
   async function deletePartner (partnerId) {
@@ -113,52 +119,90 @@ export const Partners = () => {
   //   });
   // }, []);
 
+  function handleImagesChange(val, index) {
+    setImages({ ...images, [`${index}`]: val });
+  }
+
+  function handleImageDelete(index) {
+    setImages({ ...images, [index]: "" });
+  }
+
   return (
     <>
       <div className="w-full">
+        <Button>Создать бизнес-партнера</Button>
+
         <div className="grid grid-cols-4 gap-5">
           {partners?.map((partner, i) => {
             return (
               <div key={i}>
-                <PartnersCard partner={partner}/>
+                <PartnersCard partner={partner} />
                 <div className="flex gap-4 mt-2 justify-center">
-                  <FiEdit 
-                    size={30} 
-                    color="teal" 
+                  <FiEdit
+                    size={30}
+                    color="teal"
                     onClick={() => openEditModal(partner)}
                   />
-                  <MdDeleteForever 
-                    size={30} 
+                  <MdDeleteForever
+                    size={30}
                     color="red"
-                    onClick={() => confirmDelete(partner?.id)} 
+                    onClick={() => confirmDelete(partner?.id)}
                   />
                 </div>
               </div>
-            )
+            );
           })}
         </div>
-      <Modal
-        opened={editModal}
-        onClose={closeModal}
-        title='Редактирование'
-        centered
-      >
-        <div className="space-y-4">  
-          <TextInput
-            name='name'
-            onChange={handlePartnerChange}
-            label='Имя'
-          />
-          <Textarea
-            name='description'
-            onChange={handlePartnerChange}
-            label='Описание'
-          />
-          <Button>
-            Сохранить
-          </Button>
-        </div>
-      </Modal>
+        <Modal
+          opened={editModal}
+          onClose={closeModal}
+          title="Редактирование"
+          centered
+        >
+          <div className="space-y-4">
+            <TextInput name="name" onChange={handlePartnerChange} label="Имя" />
+            <Textarea
+              name="description"
+              onChange={handlePartnerChange}
+              label="Описание"
+            />
+            <div>
+              <Image
+                label='Фото 1'
+                onChange={handleImagesChange}
+                onDelete={handleImageDelete}
+                image={images?.[1]}
+                index={1}
+                record={partner}
+              />
+              <Image
+                label='Фото 2'
+                onChange={handleImagesChange}
+                onDelete={handleImageDelete}
+                image={images?.[2]}
+                index={2}
+                record={partner}
+              />
+              <Image
+                label='Фото 1'
+                onChange={handleImagesChange}
+                onDelete={handleImageDelete}
+                image={images?.[3]}
+                index={3}
+                record={partner}
+              />
+              <Image
+                label='Фото 1'
+                onChange={handleImagesChange}
+                onDelete={handleImageDelete}
+                image={images?.[4]}
+                index={4}
+                record={partner}
+              />
+            </div>
+            <Button>Сохранить</Button>
+          </div>
+        </Modal>
       </div>
     </>
   );
