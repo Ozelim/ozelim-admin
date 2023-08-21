@@ -15,10 +15,7 @@ export function Image({
   onDelete,
   className,
 }) {
-  // const {handleImageView} = React.useContext(BidContext)
-
-  // const {openModal} = useModal()
-
+ 
   return (
     <div>
       {image ? (
