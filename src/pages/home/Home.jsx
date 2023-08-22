@@ -25,6 +25,7 @@ import React from 'react'
 // import { ResortCard } from 'entities/resort'
 
 export const Home = () => {
+
   return (
     <div className="space-y-20">
       {/* <div className="container">

@@ -154,6 +154,15 @@ export const Courses = () => {
               autosize
             />
           </div>
+          <div>
+            <Textarea
+              label="Ссылка на видео"
+              value={changedText?.link ?? ""}
+              onChange={(e) => handleCourseChange(e, "text")}
+              name="link"
+              autosize
+            />
+          </div>
         </div>
       </section>
       <div className="grid grid-cols-3 gap-4 my-10">

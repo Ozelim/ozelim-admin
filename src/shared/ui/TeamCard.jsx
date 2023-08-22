@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@mantine/core";
 import { getImageUrl } from "shared/lib";
 
 export const TeamCard = ({ team }) => {

@@ -1,3 +1,4 @@
+import { Button } from '@mantine/core'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -8,6 +9,12 @@ export const Header = () => {
         <Link to={'/'}>
           Home
         </Link>
+        <Button
+          compact
+          variant={'subtle'}
+        >
+          Выйти
+        </Button>
       </div>
     </div>
   )
