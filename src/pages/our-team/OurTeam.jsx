@@ -67,7 +67,6 @@ export const OurTeam = () => {
     .then(() => {
       setModal(false)
     })
-
   }
   
   React.useEffect(() => {

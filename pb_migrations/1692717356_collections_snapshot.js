@@ -29,7 +29,7 @@ migrate((db) => {
     {
       "id": "ty023348izzzjbo",
       "created": "2023-07-01 12:04:07.329Z",
-      "updated": "2023-08-06 14:55:30.054Z",
+      "updated": "2023-08-21 08:24:57.008Z",
       "name": "partners",
       "type": "base",
       "system": false,
@@ -74,20 +74,80 @@ migrate((db) => {
             "max": null,
             "pattern": ""
           }
+        },
+        {
+          "system": false,
+          "id": "ec8itjio",
+          "name": "1",
+          "type": "file",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "maxSize": 5242880,
+            "mimeTypes": [],
+            "thumbs": [],
+            "protected": false
+          }
+        },
+        {
+          "system": false,
+          "id": "ioqilozq",
+          "name": "2",
+          "type": "file",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "maxSize": 5242880,
+            "mimeTypes": [],
+            "thumbs": [],
+            "protected": false
+          }
+        },
+        {
+          "system": false,
+          "id": "yz6plawt",
+          "name": "3",
+          "type": "file",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "maxSize": 5242880,
+            "mimeTypes": [],
+            "thumbs": [],
+            "protected": false
+          }
+        },
+        {
+          "system": false,
+          "id": "embc9wgm",
+          "name": "4",
+          "type": "file",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "maxSize": 5242880,
+            "mimeTypes": [],
+            "thumbs": [],
+            "protected": false
+          }
         }
       ],
       "indexes": [],
-      "listRule": null,
-      "viewRule": null,
-      "createRule": null,
-      "updateRule": null,
-      "deleteRule": null,
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
       "options": {}
     },
     {
       "id": "_pb_users_auth_",
       "created": "2023-07-02 09:50:29.551Z",
-      "updated": "2023-08-18 11:39:30.212Z",
+      "updated": "2023-08-22 12:51:42.439Z",
       "name": "users",
       "type": "auth",
       "system": false,
@@ -235,6 +295,18 @@ migrate((db) => {
           "system": false,
           "id": "gs8mzzck",
           "name": "balance",
+          "type": "number",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null
+          }
+        },
+        {
+          "system": false,
+          "id": "i6abdnct",
+          "name": "blnc",
           "type": "number",
           "required": false,
           "unique": false,
@@ -1882,6 +1954,64 @@ migrate((db) => {
             "minSelect": null,
             "maxSelect": 1,
             "displayFields": []
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "ormk8mhzypabbbf",
+      "created": "2023-08-22 08:59:16.669Z",
+      "updated": "2023-08-22 09:16:21.606Z",
+      "name": "members",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "vio0es9e",
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "5wiwyn9y",
+          "name": "description",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "tkbw64il",
+          "name": "image",
+          "type": "file",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "maxSize": 5242880,
+            "mimeTypes": [],
+            "thumbs": [],
+            "protected": false
           }
         }
       ],

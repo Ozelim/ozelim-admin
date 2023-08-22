@@ -39,7 +39,9 @@ export const MoneyFlow = () => {
 
   return (
     <div className='w-full'>
-      <Table>
+      <Table
+        striped
+      >
         <thead>
           <tr>
             <th>Дата</th>
@@ -54,16 +56,16 @@ export const MoneyFlow = () => {
               <tr 
                 key={i}
               >
-                <td>{dayjs(transfer?.created).format('YY-MM-DD, HH:mm')}</td>
-                <td>{formatNumber(transfer?.sum)}</td>
-                <td>{transfer?.user}</td>
-                <td>{transfer?.taker}</td>
+                <td className='!text-lg'>{dayjs(transfer?.created).format('DD-MM-YY, HH:mm')}</td>
+                <td className='!text-lg'>{formatNumber(transfer?.sum)}</td>
+                <td className='!text-lg'>{transfer?.user}</td>
+                <td className='!text-lg'>{transfer?.taker}</td>
               </tr>
             )
           })}
         </tbody>
       </Table>
-      <div className='flex justify-center'>
+      <div className='flex justify-center mt-4'>
         <Pagination
           value={transfers?.page}
           total={transfers?.totalPages}

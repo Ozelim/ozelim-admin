@@ -169,8 +169,6 @@ export const Resorts = () => {
 
   function filterByRegions() {}
 
-  console.log(resort?.description);
-
   return (
     <>
       <div className="w-full">

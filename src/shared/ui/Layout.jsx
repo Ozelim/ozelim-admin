@@ -20,6 +20,9 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
 
   async function login () {
     await pb.admins.authWithPassword(val?.email, val?.password)
+    .then(() => {
+      window.location.reload()
+    })
   }
 
   return user &&

@@ -9,6 +9,8 @@ import { MdDeleteForever } from 'react-icons/md'
 import { openConfirmModal } from "@mantine/modals";
 import { Image } from "shared/ui";
 import { AiOutlineDelete } from "react-icons/ai";
+import { useModals } from "shared/hooks";
+import { getExtension, getImageUrl } from "shared/lib";
 
 
 async function getPartners () {
@@ -16,6 +18,8 @@ async function getPartners () {
 }
 
 export const Partners = () => {
+
+
 
   const [partners, setPartners] = React.useState([]);
   const [partner, setPartner] = React.useState({})
@@ -43,16 +47,16 @@ export const Partners = () => {
   }, [])
 
   React.useEffect(() => {
-    let imgs = {}
-    for (const key in partner) {
-      if (!isNaN(key)) {
-        imgs = {
-          ...imgs,
-          [key]: partner?.[key]
-        }
-      }
-    }
-    setImages(imgs)
+    // let imgs = {}
+    // for (const key in partner) {
+    //   if (!isNaN(key)) {
+    //     imgs = {
+    //       ...imgs,
+    //       [key]: partner?.[key]
+    //     }
+    //   }
+    // }
+    // setImages(imgs)
   }, [partner])
 
   async function deletePartner (partnerId) {
@@ -81,62 +85,70 @@ export const Partners = () => {
     setPartner({...partner, [name]: value}) 
   }
 
-  const [partnersGet, setPartnersGet] = React.useState([]);
-  const [changedHeadings, setChangedHeadings] = React.useState({});
-  const [changedImages, setChangedImages] = React.useState({});
-  const [changedText, setChangedText] = React.useState({});
-
-  // async function savePartners() {
-  //   for (const index in changedImages) {
-  //     if (!isNaN(index)) {
-  //       if (changedImages?.[index] instanceof File) {
-  //         const formData = new FormData();
-  //         formData.append([`${index}`], changedImages?.[index]);
-  //         await pb
-  //           .collection("images")
-  //           .update(partners?.images?.id, formData)
-  //           .then((res) => {
-  //             console.log(res);
-  //           });
-  //       }
-  //     }
-  //   }
-
-  //   await pb.collection("text").update(partners?.text?.id, {
-  //     headings: changedHeadings,
-  //     text: changedText,
-  //   });
-  // }
-
-  // async function getPartnersTest() {
-  //   return await pb.collection("partners").getList(1, 50);
-  // }
-
-  // React.useEffect(() => {
-  //   getPartnersTest().then((res) => {
-  //     setPartnersGet(res);
-  //     console.log(res);
-  //   });
-  // }, []);
-
   function handleImagesChange(val, index) {
     setImages({ ...images, [`${index}`]: val });
+  }
+
+  function handlePdfChange(val) {
+    setPartner({ ...partner, pdf: val });
   }
 
   function handleImageDelete(index) {
     setImages({ ...images, [index]: "" });
   }
 
+  async function savePartner () {
+    const formData = new FormData();      
+    formData.append('name', partner.name)
+    formData.append('description', partner.description)
+
+    await pb.collection('partners').create({
+      description: partner.description,
+      name: partner.name
+    })
+    .then(async (res) => {
+      for (const index in images) {
+        if (!isNaN(index)) {
+          if (images?.[index] instanceof File) {
+            formData.append([`${index}`], images?.[index]);
+            await pb
+              .collection("partners")
+              .update(res.id, formData)
+              .then((res) => {
+                console.log(res);
+              });
+          }
+        }
+      }
+    })
+  } 
+
+  const [viewModal, setViewModal] = React.useState(false)
+
+  function view (val) {
+    setPartner(val)
+    setViewModal(true)
+  }
+
   return (
     <>
       <div className="w-full">
-        <Button>Создать бизнес-партнера</Button>
+        <Button
+          onClick={() => {
+            setEditModal(true)
+          }}
+        >
+          Создать бизнес-партнера
+        </Button>
 
         <div className="grid grid-cols-4 gap-5">
           {partners?.map((partner, i) => {
             return (
               <div key={i}>
-                <PartnersCard partner={partner} />
+                <PartnersCard 
+                  partner={partner}
+                  viewPdf={view}
+                />
                 <div className="flex gap-4 mt-2 justify-center">
                   <FiEdit
                     size={30}
@@ -153,76 +165,132 @@ export const Partners = () => {
             );
           })}
         </div>
-        <Modal
-          opened={editModal}
-          onClose={closeModal}
-          title="Редактирование"
-          centered
-        >
-          <div className="space-y-4">
-            <TextInput name="name" onChange={handlePartnerChange} label="Имя" />
-            <Textarea
-              name="description"
-              onChange={handlePartnerChange}
-              label="Описание"
-            />
-            <div>
-              <Image
-                label='Фото 1'
-                onChange={handleImagesChange}
-                onDelete={handleImageDelete}
-                image={images?.[1]}
-                index={1}
-                record={partner}
-              />
-              <Image
-                label='Фото 2'
-                onChange={handleImagesChange}
-                onDelete={handleImageDelete}
-                image={images?.[2]}
-                index={2}
-                record={partner}
-              />
-              <Image
-                label='Фото 1'
-                onChange={handleImagesChange}
-                onDelete={handleImageDelete}
-                image={images?.[3]}
-                index={3}
-                record={partner}
-              />
-              <Image
-                label='Фото 1'
-                onChange={handleImagesChange}
-                onDelete={handleImageDelete}
-                image={images?.[4]}
-                index={4}
-                record={partner}
-              />
-            </div>
-            <Button>Сохранить</Button>
-          </div>
-        </Modal>
       </div>
+      <Modal
+        opened={editModal}
+        onClose={closeModal}
+        title="Редактирование"
+        centered
+      >
+        <ParntnersForm
+          partner={partner}
+          handlePartnerChange={handlePartnerChange}
+          handleImagesChange={handleImagesChange}
+          handleImageDelete={handleImageDelete}
+          handlePdfChange={handlePdfChange}
+          images={images}
+        />
+        <Button
+          onClick={savePartner}
+        >
+          Сохранить
+        </Button>
+        {/* <div className="space-y-4">
+          <TextInput name="name" onChange={handlePartnerChange} label="Имя" />
+          <Textarea
+            name="description"
+            onChange={handlePartnerChange}
+            label="Описание"
+          />
+          <div>
+            <Image
+              label='Фото 1'
+              onChange={handleImagesChange}
+              onDelete={handleImageDelete}
+              image={images?.[1]}
+              index={1}
+              record={partner}
+            />
+            <Image
+              label='Фото 2'
+              onChange={handleImagesChange}
+              onDelete={handleImageDelete}
+              image={images?.[2]}
+              index={2}
+              record={partner}
+            />
+            <Image
+              label='Фото 1'
+              onChange={handleImagesChange}
+              onDelete={handleImageDelete}
+              image={images?.[3]}
+              index={3}
+              record={partner}
+            />
+            <Image
+              label='Фото 1'
+              onChange={handleImagesChange}
+              onDelete={handleImageDelete}
+              image={images?.[4]}
+              index={4}
+              record={partner}
+            />
+          </div>
+          <Button>Сохранить</Button>
+        </div> */}
+      </Modal>
+      <Modal
+        opened={viewModal}
+        onClose={() => setViewModal(false)}
+        size='50%'
+        centered
+      >
+        {getExtension(partner?.pdf) === 'pdf' ?
+          <iframe
+            className='w-full h-screen' 
+            src={getImageUrl(partner, partner?.pdf)} frameborder="0"
+          />
+          : <img src={getImageUrl(partner, partner?.pdf)} alt="" className='w-full h-auto' />
+        }
+      </Modal>
     </>
   );
 };
 
+const ParntnersForm = ({
+  partner,
+  handlePartnerChange,
+  handleImagesChange,
+  handleImageDelete,
+  images,
+  handlePdfChange
+}) => {
+    return (
+      <div className="space-y-4">
+        <TextInput 
+          name="name" 
+          onChange={handlePartnerChange} 
+          label="Имя" 
+        />
+        <Textarea
+          name="description"
+          onChange={handlePartnerChange}
+          label="Описание"
+        />
+        <div>
+          {Array(4).fill(1).map((_, i) => {
 
-      {/* <div className="grid grid-cols-3 gap-6">
-        {partnersGet?.items?.map((partner) => (
-          <PartnersCard
-            setPartners={setPartners}
-            setChangedHeadings={setChangedHeadings}
-            setChangedImages={setChangedImages}
-            setChangedText={setChangedText}
-            changedHeadings={changedHeadings}
-            partner={partner}
-            changedText={changedText}
-            changedImages={changedImages}
-          />
-        ))}
+            const index = i + 1 
+
+            return (
+              <Image
+                label={`Фото ${index}`}
+                onChange={handleImagesChange}
+                onDelete={handleImageDelete}
+                image={images?.[index]}
+                index={index}
+                record={partner}
+              />
+            )
+          })}
+        </div>
+        <FileInput 
+          onChange={e => handlePdfChange(e)}
+          name="pdf"
+          label='Файл (pdf)'
+        />
       </div>
-    <Button className="mt-10" size="lg" fullWidth onClick={savePartners}>
-      Сохранить
-    </Button> */}
+    )
+}
+
+
