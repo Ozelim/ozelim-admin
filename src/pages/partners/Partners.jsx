@@ -72,6 +72,17 @@ export const Partners = () => {
 
   function openEditModal (val) {
     setPartner(val)
+    let imgs = {}
+      for (const index in val) {
+        if (!isNaN(index)) {
+          imgs = {
+            ...imgs,
+            [index]: val?.[index]
+          }
+
+        }
+      }
+    setImages(imgs)
     setEditModal(true)
   }
 
@@ -94,7 +105,7 @@ export const Partners = () => {
   }
 
   function handleImageDelete(index) {
-    setImages({ ...images, [index]: "" });
+    setImages({ ...images, [index]: null});
   }
 
   async function savePartner () {
@@ -102,11 +113,60 @@ export const Partners = () => {
     formData.append('name', partner.name)
     formData.append('description', partner.description)
 
+    if (partner?.id) {
+      console.log(images);
+      await pb
+        .collection("partners")
+        .update(partner?.id, {
+          description: partner.description,
+          name: partner.name,
+        })
+        .then(async (res) => {
+          formData.append("pdf", partner?.pdf);
+          if (partner?.pdf) {
+            await pb.collection("partners").update(res.id, formData);
+          }
+
+          for (const index in images) {
+            if (!isNaN(index)) {
+              if (images?.[index] == null) {
+                await pb
+                  .collection("partners")
+                  .update(res.id, {
+                    [index]: null 
+                  })
+                  .then((res) => {
+                    console.log(res);
+                  });
+              }
+                if (images?.[index] instanceof File) {
+                  formData.append([`${index}`], images?.[index]);
+                  await pb
+                    .collection("partners")
+                    .update(res.id, formData)
+                    .then((res) => {
+                      console.log(res);
+                    });
+                }
+            }
+          }
+        });
+
+        setEditModal(false)
+        
+      return
+    }
+
     await pb.collection('partners').create({
       description: partner.description,
       name: partner.name
     })
     .then(async (res) => {
+      formData.append("pdf", partner?.pdf);
+      if (partner?.pdf) {
+        await pb.collection("partners").update(res.id, formData);
+      }
+
       for (const index in images) {
         if (!isNaN(index)) {
           if (images?.[index] instanceof File) {
@@ -120,7 +180,9 @@ export const Partners = () => {
           }
         }
       }
-    })
+      setEditModal(false);
+    });
+
   } 
 
   const [viewModal, setViewModal] = React.useState(false)
@@ -136,12 +198,18 @@ export const Partners = () => {
         <Button
           onClick={() => {
             setEditModal(true)
+            setPartner({
+              name: '',
+              description: '',
+              pdf: null,
+            })
+            setImages({})
           }}
         >
           Создать бизнес-партнера
         </Button>
 
-        <div className="grid grid-cols-4 gap-5">
+        <div className="grid grid-cols-4 gap-5 mt-5">
           {partners?.map((partner, i) => {
             return (
               <div key={i}>
@@ -185,49 +253,6 @@ export const Partners = () => {
         >
           Сохранить
         </Button>
-        {/* <div className="space-y-4">
-          <TextInput name="name" onChange={handlePartnerChange} label="Имя" />
-          <Textarea
-            name="description"
-            onChange={handlePartnerChange}
-            label="Описание"
-          />
-          <div>
-            <Image
-              label='Фото 1'
-              onChange={handleImagesChange}
-              onDelete={handleImageDelete}
-              image={images?.[1]}
-              index={1}
-              record={partner}
-            />
-            <Image
-              label='Фото 2'
-              onChange={handleImagesChange}
-              onDelete={handleImageDelete}
-              image={images?.[2]}
-              index={2}
-              record={partner}
-            />
-            <Image
-              label='Фото 1'
-              onChange={handleImagesChange}
-              onDelete={handleImageDelete}
-              image={images?.[3]}
-              index={3}
-              record={partner}
-            />
-            <Image
-              label='Фото 1'
-              onChange={handleImagesChange}
-              onDelete={handleImageDelete}
-              image={images?.[4]}
-              index={4}
-              record={partner}
-            />
-          </div>
-          <Button>Сохранить</Button>
-        </div> */}
       </Modal>
       <Modal
         opened={viewModal}
@@ -257,40 +282,44 @@ const ParntnersForm = ({
 }) => {
     return (
       <div className="space-y-4">
-        <TextInput 
-          name="name" 
-          onChange={handlePartnerChange} 
-          label="Имя" 
+        <TextInput
+          name="name"
+          onChange={handlePartnerChange}
+          label="Имя"
+          value={partner?.name ?? ''}
         />
         <Textarea
           name="description"
           onChange={handlePartnerChange}
           label="Описание"
+          value={partner?.description ?? ''}
         />
         <div>
-          {Array(4).fill(1).map((_, i) => {
+          {Array(4)
+            .fill(1)
+            .map((_, i) => {
+              const index = i + 1;
 
-            const index = i + 1 
-
-            return (
-              <Image
-                label={`Фото ${index}`}
-                onChange={handleImagesChange}
-                onDelete={handleImageDelete}
-                image={images?.[index]}
-                index={index}
-                record={partner}
-              />
-            )
-          })}
+              return (
+                <Image
+                  label={`Фото ${index}`}
+                  onChange={handleImagesChange}
+                  onDelete={handleImageDelete}
+                  image={images?.[index]}
+                  index={index}
+                  record={partner}
+                  key={index}
+                />
+              );
+            })}
         </div>
-        <FileInput 
-          onChange={e => handlePdfChange(e)}
+        <FileInput
+          onChange={(e) => handlePdfChange(e)}
           name="pdf"
-          label='Файл (pdf)'
+          label="Файл (pdf)"
         />
       </div>
-    )
+    );
 }
 
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Modal, TextInput, Textarea } from "@mantine/core";
-import { pb } from "shared/api";
+import { getData, pb } from "shared/api";
 import { TeamCard } from "shared/ui/TeamCard";
 import { Image } from "shared/ui";
 import { MdDeleteForever } from "react-icons/md";
@@ -83,43 +83,191 @@ export const OurTeam = () => {
     })
   }, []);
 
+    const [team, setTeam] = React.useState({});
+
+    const [images, setImages] = React.useState({});
+    const [changedImages, setChangedImages] = React.useState({});
+
+    const [headings, setHeadings] = React.useState({});
+    const [text, setText] = React.useState({});
+
+    const [changedHeadings, setChangedHeadings] = React.useState({});
+    const [changedText, setChangedText] = React.useState({});
+
+    function handleHealthChange(val, type) {
+      const { value, name } = val?.target;
+
+      if (type === "heading") {
+        setChangedHeadings({ ...changedHeadings, [name]: value });
+        return;
+      }
+
+      setChangedText({ ...changedText, [name]: value });
+      return;
+    }
+
+    function handleImagesChange(val, index) {
+      setChangedImages({ ...changedImages, [`${index}`]: val });
+    }
+
+    function handleImageDelete(index) {
+      setChangedImages({ ...changedImages, [index]: "" });
+    }
+
+    async function saveTeam() {
+      for (const index in changedImages) {
+        if (!isNaN(index)) {
+          if (changedImages?.[index] instanceof File) {
+            const formData = new FormData();
+            formData.append([`${index}`], changedImages?.[index]);
+            await pb
+              .collection("images")
+              .update(team?.images?.id, formData)
+              .then((res) => {
+                console.log(res);
+              });
+          }
+        }
+      }
+
+      await pb.collection("text").update(team?.text?.id, {
+        headings: changedHeadings,
+        text: changedText,
+      });
+    }
+
+    React.useEffect(() => {
+      getData("team").then((res) => {
+        setTeam(res);
+        setHeadings(res?.text?.headings);
+        setText(res?.text?.text);
+        setImages(res?.images);
+      });
+    }, []);
+
+    React.useEffect(() => {
+      setChangedHeadings(headings);
+      setChangedText(text);
+    }, [headings, text]);
+
+    React.useEffect(() => {
+      setChangedImages(images);
+    }, [images]);
+
   return (
     <>
       <div className="w-full">
-        <Button
-          onClick={e => setModal(true)}
-        >
-          Добавить участника
-        </Button>
-        <div className="grid grid-cols-3 gap-6 mt-4">
-          {ourTeam?.map((team, i) => (
-            <div key={i}>
-              <TeamCard team={team} key={team.id} />
-              <div className="flex gap-4 mt-2 justify-center">
-                <FiEdit
-                  size={30}
-                  color="teal"
-                  onClick={() => openEditModal(team)}
-                />
-                <MdDeleteForever
-                  size={30}
-                  color="red"
-                  onClick={() => confirmDelete(team?.id)}
-                />
-              </div>
+        <section>
+          <TextInput
+            label="Главный заголовок"
+            value={changedHeadings?.heading ?? ""}
+            onChange={(e) => handleHealthChange(e, "heading")}
+            name="heading"
+          />
+          <div className="flex">
+            <Image
+              className="ml-10 w-2/4"
+              label={"Картинка"}
+              onChange={handleImagesChange}
+              record={team?.images}
+              image={changedImages?.["1"]}
+              onDelete={handleImageDelete}
+              index={1}
+            />
+            <div className="w-2/4 ml-auto">
+              <TextInput
+                label="Заголовок"
+                value={changedHeadings?.main ?? ""}
+                onChange={(e) => handleHealthChange(e, "heading")}
+                name="main"
+              />
+              <Textarea
+                label="Под заголовок"
+                value={changedHeadings?.submain ?? ""}
+                onChange={(e) => handleHealthChange(e, "heading")}
+                name="submain"
+                autosize
+              />
+              <Textarea
+                label="текст"
+                value={changedText?.text1 ?? ""}
+                onChange={(e) => handleHealthChange(e, "text")}
+                name="text1"
+                autosize
+              />
+              <Textarea
+                label="текст"
+                value={changedText?.text2 ?? ""}
+                onChange={(e) => handleHealthChange(e, "text")}
+                name="text2"
+                autosize
+              />
+              <Textarea
+                label="текст"
+                value={changedText?.text3 ?? ""}
+                onChange={(e) => handleHealthChange(e, "text")}
+                name="text3"
+                autosize
+              />
+              <Textarea
+                label="текст"
+                value={changedText?.text4 ?? ""}
+                onChange={(e) => handleHealthChange(e, "text")}
+                name="text4"
+                autosize
+              />
+              <Textarea
+                label="текст"
+                value={changedText?.text5 ?? ""}
+                onChange={(e) => handleHealthChange(e, "text")}
+                name="text5"
+                autosize
+              />
+              <Textarea
+                label="текст"
+                value={changedText?.text6 ?? ""}
+                onChange={(e) => handleHealthChange(e, "text")}
+                name="text6"
+                autosize
+              />
             </div>
-          ))}
+          </div>
+        </section>
+        <Button className="mt-10" size="lg" fullWidth onClick={saveTeam}>
+          Сохранить
+        </Button>
+        <div>
+          <Button onClick={(e) => setModal(true)}>Добавить участника</Button>
+          <div className="grid grid-cols-3 gap-6 mt-4">
+            {ourTeam?.map((team, i) => (
+              <div key={i}>
+                <TeamCard team={team} key={team.id} />
+                <div className="flex gap-4 mt-2 justify-center">
+                  <FiEdit
+                    size={30}
+                    color="teal"
+                    onClick={() => openEditModal(team)}
+                  />
+                  <MdDeleteForever
+                    size={30}
+                    color="red"
+                    onClick={() => confirmDelete(team?.id)}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <Modal
         opened={modal}
-        onClose={e => {
-          setModal(false)
+        onClose={(e) => {
+          setModal(false);
           setMember({
-            name: '',
-            description: '',
+            name: "",
+            description: "",
             image: null,
-          })
+          });
         }}
         centered
       >
@@ -128,12 +276,9 @@ export const OurTeam = () => {
             member={member}
             onChange={handleMemberChange}
             onImageChange={handleMemberChange}
-            onImageDelete={() => setMember({...member, image: null})}
+            onImageDelete={() => setMember({ ...member, image: null })}
           />
-          <Button
-            onClick={createMember}
-            fullWidth
-          >
+          <Button onClick={createMember} fullWidth>
             Сохранить
           </Button>
         </div>

@@ -10,7 +10,6 @@ export const PartnersCard = ({
   viewPdf,
 }) => {
 
-
   const [embla, setEmbla] = React.useState(null);
 
   const autoplay = React.useRef(Autoplay({ delay: 2000 }));
