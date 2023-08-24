@@ -15,7 +15,7 @@ export function Image({
   onDelete,
   className,
 }) {
- 
+
   return (
     <div>
       {image ? (

@@ -118,28 +118,53 @@ export const Resorts = () => {
   }
 
   async function createGoodResort() {
-    await pb
-      .collection("resorts")
-      .create({
-        ...resort,
-        status: "good",
-      })
-      .then(async (res) => {
-        for (const index in images) {
-          if (!isNaN(index)) {
-            if (images?.[index] instanceof File) {
-              const formData = new FormData();
-              formData.append([`${index}`], images?.[index]);
-              await pb
-                .collection("resorts")
-                .update(res.id, formData)
-                .then((res) => {
-                  console.log(res);
-                });
+    if (resort?.id) {
+      await pb
+        .collection("resorts")
+        .update(resort?.id, {
+          ...resort,
+        })
+        .then(async (res) => {
+          for (const index in images) {
+            if (!isNaN(index)) {
+              if (images?.[index] instanceof File) {
+                const formData = new FormData();
+                formData.append([`${index}`], images?.[index]);
+                await pb
+                  .collection("resorts")
+                  .update(res.id, formData)
+                  .then((res) => {
+                    console.log(res);
+                  });
+              }
             }
           }
-        }
-      });
+        });
+        return
+      }
+
+      await pb
+        .collection("resorts")
+        .create({
+          ...resort,
+          status: "good",
+        })
+        .then(async (res) => {
+          for (const index in images) {
+            if (!isNaN(index)) {
+              if (images?.[index] instanceof File) {
+                const formData = new FormData();
+                formData.append([`${index}`], images?.[index]);
+                await pb
+                  .collection("resorts")
+                  .update(res.id, formData)
+                  .then((res) => {
+                    console.log(res);
+                  });
+              }
+            }
+          }
+        });
   }
 
   const [preview, setPreview] = React.useState({});
@@ -168,6 +193,12 @@ export const Resorts = () => {
   const [filteredDiseases, setFilteredDiseases] = React.useState("");
 
   function filterByRegions() {}
+
+  function openEditModal (val) {
+    setImages(val)
+    setResort(val)
+    setModal(true)
+  }
 
   return (
     <>
@@ -221,7 +252,11 @@ export const Resorts = () => {
                   <ResortCard
                     resort={resort}
                     key={i}
-                    editBtn={<Button>Редактировать</Button>}
+                    editBtn={
+                      <Button onClick={() => openEditModal(resort)}>
+                        Редактировать
+                      </Button>
+                    }
                     deleteBtn={
                       <Button
                         fill={red}
@@ -326,10 +361,12 @@ export const Resorts = () => {
               onChange={(e) => handleResortChange(e, "diseas")}
             />
 
-            <NumberInput
+            <TextInput
               label="Длительность тура"
               value={resort.duration ?? ""}
-              onChange={(e) => handleResortChange(e, "duration")}
+              onChange={(e) =>
+                handleResortChange(e.currentTarget.value, "duration")
+              }
             />
             <TextInput
               label="Питание"
@@ -362,11 +399,13 @@ export const Resorts = () => {
                 handleResortChange(e.currentTarget.value, "season")
               }
             />
-            <NumberInput
+            <TextInput
               label="Стоимость"
               description="За одного человека"
               value={resort.cost ?? ""}
-              onChange={(e) => handleResortChange(e, "cost")}
+              onChange={(e) =>
+                handleResortChange(e.currentTarget.value, "cost")
+              }
             />
             <TextInput
               label="Адрес"
@@ -419,11 +458,13 @@ export const Resorts = () => {
           </div>
         </div>
         <Image
-          image={images?.["1"]}
+          image={images?.[1]}
           onChange={handleImageChange}
           label={"Главное фото"}
           index={1}
           onDelete={handleImageDelete}
+          record={resort}
+
           // record={''}
         />
         <div className="grid grid-cols-5 gap-6">
@@ -431,7 +472,6 @@ export const Resorts = () => {
             .fill(1)
             .map((_, i) => {
               const index = i + 2;
-
               return (
                 <Image
                   image={images?.[index]}
@@ -440,6 +480,7 @@ export const Resorts = () => {
                   index={index}
                   onDelete={handleImageDelete}
                   key={i}
+                  record={resort}
                   className={"!w-60"}
                 />
               );
@@ -454,7 +495,7 @@ export const Resorts = () => {
         </div>
 
         <div className="mt-5">
-          <Button onClick={createGoodResort}>Добавить курорт</Button>
+          <Button onClick={createGoodResort}>Сохранить курорт</Button>
         </div>
       </Modal>
     </>

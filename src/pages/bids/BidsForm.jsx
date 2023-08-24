@@ -1,9 +1,10 @@
+import React from "react";
 import { Button, Group, Modal, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import React from "react";
 import { Controller } from "react-hook-form";
 
 export const BidsForm = ({ bid }) => {
+
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
@@ -22,18 +23,18 @@ export const BidsForm = ({ bid }) => {
       </div>
       <Modal opened={opened} onClose={close}>
         <div>
-          <TextInput readOnly label="Ваше имя?" placeholder={bid?.[1]} />
+          <TextInput readOnly label="Ваше имя?" value={bid?.[1]} />
           <TextInput
             readOnly
             label="Какая у вас Область?"
-            placeholder={bid?.[2]}
+            value={bid?.[2]}
           />
           <TextInput
             readOnly
             label="Какая у вас болезнь?"
-            placeholder={bid?.[3]}
+            value={bid?.[3]}
           />
-          <TextInput readOnly label="Ваш телефон?" placeholder={bid?.[4]} />
+          <TextInput readOnly label="Ваш телефон?" value={bid?.[4]} />
         </div>
       </Modal>
     </div>
