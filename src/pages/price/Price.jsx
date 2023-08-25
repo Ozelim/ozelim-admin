@@ -145,33 +145,33 @@ export const Price = () => {
         />
         <TextInput
           label="Главный заголовок"
-          value={changedHeadings?.main ?? ""}
+          value={changedHeadings?.[1] ?? ""}
           onChange={(e) => handlePriceChange(e, "heading")}
-          name="main"
+          name="1"
         />
         <TextInput
           label="Текст"
-          value={changedText?.main0 ?? ""}
+          value={changedText?.[1] ?? ""}
           onChange={(e) => handlePriceChange(e, "text")}
-          name="main0"
+          name="1"
         />
         <TextInput
           label="Текст"
-          value={changedText?.main1 ?? ""}
+          value={changedText?.[2] ?? ""}
           onChange={(e) => handlePriceChange(e, "text")}
-          name="main1"
+          name="2"
         />
         <TextInput
           label="Текст"
-          value={changedText?.main2 ?? ""}
+          value={changedText?.[3] ?? ""}
           onChange={(e) => handlePriceChange(e, "text")}
-          name="main2"
+          name="3"
         />
         <TextInput
           label="Текст"
-          value={changedText?.main3 ?? ""}
+          value={changedText?.[4] ?? ""}
           onChange={(e) => handlePriceChange(e, "text")}
-          name="main3"
+          name="4"
         />
         <Button onClick={savePrice}>Сохранить</Button>
       </section>

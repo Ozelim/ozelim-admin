@@ -10,18 +10,16 @@ export const Card = ({news}) => {
     <div className="bg-white shadow rounded-primary max-w-5xl w-full mx-auto">
       <div className="p-10 flex flex-col">
         <div className="flex items-center">
-          <Link to={'/'}>
-            {getImageUrl(news, news?.avatar) ? (
-              <img
-                className="w-14 h-14 bg-slate-300 rounded-full object-cover"
-                src={getImageUrl(news, news?.avatar)}
-                loading="lazy"
-                alt="travel"
-              />
-            ) : (
-              <div className="w-14 h-14 bg-slate-300 rounded-full object-cover" />
-            )}
-          </Link>
+          {getImageUrl(news, news?.avatar) ? (
+            <img
+              className="w-14 h-14 bg-slate-300 rounded-full object-cover"
+              src={getImageUrl(news, news?.avatar)}
+              loading="lazy"
+              alt="travel"
+            />
+          ) : (
+            <div className="w-14 h-14 bg-slate-300 rounded-full object-cover" />
+          )}
           <span className="ml-4 text-lg">{news?.name}</span>
         </div>
 

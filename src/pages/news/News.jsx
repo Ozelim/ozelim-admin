@@ -14,7 +14,7 @@ async function getNews () {
 
 export const News = () => {
 
-  const [news, setNews] = React.useState({})
+  const [news, setNews] = React.useState([])
 
   React.useEffect(() => {
     getNews()
