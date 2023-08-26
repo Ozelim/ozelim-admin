@@ -3,6 +3,8 @@ import dayjs from "dayjs";
 import React from "react";
 import { pb } from "shared/api";
 import { BidsForm } from "./BidsForm";
+import { CiCircleRemove } from "react-icons/ci";
+import { openConfirmModal } from "@mantine/modals";
 
 async function getAnswers () {
   return await pb.collection("questions").getFullList({
@@ -45,7 +47,20 @@ export const Bids = () => {
   const coursesBids = bids?.filter(bid => bid?.type === 'course')
   const priceBids = bids?.filter(bid => bid?.type === 'price')
 
-  const [modal, setModal] = React.useState(false)
+  async function deleteWithdraw (id) {
+    await pb.collection('bids').delete(id)
+  }
+
+  const removeWithdrawConfirm = (id) => openConfirmModal({
+    title: 'Подтвердите действие',
+    centered: true,
+    labels: { confirm: 'Подтвердить', cancel: 'Отмена'},
+    children: (
+      <>Вы действительно хотите отклонить данную отправку?</>
+    ),
+    onConfirm: () => deleteWithdraw(id)
+  })
+
 
   return (
     <>
@@ -96,6 +111,7 @@ export const Bids = () => {
                   <th>Имя</th>
                   <th>Почта</th>
                   <th>Телефон</th>
+                  <th>Дейтсвие</th>
                 </tr>
               </thead>
               <tbody>
@@ -108,6 +124,14 @@ export const Bids = () => {
                       <td>{health?.name}</td>
                       <td>{health?.email}</td>
                       <td>{health?.phone}</td>
+                      <td>
+                        <CiCircleRemove
+                          size={35}
+                          color='red'
+                          onClick={() => removeWithdrawConfirm(health?.id)}
+                          className='cursor-pointer hover:fill-yellow-500'
+                        />
+                      </td>
                     </tr>
                   );
                 })}
@@ -122,6 +146,7 @@ export const Bids = () => {
                   <th>Имя</th>
                   <th>Почта</th>
                   <th>Телефон</th>
+                  <th>Действие</th>
                 </tr>
               </thead>
               <tbody>
@@ -134,6 +159,14 @@ export const Bids = () => {
                       <td>{course?.name}</td>
                       <td>{course?.email}</td>
                       <td>{course?.phone}</td>
+                      <td>
+                        <CiCircleRemove
+                          size={35}
+                          color='red'
+                          onClick={() => removeWithdrawConfirm(course?.id)}
+                          className='cursor-pointer hover:fill-yellow-500'
+                        />
+                      </td>
                     </tr>
                   );
                 })}
@@ -148,6 +181,7 @@ export const Bids = () => {
                   <th>Имя</th>
                   <th>Почта</th>
                   <th>Телефон</th>
+                  <th>Действие</th>
                 </tr>
               </thead>
               <tbody>
@@ -158,6 +192,14 @@ export const Bids = () => {
                       <td>{price?.name}</td>
                       <td>{price?.email}</td>
                       <td>{price?.phone}</td>
+                      <td>
+                        <CiCircleRemove
+                          size={35}
+                          color='red'
+                          onClick={() => removeWithdrawConfirm(price?.id)}
+                          className='cursor-pointer hover:fill-yellow-500'
+                        />
+                      </td>
                     </tr>
                   );
                 })}
