@@ -14,7 +14,57 @@ export const Users = () => {
 
   const [search, setSearch] = React.useState("");
   const [searchValue] = useDebouncedValue(search, 1000);
+async function getPyramidByUser (userId) {
 
+  const pyramid = (await pb.collection('pyramid').getFullList({expand: '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12'}))[0]
+  const pyramidsUser = await pb.collection('users').getOne(userId)
+  let foundUser = null
+  let result = []
+
+  for (const stage in pyramid) {
+    if (!isNaN(stage)) {
+      const stageArrays = pyramid?.expand?.[stage]
+      const stageUser = stageArrays?.find(e => e?.id === userId)
+      if (stageUser) {
+
+        foundUser = userId
+        const properties = Object.keys(pyramid?.expand)
+        // const pows = properties.length - Number(stage)
+
+
+        properties.map((key, i) => {
+          if (Number(key) > Number(stage)) {
+            // console.log(pyramid?.expand?.[key], key, stage, 'stage')
+            result.push(pyramid?.expand?.[key])
+
+            return 
+          }
+
+        })
+
+
+        result = result?.map((arr, i) => {
+          return arr.slice(0, Math.pow(2, i + 1));
+        })
+        result.unshift([pyramidsUser])
+
+      } 
+    }
+  }
+
+  if (foundUser) {
+    return {
+      pyramid: pyramid,
+      result
+    }
+  } else {
+    return {
+      pyramid: pyramid,
+      result: null
+    }
+  }
+
+}
   async function searchByValue() {
     if (!searchValue) {
       handleUsers(1);
