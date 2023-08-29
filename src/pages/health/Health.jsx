@@ -2,6 +2,9 @@ import React from "react";
 import { Button, TextInput, Textarea } from "@mantine/core";
 import { getData, pb } from "shared/api";
 import { Image } from "shared/ui";
+import ReactQuill from "react-quill";
+
+import "react-quill/dist/quill.snow.css";
 
 export const Health = () => {
   const [health, setHealth] = React.useState({});
@@ -16,6 +19,7 @@ export const Health = () => {
   const [changedText, setChangedText] = React.useState({});
 
   function handleHealthChange(val, type) {
+    
     const { value, name } = val?.target;
 
     if (type === "heading") {
@@ -288,9 +292,19 @@ export const Health = () => {
           />
         </div>
       </section>
+      <section>        
+        <ReactQuill
+          value={changedText?.editor ?? ""}
+          onChange={(e) => {
+            setChangedText({...changedText, editor: e})
+          }}
+          className="h-full"
+          name='editor'
+        />
+      </section>
       <Button className="mt-10" size="lg" fullWidth onClick={saveHealth}>
         Сохранить
       </Button>
-    </div>
+    </div>  
   );
 };

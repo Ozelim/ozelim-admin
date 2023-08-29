@@ -14,6 +14,13 @@ export const useUtils = () => {
     .then(res => {
       setData(res)
     })
+
+    pb.collection('utils').subscribe('*', function () {
+      getRegionsAndDiseases()
+      .then(res => {
+        setData(res)
+      })
+    })
   }, [])
 
   return {

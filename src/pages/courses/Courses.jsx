@@ -2,6 +2,7 @@ import React from "react";
 import { Button, TextInput, Textarea } from "@mantine/core";
 import { getData, pb } from "shared/api";
 import { Image } from "shared/ui";
+import ReactQuill from "react-quill";
 
 export const Courses = () => {
   const [course, setCourse] = React.useState({});
@@ -380,6 +381,58 @@ export const Courses = () => {
           />
         </div>
       </section>
+
+      <div>
+        <div>
+          <TextInput
+            label='Заголовок'
+
+          />
+          <TextInput />
+          <ReactQuill
+            value={changedText?.editor1 ?? ""}
+            onChange={(e) => {
+              setChangedText({ ...changedText, editor1: e });
+            }}
+            className="h-full"
+            name="editor1"
+          />
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          {Array(3).fill(1).map((_, i) => {
+            const index = i + 1
+            return (
+              <div className="space-y-2">
+                <TextInput
+                  label="Заголовок"
+                  value={changedText?.[`label${index}`] ?? ""}
+                  name={`label${index}`}
+                  onChange={(e) =>
+                    handleCourseChange(e, "text")
+                  }
+                />
+                <TextInput
+                  label="Цена"
+                  value={changedText?.[`cost${index}`] ?? ""}
+                  name={`cost${index}`}
+                  onChange={(e) =>
+                    handleCourseChange(e, "text")
+                  }
+                />
+                <ReactQuill
+                  value={changedText?.[`editor${index}`] ?? ""}
+                  onChange={(e) => {
+                    setChangedText({ ...changedText, [`editor${index}`]: e});
+                  }}
+                  className="h-full"
+                  name={`editor${index}`}
+                />
+              </div>
+            );
+          })}
+        </div>
+        {console.log(changedText, 'text')}
+      </div>
 
       <Button className="mt-10" size="lg" fullWidth onClick={saveCourses}>
         Сохранить

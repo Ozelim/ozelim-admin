@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 
 export const Card = ({news}) => {
   return (
-    <div className="bg-white shadow rounded-primary max-w-4xl w-full mx-auto">
+    <div className="bg-white shadow rounded-primary max-w-2xl w-full mx-auto">
       <div className="p-6 flex flex-col">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
@@ -38,7 +38,7 @@ export const Card = ({news}) => {
         </div>
         {getImageUrl(news, news?.image) ? (
           <img
-            className="w-full  object-cover aspect-video"
+            className="w-full object-cover aspect-video"
             src={getImageUrl(news, news?.image)}
             loading="lazy"
             alt="travel"

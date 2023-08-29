@@ -159,12 +159,12 @@ export const OurTeam = () => {
     <>
       <div className="w-full">
         <section>
-          <TextInput
+          {/* <TextInput
             label="Главный заголовок"
             value={changedHeadings?.heading ?? ""}
             onChange={(e) => handleHealthChange(e, "heading")}
             name="heading"
-          />
+          /> */}
           <div className="flex">
             <Image
               className="ml-10 w-2/4"

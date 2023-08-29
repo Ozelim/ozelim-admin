@@ -69,9 +69,9 @@ export const Bids = () => {
         <Tabs>
           <Tabs.List grow>
             <Tabs.Tab value="question">Опросник</Tabs.Tab>
-            <Tabs.Tab value="health">Здоровье</Tabs.Tab>
-            <Tabs.Tab value="courses">Курсы</Tabs.Tab>
-            <Tabs.Tab value="price">Прайс</Tabs.Tab>
+            <Tabs.Tab value="health">Оздоровление</Tabs.Tab>
+            <Tabs.Tab value="courses">Курсы туризма</Tabs.Tab>
+            <Tabs.Tab value="price">Прайс лист</Tabs.Tab>
             <Tabs.Tab value="resort">Курорты</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="question">
@@ -122,6 +122,7 @@ export const Bids = () => {
                   <th>Имя</th>
                   <th>Почта</th>
                   <th>Телефон</th>
+                  <th>Курс</th>
                   <th>Действие</th>
                 </tr>
               </thead>
@@ -135,6 +136,7 @@ export const Bids = () => {
                       <td>{course?.name}</td>
                       <td>{course?.email}</td>
                       <td>{course?.phone}</td>
+                      <td>{course?.data}</td>
                       <td>
                         <CiCircleRemove
                           size={35}
@@ -190,6 +192,7 @@ export const Bids = () => {
                   <th>Имя</th>
                   <th>Почта</th>
                   <th>Телефон</th>
+                  <th>Курорт</th>
                   <th>Действие</th>
                 </tr>
               </thead>
@@ -197,16 +200,23 @@ export const Bids = () => {
                 {resortsBids?.map((resort) => {
                   return (
                     <tr key={resort?.id}>
-                      <td>{dayjs(resort?.created).format("YY-MM-DD, HH:mm")}</td>
+                      <td>
+                        {dayjs(resort?.created).format("YY-MM-DD, HH:mm")}
+                      </td>
                       <td>{resort?.name}</td>
                       <td>{resort?.email}</td>
                       <td>{resort?.phone}</td>
                       <td>
+                        <a href={`https://oz-elim.kz/resort/${resort?.data}`} target="_blank">
+                          {resort?.data}
+                        </a>
+                      </td>
+                      <td>
                         <CiCircleRemove
                           size={35}
-                          color='red'
+                          color="red"
                           onClick={() => removeWithdrawConfirm(resort?.id)}
-                          className='cursor-pointer hover:fill-yellow-500'
+                          className="cursor-pointer hover:fill-yellow-500"
                         />
                       </td>
                     </tr>
