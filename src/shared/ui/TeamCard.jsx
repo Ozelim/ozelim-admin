@@ -11,6 +11,9 @@ export const TeamCard = ({ team }) => {
       />
       <h2 className="text-center pt-2 font-head text-2xl px-6 ">{team?.name}</h2>
       <p className="px-4 text-center text">{team?.description}</p>
+      <a href={team?.link} target="_blnak" className="underline text-blue-300">
+        Перейти по ссылке
+      </a>
     </div>
   );
 };

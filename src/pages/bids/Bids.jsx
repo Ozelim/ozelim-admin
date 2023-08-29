@@ -46,6 +46,7 @@ export const Bids = () => {
   const healthBids = bids?.filter(bid => bid?.type === 'health')
   const coursesBids = bids?.filter(bid => bid?.type === 'course')
   const priceBids = bids?.filter(bid => bid?.type === 'price')
+  const resortsBids = bids?.filter(bid => bid?.type === 'resort')
 
   async function deleteWithdraw (id) {
     await pb.collection('bids').delete(id)
@@ -71,34 +72,9 @@ export const Bids = () => {
             <Tabs.Tab value="health">Здоровье</Tabs.Tab>
             <Tabs.Tab value="courses">Курсы</Tabs.Tab>
             <Tabs.Tab value="price">Прайс</Tabs.Tab>
+            <Tabs.Tab value="resort">Курорты</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="question">
-            {/* <Table className="mt-8" bg="white" striped>
-              <thead>
-                <tr>
-                  <td>Имя</td>
-                  <td>Телефон</td>
-                  <td>Патология</td>
-                  <td>Область</td>
-                  <td>Дата</td>
-                </tr>
-              </thead>
-              <tbody>
-                {answers?.map((answer) => {
-                  return (
-                    <tr key={answer?.id}>
-                      <td>{answer?.[3]}</td>
-                      <td>{answer?.[4]}</td>
-                      <td>{answer?.[1]}</td>
-                      <td>{answer?.[2]}</td>
-                      <td>
-                        {dayjs(answer?.created).format("YY-MM-DD, HH:mm")}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table> */}
             {answers?.map((bid) => (
               <BidsForm bid={bid} key={bid.id} />
             ))}
@@ -197,6 +173,39 @@ export const Bids = () => {
                           size={35}
                           color='red'
                           onClick={() => removeWithdrawConfirm(price?.id)}
+                          className='cursor-pointer hover:fill-yellow-500'
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value="resort">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Имя</th>
+                  <th>Почта</th>
+                  <th>Телефон</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {resortsBids?.map((resort) => {
+                  return (
+                    <tr key={resort?.id}>
+                      <td>{dayjs(resort?.created).format("YY-MM-DD, HH:mm")}</td>
+                      <td>{resort?.name}</td>
+                      <td>{resort?.email}</td>
+                      <td>{resort?.phone}</td>
+                      <td>
+                        <CiCircleRemove
+                          size={35}
+                          color='red'
+                          onClick={() => removeWithdrawConfirm(resort?.id)}
                           className='cursor-pointer hover:fill-yellow-500'
                         />
                       </td>

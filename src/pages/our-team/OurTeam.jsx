@@ -18,6 +18,7 @@ export const OurTeam = () => {
   const [member, setMember] = React.useState({
     name: '',
     description: '',
+    link: '',
     image: null,
   })
 
@@ -314,6 +315,12 @@ const MemberForm = ({
         onChange={onImageChange}
         onDelete={onImageDelete}
         record={member}
+      />
+      <TextInput
+        value={member?.link}
+        onChange={onChange}
+        name="link"
+        label='Ссылка'
       />
     </div>
   )

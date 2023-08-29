@@ -288,7 +288,6 @@ export const Health = () => {
           />
         </div>
       </section>
-
       <Button className="mt-10" size="lg" fullWidth onClick={saveHealth}>
         Сохранить
       </Button>
