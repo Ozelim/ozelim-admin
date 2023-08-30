@@ -106,10 +106,9 @@ async function getPyramidByUser(userId) {
       .getFullList({ expand: "sponsor, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12" })
   )[0];
 
-  const sponsor = await pyramid?.expand?.sponsor
+  const sponsor = pyramid?.expand?.sponsor
 
   // const pyramidsUser = await pb.collection("users").getOne(userId);
-  let foundUser = null;
   let result = [];
 
   for (const stage in pyramid) {

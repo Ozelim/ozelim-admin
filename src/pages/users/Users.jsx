@@ -119,48 +119,214 @@ export const Users = () => {
     });
   }
 
+  async function checkReferals (binary, sponsor) {
+
+    if (binary?.referals?.length < 2) {
+      await pb.collection('binary').update(binary?.id, {
+        referals: [...binary?.referals, sponsor?.id]
+      })
+      .then(async () => {
+        await pb.collection('binary').create({
+          sponsor: sponsor?.id,
+        })
+        return
+      })
+    }
+  }
+
+  async function findAvailableSlot(guest, depth = 0, sponsor) {
+
+    if (depth === 8) {
+      return; // Достигнута максимальная глубина, прекращаем поиск
+    }
+  
+    if (guest.referals && guest.referals.length < 2) {
+      console.log(sponsor, 'sponsor');
+      console.log('this code');
+        await pb.collection('binary').update(guest?.id, {
+          referals: [...guest?.referals, sponsor?.id]
+        })
+        .then(async () => {
+          await pb.collection('binary').create({
+            id: sponsor?.id,
+            sponsor: sponsor?.id,
+          })
+          console.log('succ');
+        })
+      // guest.referals.push(guest);
+      return; // Найдено свободное место, завершаем поиск
+    }
+  
+    if (guest.referals) {
+
+      for (const referal of guest.referals) {
+
+        const referalSlot = await pb.collection('binary').getFirstListItem(`sponsor = '${referal}'`)
+
+        if (referalSlot.referals && referalSlot.referals.length < 2) {
+
+          await pb.collection('binary').update(referalSlot?.id, {
+            referals: [...referalSlot?.referals, sponsor?.id]
+          })
+          .then(async () => {
+            await pb.collection('binary').create({
+              id: sponsor?.id,
+              sponsor: sponsor?.id,
+            })
+          })
+          .then(() => {
+            console.log('succ');
+          })
+          // referal.referals.push(guest);
+          return; // Найдено свободное место, завершаем поиск
+        }
+      }
+
+      for (const referal of guest?.referals) {
+        const referalSlot = await pb.collection('binary').getFirstListItem(`sponsor = '${referal}'`)
+
+        // if (referalSlot?.referals.referals && referalSlot?.referals.referals.length === 2) {
+        //   continue; // У этого referal уже нет свободных мест, переходим к следующему
+        // }
+
+        findAvailableSlot(guest, depth + 1, sponsor);
+        if (referalSlot.referals && referalSlot.referals.length >= 2) {
+          return; // Найдено свободное место, завершаем поиск
+        }
+      }
+    }
+  }
+
   async function verifyUser(userId) {
     return await pb.collection('users').update(userId, {
-      verified: true
+      // verified: true
     })
     .then(async (res) => {
-      
-      const sponsor = await pb.collection("users").getOne(res?.sponsor)  
 
+      const sponsor = await pb.collection("users").getOne(res?.sponsor)  
       const referals = await pb.collection("users").getFullList({
         filter: `sponsor = '${sponsor.id}' && verified = true`,
       });
 
-      console.log(referals, 'referals');
+      if (referals.length === 2 && !sponsor?.bin) { 
 
-      const pyramid = await pb
-        .collection("pyramid")
-        .getOne("ozelimbinary123", { expand: "sponsor" });
+        const sponsorParent = await pb.collection('users').getOne(sponsor?.sponsor)
 
+        const binarySponsorParent = await pb.collection('binary').getFirstListItem(`sponsor = '${sponsorParent.id}'`)
 
-        if (referals.length === 3 && !sponsor?.bin) { 
-          for (let i = 1; i <= 50; i++) {
-            
-            let multiple = Math.pow(2, i);
-            
-            if (pyramid?.[i]?.length < multiple) {
-              await pb.collection('pyramid').update(pyramid.id, {
-                [i]: [...pyramid?.[`${i}`], sponsor.id]
-              })
-              .then(async res => {
-                console.log(sponsor);
-                await pb.collection('users').update(sponsor.id, {
-                  bin: true
-                })
-                console.log(res, 'write');
-              })
-              return
-            }
-          }
-        }
-      })
+        findAvailableSlot(binarySponsorParent, 4, sponsor)
+        
+
+        // await checkReferals(binarySponsorParent, sponsor)
+
+        // if (binarySponsorParent?.referals?.length < 2) {
+        //   await pb.collection('binary').update(binarySponsorParent?.id, {
+        //     referals: [...binarySponsorParent?.referals, sponsor?.id]
+        //   })
+        //   .then(async () => {
+        //     await pb.collection('binary').create({
+        //       sponsor: sponsor?.id,
+        //     })
+        //   })
+        // } 
+        
+        // else {
+
+        //   let loop = false
+        //   let each = false
+
+        //   for (let i = 1; i <= 5; i++) {
+
+        //     if (loop) {
+        //       return
+        //     } 
+
+        //     let multiple = Math.pow(2, i);
+        //     Array(multiple).fill(1).forEach(async (_, i) => {
+        //       const referals = await pb.collection('binary').getFullList({filter: `sponsor = '${binarySponsorParent?.referals?.[i]}'`})
+        //       if (referals?.[i]) {
+        //         if (referals?.[i]?.referals?.length < 2) {
+        //           loop = true
+        //           each = true
+        //           return await pb.collection('binary').update(referals?.[i]?.id, {
+        //             referals: [...referals?.[i]?.referals, sponsor?.id]
+        //           }) 
+        //           .then(async () => {
+        //             await pb.collection('binary').create({
+        //               sponsor: sponsor?.id,
+        //             })
+        //           })
+        //         }
+        //         else {
+        //           const sponsorreferals = await pb.collection('binary').getFullList({filter: `sponsor = '${referals?.[i]?.referals?.[i]}'`})
+   
+        //           if (sponsorreferals?.[i]) {
+        //             if (sponsorreferals?.[i]?.referals?.length < 2) {
+        //               loop = true
+        //               each = true
+  
+        //               return await pb.collection('binary').update(sponsorreferals?.[i]?.id, {
+        //                 referals: [...sponsorreferals?.[i]?.referals, sponsor?.id]
+        //               }) 
+        //               .then(async () => {
+        //                 const createdSlot = (await pb.collection('binary').getFullList({filter: `sponsor = '${sponsor?.id}'`}))[0]
+        //                 if (createdSlot) return
+  
+        //                 await pb.collection('binary').create({
+        //                   sponsor: sponsor?.id,
+        //                 })
+        //               })
+        //             }
+        //           }
+        //         }
+        //       } 
+        //     })
+        //   }
+        // }
+
+        // for (let i = 1; i <= 50; i++) {
+          
+        //   let multiple = Math.pow(2, i);
+          
+        //   if (pyramid?.[i]?.length < multiple) {
+        //     await pb.collection('pyramid').update(pyramid.id, {
+        //       [i]: [...pyramid?.[`${i}`], sponsor.id]
+        //     })
+        //     .then(async res => {
+        //       console.log(sponsor);
+        //       await pb.collection('users').update(sponsor.id, {
+        //         bin: true
+        //       })
+        //       console.log(res, 'write');
+        //     })
+        //     return
+        //   }
+        // }
+      }
+    })
   }
 
+  function fillReferrals(obj) {
+    if (!obj.referals) {
+        obj.referals = [];
+    }
+
+    if (obj.referals.length < 2) {
+        const emptySlots = 2 - obj.referals.length;
+        for (let i = 0; i < emptySlots; i++) {
+            obj.referals.push({ referals: [] });
+        }
+    }
+
+    for (const referral of obj.referals) {
+        fillReferrals(referral);
+    }
+  }
+  // Пример использования
+
+
+
+  
   const confirmVerifing = (userId) => openConfirmModal({
     title: 'Подтвердить верификацию',
     centered: true,
