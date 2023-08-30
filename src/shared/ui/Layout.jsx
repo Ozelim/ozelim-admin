@@ -16,14 +16,21 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
   function handleValueChange (e) {
     const { value, name } = e?.currentTarget
     setVal({...val, [name]: value})
+    setErr('')
   }
 
   async function login () {
+    if (!val?.email || !val?.password) return setErr('Заполните поля')
     await pb.admins.authWithPassword(val?.email, val?.password)
     .then(() => {
       window.location.reload()
     })
+    .catch(err => {
+      setErr('Неверные данные')
+    })
   }
+
+  const [err, setErr] = React.useState('')
 
   return user &&
     (user?.email === "ozelim.pv@gmail.com" ||
@@ -40,8 +47,8 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
       <div className="w-full h-full border-t pt-5">{footerSlot}</div>
     </div>
   ) : (
-    <div className="flex justify-center items-center h-screen">
-      <div className="border p-4 space-y-4">
+    <div className="flex items-center justify-center h-screen">
+      <div className="border p-4 space-y-4 max-w-xs w-full mx-auto">
         <TextInput
           type={"email"}
           label="Почта"
@@ -55,6 +62,9 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
           onChange={handleValueChange}
           name="password"
         />
+        {err && (
+          <p className='text-sm text-red-500'>{err}</p>
+        )}
         <Button fullWidth onClick={login}>
           Войти
         </Button>

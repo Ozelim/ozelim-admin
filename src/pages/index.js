@@ -3,7 +3,6 @@ export { Binary } from './binary/Binary'
 export { MoneyFlow } from './money-flow/MoneyFlow'
 export { Users } from './users/Users'
 export { Withdraws } from './withdraws/Withdraws'
-
 export { Price } from './price/Price'
 export { About } from './about/About'
 export { Bids } from './bids/Bids'
