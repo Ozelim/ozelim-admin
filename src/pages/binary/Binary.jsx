@@ -1,23 +1,27 @@
-import { TextInput } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
+import { Button, Modal, TextInput } from '@mantine/core';
+import { useDebouncedValue, useForceUpdate } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import { BinaryTree } from 'entities/binary/BinaryTree';
 import React from 'react'
 import Tree from "react-d3-tree";
 import { pb } from 'shared/api';
 
-function CustomNode({ nodeData, onNodeClick, handleClick }) {
+function CustomNode({ nodeData, onNodeClick, handleClick, toggleNode }) {
 
   const data = nodeData?.value;
+
+  function click (data) {
+    handleClick(data)
+    toggleNode()
+  }
 
   return (
     <g stroke="grey" fill="grey" strokeWidth="0.7" >
       <circle
         r={10}
         fill={nodeData.children ? "Aquamarine" : "#ccc"}
-        onClick={() => data?.id ? handleClick(data) : () => {}}
+        onClick={() => data?.id ? click(data) : () => {}}
       />
-
       <text
         stroke="green"
         x={-60}
@@ -27,7 +31,6 @@ function CustomNode({ nodeData, onNodeClick, handleClick }) {
       >
         {data?.name} {data?.surname}
       </text>
-
       <text
         stroke="green"
         x={-48}
@@ -146,12 +149,16 @@ async function getBinaryById (id) {
   })
 }
 
-const binaryTree = new BinaryTree(8);
 
 export const Binary = () => {
 
+  const forceUpdate = useForceUpdate()
+  
+  const binaryTree = new BinaryTree(8);
+  
   const [root, setRoot] = React.useState(new BinaryTree(8))
 
+  const [toggle, setToggle] = React.useState(false)
 
   const [pyramid, setPyramid] = React.useState([]);
 
@@ -165,17 +172,14 @@ export const Binary = () => {
       root.insert(res?.expand?.children?.[0]) 
       root.insert(res?.expand?.children?.[1])
     })
+    forceUpdate()
   }, [])
-
-
-  React.useEffect(() => {
+ 
+  React.useEffect(() => {  
     // pyramid.flat(1)?.map((stage, i) => {
     //   return binaryTree.insert(stage);
     // });
-    if (root.root) {
-      setTree(root.root);
-    }
-  }, [root?.root]);
+  }, [root]);
 
   React.useEffect(() => {
     // if (binaryTree.findMaxLevel()) {
@@ -191,62 +195,102 @@ export const Binary = () => {
       // handleUsers(1);
       return;
     }
-    getPyramidByUser(searchValue)
-    .then((res) => {
-      if (res?.result) {
-        setPyramid(res?.result);
-      } else {
-        getPyramidByUser()
-        .then(res => {
-          setPyramid(res?.result);
-        })
-      }
-    });
+    // getPyramidByUser(searchValue)
+    // .then((res) => {
+    //   if (res?.result) {
+    //     setPyramid(res?.result);
+    //   } else {
+    //     getPyramidByUser()
+    //     .then(res => {
+    //       setPyramid(res?.result);
+    //     })
+    //   }
+    // });
   }
   
   React.useEffect(() => {
     searchByValue();
   }, [searchValue]);
 
-  async function handleNodeClick ({id}) {
-    getBinaryById(id)
+  React.useEffect(() => {
+    setTree(root.root); 
+  }, [toggle]) 
+
+  const [modal, setModal] = React.useState(false)
+  const [node, setNode] = React.useState({})
+
+  const [id, setId] = React.useState('')
+
+  async function handleNodeClick (data) {
+    // setModal(true)
+    setNode(data)
+    getBinaryById(data?.id)
     .then(res => {
+      console.log(res, 'res ');
       root.insert(res?.expand?.sponsor)
       root.insert(res?.expand?.children?.[0]) 
       root.insert(res?.expand?.children?.[1])
+      setToggle(q => !q)
     })
+    .catch(err => {
+      console.log(err, 'err');
+    }) 
   } 
-  
-  console.log(binaryTree, 'root');
 
-  return (
-    <div>
-      <TextInput
-        label='ID пользолвателя'
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-      />
-      <div className="h-[100vh] mt-4 border-2 border-primary-400 p-4 ">
-        <Tree
-          data={tree ?? {}}
-          orientation="vertical" 
-          pathFunc="elbow"
-          nodeSvgShape={{
-            shape: "circle",
-            shapeProps: { r: 10, fill: "green" },
-          }}
-          
-          onLinkClick={e => console.log(e.id, 'zxczxc')}
-          renderCustomNodeElement={({ nodeDatum, toggleNode, onNodeClick }) => (
-            <CustomNode 
-              nodeData={nodeDatum} 
-              toggleNode={toggleNode} 
-              onNodeClick={onNodeClick}
-              handleClick={handleNodeClick}
+  function add () {
+    root.insert({sponsor: 'asdasdasd'})
+  }  
+
+  console.log(tree, 'tree');
+
+  return ( 
+    <>
+      <div> 
+        <Button onClick={add}>   
+          asdasd
+        </Button>
+        <TextInput
+          label='ID пользолвателя'
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+        <div className="h-[100vh] mt-4 border-2 border-primary-400 p-4 ">
+          {tree && (
+            <Tree 
+              data={tree}
+              orientation="vertical" 
+              pathFunc="elbow"
+              nodeSvgShape={{
+                shape: "circle",
+                shapeProps: { r: 10, fill: "green " },
+              }}
+              // collapsible={false}
+              // onLinkClick={e => console.log(e.id, 'zxczxc')}
+              renderCustomNodeElement={({ nodeDatum, toggleNode, onNodeClick }) => (
+                <CustomNode 
+                  nodeData={nodeDatum} 
+                  toggleNode={toggleNode} 
+                  onNodeClick={onNodeClick}
+                  handleClick={handleNodeClick}
+                />
+              )}
             />
           )}
-        />
+        </div>
       </div>
-    </div>
+      <Modal
+        opened={modal}
+        onClose={setModal}
+      > 
+        <TextInput
+          value={id}
+          label='ID пользователя'
+          onChange={e => setId(e.currentTarget.value)}
+        />  
+        <Button>
+          
+        </Button>
+      </Modal>
+    </>
   );
 }
