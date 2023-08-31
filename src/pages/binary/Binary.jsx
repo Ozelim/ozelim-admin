@@ -245,7 +245,7 @@ export const Binary = () => {
 
   return ( 
     <>
-      <div> 
+      {/* <div> 
         <Button onClick={add}>   
           asdasd
         </Button>
@@ -277,7 +277,7 @@ export const Binary = () => {
             />
           )}
         </div>
-      </div>
+      </div> */}
       <Modal
         opened={modal}
         onClose={setModal}
