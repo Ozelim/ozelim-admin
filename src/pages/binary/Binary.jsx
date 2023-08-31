@@ -6,15 +6,16 @@ import React from 'react'
 import Tree from "react-d3-tree";
 import { pb } from 'shared/api';
 
-function CustomNode({ nodeData, toggleNode }) {
+function CustomNode({ nodeData, onNodeClick, handleClick }) {
+
   const data = nodeData?.value;
 
   return (
-    <g stroke="grey" fill="grey" strokeWidth="0.7">
+    <g stroke="grey" fill="grey" strokeWidth="0.7" >
       <circle
         r={10}
         fill={nodeData.children ? "Aquamarine" : "#ccc"}
-        onClick={toggleNode}
+        onClick={() => data?.id ? handleClick(data) : () => {}}
       />
 
       <text
@@ -34,7 +35,7 @@ function CustomNode({ nodeData, toggleNode }) {
         style={{ fontSize: "13px" }}
         textAnchor="start"
       >
-        ID: {data?.id}
+        ID: {data?.id}  
       </text>
 
       <text
@@ -139,9 +140,18 @@ async function getPyramidByUser(userId) {
   }
 }
 
+async function getBinaryById (id) {
+  return await pb.collection('binary').getFirstListItem(`sponsor = '${id}'`, {
+    expand: 'sponsor, children'
+  })
+}
+
+const binaryTree = new BinaryTree(8);
+
 export const Binary = () => {
 
-  const binaryTree = new BinaryTree(8);
+  const [root, setRoot] = React.useState(new BinaryTree(8))
+
 
   const [pyramid, setPyramid] = React.useState([]);
 
@@ -149,23 +159,28 @@ export const Binary = () => {
   const [level, setLevel] = React.useState(0);
 
   React.useEffect(() => {
-    getPyramidByUser().then((res) => {
-      setPyramid(res?.result);
-    });
+    getBinaryById('111111111111111')
+    .then(res => {
+      root.insert(res?.expand?.sponsor)
+      root.insert(res?.expand?.children?.[0]) 
+      root.insert(res?.expand?.children?.[1])
+    })
   }, [])
 
-  React.useEffect(() => {
-    pyramid.flat(1)?.map((stage, i) => {
-      return binaryTree.insert(stage);
-    });
-
-    setTree(binaryTree.root);
-  }, [pyramid]);
 
   React.useEffect(() => {
-    if (binaryTree.findMaxLevel()) {
-      setLevel(binaryTree.findMaxLevel());
+    // pyramid.flat(1)?.map((stage, i) => {
+    //   return binaryTree.insert(stage);
+    // });
+    if (root.root) {
+      setTree(root.root);
     }
+  }, [root?.root]);
+
+  React.useEffect(() => {
+    // if (binaryTree.findMaxLevel()) {
+    //   setLevel(binaryTree.findMaxLevel());
+    // }
   }, [binaryTree]);
 
   const [search, setSearch] = React.useState('')
@@ -193,6 +208,17 @@ export const Binary = () => {
     searchByValue();
   }, [searchValue]);
 
+  async function handleNodeClick ({id}) {
+    getBinaryById(id)
+    .then(res => {
+      root.insert(res?.expand?.sponsor)
+      root.insert(res?.expand?.children?.[0]) 
+      root.insert(res?.expand?.children?.[1])
+    })
+  } 
+  
+  console.log(binaryTree, 'root');
+
   return (
     <div>
       <TextInput
@@ -203,14 +229,21 @@ export const Binary = () => {
       <div className="h-[100vh] mt-4 border-2 border-primary-400 p-4 ">
         <Tree
           data={tree ?? {}}
-          orientation="vertical"
+          orientation="vertical" 
           pathFunc="elbow"
           nodeSvgShape={{
             shape: "circle",
             shapeProps: { r: 10, fill: "green" },
           }}
-          renderCustomNodeElement={({ nodeDatum, toggleNode }) => (
-            <CustomNode nodeData={nodeDatum} toggleNode={toggleNode} />
+          
+          onLinkClick={e => console.log(e.id, 'zxczxc')}
+          renderCustomNodeElement={({ nodeDatum, toggleNode, onNodeClick }) => (
+            <CustomNode 
+              nodeData={nodeDatum} 
+              toggleNode={toggleNode} 
+              onNodeClick={onNodeClick}
+              handleClick={handleNodeClick}
+            />
           )}
         />
       </div>
