@@ -63,7 +63,12 @@ export const Users = () => {
       .collection("users")
       .update(userId, {
         verified: true
-      });
+      })
+      .then(async res => {
+        // const sponsor = await pb.collection('users').getOne(res?.sponsor)
+        // const referals = await pb.collection('users').getFullList({filter: `sponsor = '${sponsor?.id}' && verified = true`})
+        // if (referals.length === 2)
+      })
   }
   // Пример использования
 

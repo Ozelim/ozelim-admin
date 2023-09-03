@@ -88,8 +88,64 @@ function findAndReplaceObjectById(obj, idToFind, replacementObject) {
 }
 
 async function getBinaryById (id) {
-  return await pb.collection('binary').getFirstListItem(`sponsor = '${id}'`, {
+
+  const sponsor = await pb.collection('binary').getFirstListItem(`sponsor = '${id}'`, {
     expand: 'sponsor, children'
+  })
+  .then(() => {
+    return sponsor
+  })
+  .catch(async () => {
+    const user1 = await pb.collection('users').getOne(id)
+    const user1Sponsor = await pb.collection('binary').getFirstListItem(`sponsor = '${user1?.sponsor}'`, {
+      expand: 'sponsor, children'
+    })
+    .then((err) => {
+      console.log(err, '1');
+      return user1Sponsor
+    })
+    .catch(async () => {
+      const user2 = await pb.collection('users').getOne(user1?.sponsor)
+      const user2Sponsor = await pb.collection('binary').getFirstListItem(`sponsor = '${user2?.sponsor}'`, {
+        expand: 'sponsor, children'
+      })
+      .then(() => {
+        return user2Sponsor
+      })
+      .catch(async () => {
+        const user3 = await pb.collection('users').getOne(user2?.sponsor)
+        const user3Sponsor = await pb.collection('binary').getFirstListItem(`sponsor = '${user3?.sponsor}'`, {
+          expand: 'sponsor, children'
+        })
+        .then(() => {
+          return user3Sponsor
+        })
+        .catch(async () => {
+          const user4 = await pb.collection('users').getOne(user3?.sponsor)
+          const user4Sponsor = await pb.collection('binary').getFirstListItem(`sponsor = '${user4?.sponsor}'`, {
+            expand: 'sponsor, children'
+          })
+          .then(() => {
+            return user4Sponsor
+          })
+          .catch(async () => {
+            
+            const user5 = await pb.collection('users').getOne(user4?.sponsor)
+            const user5Sponsor = await pb.collection('binary').getFirstListItem(`sponsor = '${user5?.sponsor}'`, {
+              expand: 'sponsor, children'
+            })
+            .then(() => {
+              return user5Sponsor
+            })
+            .catch(async () => {
+              return await pb.collection('binary').getFirstListItem(`sponsor = '111111111111111'`, {
+                expand: 'sponsor, children'
+              })
+            })
+          })
+        })
+      })
+    })
   })
 }
 
