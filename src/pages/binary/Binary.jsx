@@ -1,4 +1,4 @@
-import { Button, Modal, TextInput, clsx } from '@mantine/core';
+import { Button, Modal, Table, TextInput, clsx } from '@mantine/core';
 import { useDebouncedValue, useForceUpdate } from '@mantine/hooks';
 import { openConfirmModal } from '@mantine/modals';
 import dayjs from 'dayjs';
@@ -24,7 +24,7 @@ function CustomNode({ nodeDatum, onNodeClick, sponsor, node, handleSelected }) {
   return (
     <g stroke="grey" fill="grey" strokeWidth="0.7" >
       <circle
-        r={isSponsor ? 40 : 20}
+        r={isSponsor ? 30 : 20}
         fill={nodeDatum?.children ? "Aquamarine" : "#ccc"}
         onClick={() => data?.id && click(nodeDatum)}
         strokeWidth={selected ? 5 : 1}
@@ -94,7 +94,7 @@ async function getBinaryById (id) {
 }
 
 async function getWorthyUsers () {
-  const users = await pb.collection('users').getFullList({filter: `verified = true && bin = false`, expand: 'referals'})
+  const users = await pb.collection('users').getFullList({filter: `verified = true && bin = false`, expand: 'sponsor, referals'})
 
   function hasThreeOrMoreVerifiedReferrals(user) {
     const verifiedReferrals = user?.expand?.referals?.filter(referal => referal.verified == true);
@@ -123,22 +123,22 @@ export const Binary = () => {
       setMals(res)
     })
 
-    getBinaryById('111111111111111')
-    .then(res => {
-      setBinary({
-        value: res?.expand?.sponsor,
-        children: [
-          {
-            value: res?.expand?.children?.[0],
-            children: []
-          },
-          {
-            value: res?.expand?.children?.[1],
-            children: []
-          },
-        ]
-      })
-    })
+    // getBinaryById('111111111111111')
+    // .then(res => {
+    //   setBinary({
+    //     value: res?.expand?.sponsor,
+    //     children: [
+    //       {
+    //         value: res?.expand?.children?.[0],
+    //         children: []
+    //       },
+    //       {
+    //         value: res?.expand?.children?.[1],
+    //         children: []
+    //       },
+    //     ]
+    //   })
+    // })
 
     pb.collection('users').subscribe('*', function ({_, record}) {
       if (record?.bin) {
@@ -151,29 +151,15 @@ export const Binary = () => {
   }, [])
 
   const [search, setSearch] = React.useState('')
-  const [searchValue] = useDebouncedValue(search, 1000);
+  const [searchModal, setSearchModal] = React.useState(false)
 
-  async function searchByValue() {
-    if (!searchValue) {
-      // handleUsers(1);
-      return;
-    }
-  }
-  
-  React.useEffect(() => {
-    searchByValue();
-  }, [searchValue]);
-
-  const [node, setNode] = React.useState(null)
-
-  async function handleNodeClick (data) {
-    if (mal) {
-      getBinaryById(mal?.sponsor)
+  async function searchByValue(id) {
+    if (id) {
+      getBinaryById(id)
       .then(async res => {
-        console.log(res, 'res');
-        const slot = await pb.collection('binary').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
-        // setNode(slot)
-        const obj = findAndReplaceObjectById(binary, mal?.sponsor, {
+        const slot = await pb.collection('binary').getOne(id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        setAddBinary({...addBinary, 
           value: res?.expand?.sponsor,
           children: [
             {
@@ -186,17 +172,49 @@ export const Binary = () => {
             },
           ]
         })
-        setBinary(obj)
+        setSearchModal(true)
       })
       .catch(err => {
         console.log(err, 'err');
       }) 
+      // handleUsers(1);
+      return;
     }
+    if (!search) return
+      getBinaryById(search)
+      .then(async res => {
+        const slot = await pb.collection('binary').getOne(search, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        setAddBinary({...addBinary, 
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        setSearchModal(true)
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
+      // handleUsers(1);
+      return;
+  }
+  
+  const [node, setNode] = React.useState(null)
+
+  async function handleNodeClick (data) {
     getBinaryById(data?.value?.id)
     .then(async res => {
       const slot = await pb.collection('binary').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
       setNode(slot)
-      const obj = findAndReplaceObjectById(binary, data?.value?.id, {
+      const obj = findAndReplaceObjectById(addBinary, data?.value?.id, {
         value: res?.expand?.sponsor,
         children: [
           {
@@ -209,7 +227,7 @@ export const Binary = () => {
           },
         ]
       })
-      setBinary({...binary, obj})
+      setAddBinary({...addBinary, ...obj})
     })
     .catch(err => {
       console.log(err, 'err');
@@ -230,7 +248,7 @@ export const Binary = () => {
       })
       await getBinaryById(node?.id)
       .then(res => {
-        const obj = findAndReplaceObjectById(binary, node?.id, {
+        const obj = findAndReplaceObjectById(addBinary, node?.id, {
           value: res?.expand?.sponsor,
           children: [
             {
@@ -243,7 +261,7 @@ export const Binary = () => {
             },
           ]
         })
-        setBinary({...binary, obj})
+        setAddBinary({...addBinary, obj})
       })
     })
   }
@@ -260,87 +278,133 @@ export const Binary = () => {
     })
   } 
 
-  function handleMambetClick (val) {
-    if (val === mal) {
-      setMal(null)
-    } else {
-      setMal(val)
-    }
-  }
-
   const disabled = (!node || !mal) || node?.children?.length >= 2 
 
-  async function zxc () {
-    getBinaryById('295574719031357')
-    .then(async res => {
-      // const slot = await pb.collection('binary').getOne('295574719031357', {expand: 'sponsor, children'}) 
-      // setNode(slot)
-      const obj = findAndReplaceObjectById(binary, '295574719031357', {
-        value: res?.expand?.sponsor,
-        children: [
-          {
-            value: res?.expand?.children?.[0],
-            children: []
-          },
-          {
-            value: res?.expand?.children?.[1],
-            children: []
-          },
-        ]
-      })
+  const [addModal, setAddModal] = React.useState(false)
 
-      console.log(obj, 'obj');
-      setBinary(obj)
-    })
-    .catch(err => {
-      console.log(err, 'err');
-    }) 
+  const [addBinary, setAddBinary] = React.useState({})
+
+  React.useEffect(() => {
+    if (addModal) {
+      getBinaryById(mal?.sponsor)
+      .then(async res => {
+        const slot = await pb.collection('binary').getOne(res?.id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        setAddBinary({
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        // const slot = await pb.collection('binary').getOne(mal?.sponsor, {expand: 'sponsor, children'}) 
+        // setNode(slot)
+        // const obj = findAndReplaceObjectById(addBinary, mal?.sponsor, {
+        //   value: res?.expand?.sponsor,
+        //   children: [
+        //     {
+        //       value: res?.expand?.children?.[0],
+        //       children: []
+        //     },
+        //     {
+        //       value: res?.expand?.children?.[1],
+        //       children: []
+        //     },
+        //   ]
+        // })
+        // setAddBinary({...addBinary, obj})
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
+    }
+  }, [addModal])
+
+  function handleAddMode (val) {
+    setMal(val)
+    setNode(val?.expand?.sponsor)
+    setAddModal(true)
   }
 
   return ( 
     <>
       <div> 
-        <TextInput
-          label='ID пользолвателя'
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-        <div className='flex mt-5 gap-4'>
-          {mals.map((mambet, i) => {
-            return (
-              <div 
-                key={i} 
-                className={'flex flex-col items-center gap-2 cursor-pointer'}
-                onClick={() => handleMambetClick(mambet)}
-              >
-                {mambet?.avatar 
-                  ? <img src={getImageUrl(mambet, mambet?.avatar)} className={clsx('w-10 h-10 bg-slate-300 rounded-full', {
-                    'border-4 border-teal-500': mambet === mal
-                  })} />
-                  : <div className={clsx('w-10 h-10 bg-slate-300 rounded-full', {
-                      'border-4 border-teal-500': mambet === mal
-                    })}/>
-                }
-                <p>{mambet?.id}</p>
-              </div>
-            )
-          })}
-        </div>
-        <div>
+        <div className='flex items-end'>
+          <TextInput
+            label='Поиск по ID'
+            value={search}
+            className='max-w-xs'
+            onChange={e => setSearch(e.target.value)}
+          />
           <Button
-            onClick={zxc}
+            onClick={() => searchByValue()}
           >
-          </Button>
+            Поиск
+          </Button>          
           <Button
-            onClick={handleNodeAdd}
-            disabled={disabled}
+            onClick={() => searchByValue('111111111111111')}
+            compact
+            variant='subtle'
+            className='ml-8'
           >
-            Добавить
+            Открыть бинарку
           </Button>
         </div>
-        <div className="h-[70vh] mt-4 border-2 border-primary-400 p-4 ">
+        <div className='mt-5 gap-4'>
+          <Table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Телефон</th>
+                <th>Партнеры</th>
+                <th>Спонсор</th>
+                <th>Действие</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mals?.map((mambet, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{mambet?.id}</td>
+                    <td>{mambet?.name}</td>
+                    <td>{mambet?.surname}</td>
+                    <td>{mambet?.phone}</td>
+                    <td>{mambet?.expand?.referals?.length}</td>
+                    <td>{mambet?.sponsor}</td>
+                    <td>
+                      <Button
+                        onClick={() => handleAddMode(mambet)}
+                      >
+                        Добавить
+                      </Button>  
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        </div>
+      </div>
+      <Modal
+        opened={addModal}
+        onClose={() => {
+          setAddModal(false)
+          setMal(null)
+        }}
+        fullScreen
+        centered
+      >
+        <div className="h-[70vh] mt-4 border-2 border-primary-400 p-4 w-full">
           <Tree 
-            data={binary ?? {}}
+            data={addBinary ?? {}}
             orientation="vertical" 
             pathFunc="elbow"
             nodeSvgShape={{
@@ -360,7 +424,71 @@ export const Binary = () => {
             )}
           />
         </div>
-      </div>
+        <div className='mt-4 flex justify-center'>
+          <Button
+            disabled={disabled}
+            onClick={handleNodeAdd}
+          >
+            Добавить
+          </Button>
+        </div>
+      </Modal>
+      <Modal
+        opened={searchModal}
+        centered
+        fullScreen
+        onClose={() => {
+          setSearchModal(false)
+          setBinary(null)
+        }}
+      >
+        <div className="h-[70vh] mt-4 border-2 border-primary-400 p-4 w-full">
+          <Tree 
+            data={addBinary ?? {}}
+            orientation="vertical" 
+            pathFunc="elbow"
+            nodeSvgShape={{
+              shape: "circle",
+              shapeProps: { r: 20, fill: "green " },
+            }}
+            // collapsible={false}
+            // onLinkClick={e => console.log(e.id, 'zxczxc')}
+            renderCustomNodeElement={(props) => (
+              <CustomNode 
+                {...props}
+                onNodeClick={handleNodeClick}
+                handleNodeAdd={handleNodeAdd}
+                sponsor={mal}
+                node={node}
+              />
+            )}
+          />
+        </div>
+      </Modal>
     </>
   );
 }
+
+
+// <div className="h-[70vh] mt-4 border-2 border-primary-400 p-4 w-full">
+// <Tree 
+//   data={binary ?? {}}
+//   orientation="vertical" 
+//   pathFunc="elbow"
+//   nodeSvgShape={{
+//     shape: "circle",
+//     shapeProps: { r: 20, fill: "green " },
+//   }}
+//   // collapsible={false}
+//   // onLinkClick={e => console.log(e.id, 'zxczxc')}
+//   renderCustomNodeElement={(props) => (
+//     <CustomNode 
+//       {...props}
+//       onNodeClick={handleNodeClick}
+//       handleNodeAdd={handleNodeAdd}
+//       sponsor={mal}
+//       node={node}
+//     />
+//   )}
+// />
+// </div>

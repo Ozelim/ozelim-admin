@@ -22,7 +22,7 @@ export const Sidebar = () => {
     {path: '/money-flow', label: 'Движение средтв'},
     {path: '/withdraws', label: 'Выводы', buhgalter: true},
     {path: '/users', label: 'Пользователи'},
-    {path: '/binary', label: 'Структура'},
+    {path: '/binary', label: 'Бинар'},
   ]
 
   const { pathname } = useLocation()
