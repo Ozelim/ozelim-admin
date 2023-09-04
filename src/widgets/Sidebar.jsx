@@ -18,11 +18,11 @@ export const Sidebar = () => {
     {path: '/our-team', label: 'Наша команда'},
     {path: '/charity-fund', label: 'Благотворительный фонд'},
     {path: '/news', label: 'Новости компании'},
+    {path: '/users', label: 'Пользователи'},
+    {path: '/binary', label: 'Бинар'},
     {path: '/bids', label: 'Заявки'},
     {path: '/money-flow', label: 'Движение средтв'},
     {path: '/withdraws', label: 'Выводы', buhgalter: true},
-    {path: '/users', label: 'Пользователи'},
-    {path: '/binary', label: 'Бинар'},
   ]
 
   const { pathname } = useLocation()

@@ -2,6 +2,8 @@ import React from 'react'
 import { Button, NumberInput, Select, Textarea, TextInput } from '@mantine/core'
 import { pb } from 'shared/api'
 import { useUtils } from 'shared/hooks';
+import { CiCircleRemove } from 'react-icons/ci';
+import { openConfirmModal } from '@mantine/modals';
 
 async function getQuestions () {
   return (await pb.collection('questions').getFullList({
@@ -16,6 +18,11 @@ export const Construct = () => {
   const [count, setCount] = React.useState(10)
 
   const {record, diseases} = useUtils()
+  const [changedDiseases, setChangedDiseases] = React.useState(diseases)
+
+  React.useEffect(() => {
+    setChangedDiseases(diseases)
+  }, [diseases])
 
   function handleQuestionChange (e) {
     const { value, name } = e?.currentTarget
@@ -35,6 +42,32 @@ export const Construct = () => {
       // setCount(res.count);
     });
   }, []);
+
+  const [diseas, setDiseas] = React.useState('')
+
+  async function deleteDiseas () {
+    const newDiseses = diseases?.filter(q => q !== diseas)
+    await pb.collection('utils').update(record?.id, {
+      diseases: newDiseses
+    })
+    .then(() => {
+      setDiseas('')
+    })
+  }
+
+  const removeDiseasConfirm = () => {
+    openConfirmModal({
+      title: 'Подтвердите действие',
+      labels: {confirm: 'Подтведить', cancel: 'Отмена'},
+      centered: true,
+      children: (
+        <>Вы дейтсвительно хотите удалить патологию: {diseas}</>
+      ),
+      onConfirm: () => deleteDiseas()
+    })
+  }
+
+
 
   return (
     <div className='w-full'>
@@ -61,7 +94,32 @@ export const Construct = () => {
         <div className='space-y-4'>
           <Select
             label='Патологии'
-            data={diseases}
+            data={changedDiseases}
+            value={diseas}
+            onChange={e => setDiseas(e)}
+            creatable
+            searchable
+            getCreateLabel={(query) => `+ добавить ${query}`}
+            onCreate={async (query) => {
+              await pb.collection('utils').update(record?.id, {
+                diseases: [...diseases, query]
+              })
+              setChangedDiseases((current) => [...current, query]);
+              return query;
+            }}
+            rightSection={
+              diseas &&
+                <CiCircleRemove 
+                  size={35}
+                  color='red'
+                  onClick={() => removeDiseasConfirm()}
+                  className='cursor-pointer hover:fill-yellow-500'
+                />
+            }
+            // itemComponent={SelectItem}
+            // filter={(value, item) =>
+            //   item.label.toLowerCase().includes(value.toLowerCase().trim())
+            // }
           />
         </div>
       </div>

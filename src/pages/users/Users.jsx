@@ -1,4 +1,4 @@
-import { Button, Pagination, Table, TextInput } from "@mantine/core";
+import { Button, Menu, Pagination, Table, TextInput } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import dayjs from "dayjs";
 import React from "react";
@@ -79,7 +79,22 @@ export const Users = () => {
       children: <>Подтверить верификацию пользователя</>,
       labels: { confirm: "Подтвердить", cancel: "Отмена" },
       onConfirm: () => verifyUser(userId),
-    });
+  });
+
+  const confirmLevel = (user, val) => {
+    openConfirmModal({
+      title: "Подтвердить верификацию",
+      centered: true,
+      children: <>Выдать уровень {val} пользователю {user?.id} </>,
+      labels: { confirm: "Подтвердить", cancel: "Отмена" },
+      onConfirm: () => giveLevel(user, val),
+  })}
+
+  async function giveLevel (user, val) {
+    await pb.collection('users').update(user?.id, {
+      level: val
+    })
+  }
 
   return (
     <>
@@ -142,19 +157,55 @@ export const Users = () => {
                   <td>{user.name}</td>
                   <td>{user.bin ? "Да" : "Нет"}</td>
                   <td>
-                    {user?.level < 4 ? (
+                    {(user?.level && user?.level !== '0') && (
+                      <Menu
+                        compact
+                      >
+                        <Menu.Target>
+                          <Button color="teal">
+                            {user?.level}
+                          </Button>
+                       
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                        <Menu.Label>
+                            4 уровень
+                          </Menu.Label>
+                        <Menu.Item 
+                          value={4.1} 
+                          onClick={(e) => confirmLevel(user, e.currentTarget.value)}
+                        >
+                            4. Курс по туризму
+                        </Menu.Item>
+                        <Menu.Item 
+                          value={4.2} 
+                          onClick={(e) => confirmLevel(user, e.currentTarget.value)}
+                        >
+                            4. Оздоровлеие
+                        </Menu.Item>
+                        <Menu.Divider/>
+                        <Menu.Item 
+                          value={5} 
+                          onClick={(e) => confirmLevel(user, e.currentTarget.value)}
+                        >
+                            5. Вознаграждение 500 000 тг
+                        </Menu.Item>
+                        <Menu.Item 
+                          value={6} 
+                          onClick={(e) => confirmLevel(user, e.currentTarget.value)}
+                        >
+                            6. Вознаграждение 1 млн. тг
+                        </Menu.Item>
+                        </Menu.Dropdown>
+                      </Menu>
+                    )}
+                    
+                    {(!user?.level || user?.level == '0') && (
                       <Button
                         compact
                         color="gray"
                       >
-                        {user.level}
-                      </Button>
-                    ) : (
-                      <Button
-                        compact
-                        color="gray"
-                      >
-                        {user.level}
+                        0
                       </Button>
                     )}
                   </td>

@@ -217,10 +217,10 @@ export const Resorts = () => {
             <Tabs.Tab value="resorts">Карточки курортов</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="list" p={"md"}>
-            <div className="flex items-center justify-end gap-2">
+            {/* <div className="flex items-center justify-end gap-2">
               <Select data={regions} label="По областям" />
-              <Select data={diseases} label="По болезням" />
-            </div>
+              <Select data={diseases} label="По патологиям" />
+            </div> */}
             <div className="space-y-4 flex flex-col items-center mt-4">
               {resorts?.items?.map((resort, i) => {
                 return (
@@ -301,7 +301,7 @@ export const Resorts = () => {
           />
           <Select
             data={diseases}
-            label="Заболевание"
+            label="Патология"
             dropdownPosition="bottom"
             searchable
             value={shit.diseas ?? ""}
