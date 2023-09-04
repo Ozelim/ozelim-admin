@@ -302,9 +302,64 @@ export const Health = () => {
           name='editor'
         />
       </section>
-      <Button className="mt-10" size="lg" fullWidth onClick={saveHealth}>
-        Сохранить
-      </Button>
+
+      <section>
+        <div>
+          <TextInput
+            label="Заголовок"
+            value={changedHeadings?.z1 ?? ""}
+            onChange={(e) => handleHealthChange(e, "heading")}
+            name="z1"
+          />
+          <Image
+            className="ml-10 max-w-xs"
+            label={"Картинка"}
+            onChange={handleImagesChange}
+            record={health?.images}
+            image={changedImages?.["7"]}
+            onDelete={handleImageDelete}
+            index={7}
+          />
+        </div>
+        <div>
+          <TextInput
+            label="Имя"
+            value={changedHeadings?.z3 ?? ""}
+            onChange={(e) => handleHealthChange(e, "heading")}
+            name="z3"
+          />
+          <TextInput
+            label="Описание"
+            value={changedText?.z4 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="z4"
+          />
+
+          <TextInput
+            label="Телефон"
+            value={changedText?.z5 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="z5"
+          />
+          <TextInput
+            label="Whatsapp"
+            value={changedText?.z6 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="z6"
+          />
+          <TextInput
+            label="Почта"
+            value={changedText?.z7 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="z7"
+          />
+        </div>
+      </section>
+      <div className="flex justify-center mt-10">
+        <Button className="mt-10"  onClick={saveHealth}>
+          Сохранить
+        </Button>
+      </div>
     </div>  
   );
 };

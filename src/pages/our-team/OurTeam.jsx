@@ -217,26 +217,14 @@ export const OurTeam = () => {
                 name="text4"
                 autosize
               />
-              <Textarea
-                label="текст"
-                value={changedText?.text5 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text5"
-                autosize
-              />
-              <Textarea
-                label="текст"
-                value={changedText?.text6 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text6"
-                autosize
-              />
             </div>
           </div>
         </section>
-        <Button className="mt-10" size="lg" fullWidth onClick={saveTeam}>
-          Сохранить
-        </Button>
+        <div className="flex justify-center mb-10">
+          <Button className="mt-10" onClick={saveTeam}>
+            Сохранить
+          </Button>
+        </div>
         <div>
           <Button onClick={(e) => setModal(true)}>Добавить участника</Button>
           <div className="grid grid-cols-3 gap-6 mt-4">

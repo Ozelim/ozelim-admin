@@ -240,10 +240,12 @@ export const CharityFund = () => {
           />
         </div>
       </section>
+      <div  className="flex justify-center mt-10">
 
-      <Button className="mt-10" size="lg" fullWidth onClick={saveCharity}>
+      <Button className="mt-10"  onClick={saveCharity}>
         Сохранить
       </Button>
+    </div>
     </div>
   );
 };

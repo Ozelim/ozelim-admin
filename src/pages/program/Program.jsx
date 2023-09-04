@@ -279,9 +279,11 @@ export const Program = () => {
         />
       </section>
 
-      <Button className="mt-10" size="lg" fullWidth onClick={saveProgram}>
-        Сохранить
-      </Button>
+      <div className="flex justify-center">
+        <Button className="mt-10" onClick={saveProgram}>
+          Сохранить
+        </Button>
+      </div>
     </div>
   );
 };

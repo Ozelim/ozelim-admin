@@ -97,7 +97,7 @@ export const Courses = () => {
             />
           </div>
           <Image
-            className="ml-10 w-2/4"
+            className="ml-10 w-2/4 rounded-primary"
             label={"Картинка"}
             onChange={handleImagesChange}
             record={course?.images}

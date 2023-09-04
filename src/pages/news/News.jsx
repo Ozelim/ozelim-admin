@@ -2,8 +2,6 @@ import { Button, TextInput, Textarea } from "@mantine/core";
 import React from "react";
 import { getData, pb } from "shared/api";
 import { Image } from "shared/ui";
-import { AiFillCalendar } from "react-icons/ai";
-import { DateInput, DateTimePicker } from "@mantine/dates";
 import { NewsCard } from "widgets";
 import { openConfirmModal } from "@mantine/modals";
 import { MdDeleteForever } from "react-icons/md";
@@ -36,7 +34,6 @@ export const News = () => {
     description: '',
     image: '',
     avatar: '',
-    date: '',
     link: '',
   })
 
@@ -56,7 +53,6 @@ export const News = () => {
     formData.append('description', item?.description)
     formData.append('title', item?.title)
     formData.append('link', item?.link)
-    formData.append('date', item?.date?.toUTCString())
     formData.append('image', item?.image)
     formData.append('avatar', item?.avatar)
     await pb.collection('news').create(formData)
@@ -90,12 +86,6 @@ export const News = () => {
           onChange={handleNewsChange}
           name="name"
         />
-        <TextInput
-          label='Заголовок'
-          value={item?.title ?? ''}
-          onChange={handleNewsChange}
-          name="title"
-        />
         <Image
           label='Аватар'
           // value={item?.name ?? ''}
@@ -104,6 +94,12 @@ export const News = () => {
           index={'avatar'}
           image={item?.avatar}
           className={'!w-24'}
+        />
+        <TextInput
+          label='Заголовок'
+          value={item?.title ?? ''}
+          onChange={handleNewsChange}
+          name="title"
         />
         <Image
           label='Изображение'
@@ -119,12 +115,6 @@ export const News = () => {
           value={item?.description ?? ''}
           onChange={handleNewsChange}
           name="description"
-        />
-        <DateTimePicker
-          label='Дата'
-          value={item?.date ?? ''}
-          onChange={e => handleNewsChange(e, 'date')}
-          name="date"
         />
         <TextInput
           label='Ссылка'

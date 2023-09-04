@@ -10,6 +10,10 @@ async function getPs () {
   return await pb.collection('price').getFullList()
 }
 
+async function getOs () {
+  return await pb.collection('price_duplicate').getFullList()
+}
+
 export const Price = () => {
 
   const [price, setPrice] = React.useState({});
@@ -82,6 +86,38 @@ export const Price = () => {
     setChangedImages(images);
   }, [images]);
 
+  const [o, setO] = React.useState({
+    title: '',
+    cost: '',
+  })
+
+  const [os, setOs] = React.useState([])
+
+  function handleOChange (e) {
+    const { value, name } = e?.currentTarget
+    setO({...o, [name]: value})
+  }
+
+  async function createPrice () {
+    await pb.collection('price').create(p)
+    .then(() => {
+      setP({
+        title: '',
+        cost: ''
+      })
+    })
+  }
+
+  async function createOPrice () {
+    await pb.collection('price_duplicate').create(o)
+    .then(() => {
+      setO({
+        title: '',
+        cost: ''
+      })
+    })
+  }
+
   const [p, setP] = React.useState({
     title: '',
     cost: '',
@@ -110,9 +146,20 @@ export const Price = () => {
       setPs(res)
     })
 
+    getOs()
+    .then(res => {
+      setOs(res)
+    })
+
     pb.collection('price').subscribe('*', function () {
+      console.log('asd');
       getPs().then((res) => {
         setPs(res);
+      });
+    })
+    pb.collection('price_duplicate').subscribe('*', function () {
+      getOs().then((res) => {
+        setOs(res);
       });
     })
   }, [])
@@ -199,6 +246,78 @@ export const Price = () => {
                 size={35}
                 color="red"
                 onClick={() => removePriceConfrim(p?.id)}
+                className="cursor-pointer hover:fill-yellow-500"
+              />
+            </div>
+          );
+        })}
+      </section>
+
+      <section>
+        <Image
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={price?.images}
+          image={changedImages?.["2"]}
+          onDelete={handleImageDelete}
+          index={2}
+        />
+        <TextInput
+          label="Главный заголовок"
+          value={changedHeadings?.[2] ?? ""}
+          onChange={(e) => handlePriceChange(e, "heading")}
+          name="2"
+        />
+        <TextInput
+          label="Текст"
+          value={changedText?.[5] ?? ""}
+          onChange={(e) => handlePriceChange(e, "text")}
+          name="5"
+        />
+        <TextInput
+          label="Текст"
+          value={changedText?.[6] ?? ""}
+          onChange={(e) => handlePriceChange(e, "text")}
+          name="6"
+        />
+        <TextInput
+          label="Текст"
+          value={changedText?.[7] ?? ""}
+          onChange={(e) => handlePriceChange(e, "text")}
+          name="7"
+        />
+        <TextInput
+          label="Текст"
+          value={changedText?.[8] ?? ""}
+          onChange={(e) => handlePriceChange(e, "text")}
+          name="8"
+        />
+        <Button onClick={savePrice}>Сохранить</Button>
+      </section>
+      <section className="mt-10">
+        <TextInput
+          value={o?.title}
+          onChange={handleOChange}
+          label="Описание"
+          name="title"
+        />
+        <TextInput
+          value={o?.cost}
+          onChange={handleOChange}
+          label="Цена"
+          name="cost"
+        />
+        <Button onClick={createOPrice}>Добавить цену</Button>
+      </section>
+      <section className="mt-10 space-y-4">
+        {os?.map((o, i) => {
+          return (
+            <div className="flex gap-4 w-full" key={i}>
+              <PriceCard price={o} key={i} />
+              <CiCircleRemove
+                size={35}
+                color="red"
+                onClick={() => removePriceConfrim(o?.id)}
                 className="cursor-pointer hover:fill-yellow-500"
               />
             </div>
