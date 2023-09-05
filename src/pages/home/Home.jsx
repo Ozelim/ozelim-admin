@@ -1,80 +1,132 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Tree } from 'react-d3-tree';
 
-const TreeNode = () => {
-
-  return (
-    <g stroke="grey" fill="grey" strokeWidth="0.7">
-      <circle
-        r={10}
-        fill={"Aquamarine"}
-        // onClick={() => data?.id ? click(data) : () => {}}
-      />
-      <text
-        stroke="green"
-        x={-48}
-        y={25}
-        style={{ fontSize: "13px" }}
-        textAnchor="start"
-      >
-        {'asdasdasd'}
-      </text>
-    </g>
-  );
-};
+import { Button, TextInput, Textarea } from '@mantine/core'
+import { getData, pb } from 'shared/api'
+import { Image } from 'shared/ui'
 
 export const Home = () => {
-  const initialTreeData = [
-    { 
-      name: 'Пользователь 1',
-      children: [
-        {
-          name: 'Пользователь 1',
-        },
-        {
-          name: 'Пользователь 1',
-        },
-      ],
-    },
-  ];
 
-  const [treeData, setTreeData] = useState(initialTreeData);
+  const [about, setAbout] = React.useState({})
 
-  const addNewChild = (node) => {
-    if (node.children.length < 2) {
-      // Добавление нового потомка
-      const newChild = {
-        name: `Пользователь ${node.children.length + 1}`,
-        children: [],
-      };
-      node.children.push(newChild);
-    } else {
-      // Рекурсивный вызов для добавления нового потомка к первому доступному потомку
-      node.children.forEach((child) => {
-        if (child.children.length < 2) {
-          addNewChild(child);
-        }
-      });
+  const [images, setImages] = React.useState({})
+  const [changedImages, setChangedImages] = React.useState({})
+
+  const [headings, setHeadings] = React.useState({})
+  const [text, setText] = React.useState({})
+
+  const [changedHeadings, setChangedHeadings] = React.useState({})
+  const [changedText, setChangedText] = React.useState({})
+
+  function handleAboutChange (val, type) {
+    const {value, name} = val?.target
+
+    if (type === 'heading') {
+      setChangedHeadings({...changedHeadings, [name]: value})
+      return 
     }
-  };
 
-  const handleNodeClick = (nodeData) => {
-    addNewChild(nodeData);
+    setChangedText({...changedText, [name]: value})
+    return 
+  }
 
-    // Перерисовка дерева после добавления нового потомка
-    setTreeData([...treeData]);
-  };
+  async function saveAbout () {
 
+    for (const index in changedImages) {
+      if (!isNaN(index)) {
+        if (changedImages?.[index] instanceof File) {
+          const formData = new FormData()
+          formData.append([`${index}`], changedImages?.[index])
+          await pb.collection('images').update(about?.images?.id, formData)
+          .then(res => {
+            console.log(res);
+          })
+        }
+      }
+    }
+    await pb.collection('text').update(about?.text?.id, {
+      headings: changedHeadings, 
+      text: changedText
+    })
+  }
+
+  React.useEffect(() => {
+    getData('stats').then(res => {
+      setAbout(res);
+      setHeadings(res?.text?.headings)
+      setText(res?.text?.text)
+      setImages(res?.images)
+    })
+  }, [])
+  
+  React.useEffect(() => {
+    setChangedHeadings(headings)
+    setChangedText(text)
+  }, [headings, text])
+
+  React.useEffect(() => {
+    setChangedImages(images)
+  }, [images])
   return (
-    <div className='h-screen'>
-      <Tree
-        data={treeData}
-        onClick={handleNodeClick}
-        renderCustomNodeElement={(rd3tProps) => (
-          <TreeNode {...rd3tProps}  />
-        )}
-        orientation="vertical" 
+    <div className='w-full'>
+      <TextInput 
+        label='Главный заголовок'
+        value={changedHeadings?.[1] ?? ''}
+        onChange={(e) => handleAboutChange(e, 'heading')}
+        name='1'
       />
+      <div className='grid grid-cols-3 gap-8'>
+        <Textarea 
+          label='Данные'
+          value={changedText?.[1] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='1'
+          autosize
+        />
+        <Textarea 
+          label='Данные'
+          value={changedText?.[2] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='2'
+          autosize
+        />
+        <Textarea 
+          label='Данные'
+          value={changedText?.[3] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='3'
+          autosize
+        />
+      </div>
+      <div className='grid grid-cols-3 gap-8'>
+        <Textarea 
+          label='Описание'
+          value={changedText?.[4] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='4'
+          autosize
+        />
+        <Textarea 
+          label='Описание'
+          value={changedText?.[5] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='5'
+          autosize
+        />
+        <Textarea 
+          label='Описание'
+          value={changedText?.[6] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='6'
+          autosize
+        />
+      </div>
+      <Button
+        className='mt-5'
+        onClick={saveAbout}
+      >
+        Сохранить
+      </Button>
     </div>
   );
 };

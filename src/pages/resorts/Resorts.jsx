@@ -189,17 +189,6 @@ export const Resorts = () => {
     });
   }
 
-  const [filteredRegions, setFilteredRegions] = React.useState("");
-  const [filteredDiseases, setFilteredDiseases] = React.useState("");
-
-  function filterByRegions() {}
-
-  function openEditModal (val) {
-    setImages(val)
-    setResort(val)
-    setModal(true)
-  }
-
   return (
     <>
       <div className="w-full">
@@ -224,8 +213,8 @@ export const Resorts = () => {
             <div className="space-y-4 flex flex-col items-center mt-4">
               {resorts?.items?.map((resort, i) => {
                 return (
-                  <div key={i} className="flex gap-2">
-                    <BomjPlaza />
+                  <div key={i} className="flex gap-2 w-full">
+                    <BomjPlaza resort={resort} />
                     <ActionIcon
                       color="red"
                       size="md"
@@ -418,21 +407,21 @@ export const Resorts = () => {
               label="Whatsapp"
               description="Укажите только цифры"
               value={resort.whats ?? ""}
-              onChange={(e) => handleResortChange(e, "whats")}
+              onChange={(e) => handleResortChange(e.currentTarget.value, "whats")}
               placeholder="87071218989"
             />
             <TextInput
               label="Instagram"
               description="Имя аккаунта инстаграм"
               value={resort.inst ?? ""}
-              onChange={(e) => handleResortChange(e, "inst")}
+              onChange={(e) => handleResortChange(e.currentTarget.value, "inst")}
               placeholder="ozelim"
             />
             <TextInput
               label="2gis"
               description="Ссылка на 2gis"
               value={resort.twogis ?? ""}
-              onChange={(e) => handleResortChange(e, "twogis")}
+              onChange={(e) => handleResortChange(e.currentTarget.value, "twogis")}
             />
 
             <div className="flex gap-4 flex-wrap">

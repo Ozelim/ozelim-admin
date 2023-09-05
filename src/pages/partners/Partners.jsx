@@ -19,8 +19,6 @@ async function getPartners () {
 
 export const Partners = () => {
 
-
-
   const [partners, setPartners] = React.useState([]);
   const [partner, setPartner] = React.useState({})
   const [images, setImages] = React.useState([])

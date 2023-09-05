@@ -253,7 +253,7 @@ export const Price = () => {
         })}
       </section>
 
-      <section>
+      <section className='mt-20'>
         <Image
           label={"Картинка"}
           onChange={handleImagesChange}

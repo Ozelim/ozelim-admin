@@ -5,6 +5,7 @@ import { Image } from "shared/ui";
 import ReactQuill from "react-quill";
 
 export const Courses = () => {
+
   const [course, setCourse] = React.useState({});
 
   const [images, setImages] = React.useState({});
@@ -223,108 +224,131 @@ export const Courses = () => {
         name="grid_main"
         autosize
       />
-      <section className="mt-10 grid grid-cols-3 gap-x-10 gap-y-16">
-        <div>
-          <TextInput
-            label="Заголовок"
-            value={changedHeadings?.grid_head1 ?? ""}
-            onChange={(e) => handleCourseChange(e, "heading")}
-            name="grid_head1"
-          />
-          <Textarea
-            label="Описание"
-            value={changedText?.grid_p1 ?? ""}
-            onChange={(e) => handleCourseChange(e, "text")}
-            name="grid_p1"
-            autosize
-          />
+      <section className="mt-10 ">
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <TextInput
+              label="Заголовок"
+              value={changedHeadings?.grid_head1 ?? ""}
+              onChange={(e) => handleCourseChange(e, "heading")}
+              name="grid_head1"
+            />
+            <Textarea
+              label="Описание"
+              value={changedText?.grid_p1 ?? ""}
+              onChange={(e) => handleCourseChange(e, "text")}
+              name="grid_p1"
+              autosize
+            />
+          </div>
+          <div>
+            <TextInput
+              label="Заголовок"
+              value={changedHeadings?.grid_head2 ?? ""}
+              onChange={(e) => handleCourseChange(e, "heading")}
+              name="grid_head2"
+            />
+            <Textarea
+              label="Описание"
+              value={changedText?.grid_p2 ?? ""}
+              onChange={(e) => handleCourseChange(e, "text")}
+              name="grid_p2"
+              autosize
+            />
+          </div>
+          <div>
+            <TextInput
+              label="Заголовок"
+              value={changedHeadings?.grid_head3 ?? ""}
+              onChange={(e) => handleCourseChange(e, "heading")}
+              name="grid_head3"
+            />
+            <Textarea
+              label="Описание"
+              value={changedText?.grid_p3 ?? ""}
+              onChange={(e) => handleCourseChange(e, "text")}
+              name="grid_p3"
+              autosize
+            />
+          </div>
         </div>
-        <div>
-          <TextInput
-            label="Заголовок"
-            value={changedHeadings?.grid_head2 ?? ""}
-            onChange={(e) => handleCourseChange(e, "heading")}
-            name="grid_head2"
-          />
+        <div className="mt-10">
           <Textarea
-            label="Описание"
-            value={changedText?.grid_p2 ?? ""}
-            onChange={(e) => handleCourseChange(e, "text")}
-            name="grid_p2"
-            autosize
-          />
-        </div>
-        <div>
-          <TextInput
             label="Заголовок"
-            value={changedHeadings?.grid_head3 ?? ""}
-            onChange={(e) => handleCourseChange(e, "heading")}
-            name="grid_head3"
-          />
-          <Textarea
-            label="Описание"
-            value={changedText?.grid_p3 ?? ""}
+            value={changedText?.grid_head4 ?? ""}
             onChange={(e) => handleCourseChange(e, "text")}
-            name="grid_p3"
-            autosize
-          />
-        </div>
-        <div>
-          <TextInput
-            label="Заголовок"
-            value={changedHeadings?.grid_head4 ?? ""}
-            onChange={(e) => handleCourseChange(e, "heading")}
             name="grid_head4"
-          />
-          <Textarea
-            label="Описание"
-            value={changedText?.grid_p4 ?? ""}
-            onChange={(e) => handleCourseChange(e, "text")}
-            name="grid_p4"
             autosize
           />
         </div>
-        <div>
-          <TextInput
-            label="Заголовок"
-            value={changedHeadings?.grid_head5 ?? ""}
-            onChange={(e) => handleCourseChange(e, "heading")}
-            name="grid_head5"
-          />
-          <Textarea
-            label="Описание"
-            value={changedText?.grid_p5 ?? ""}
-            onChange={(e) => handleCourseChange(e, "text")}
-            name="grid_p5"
-            autosize
-          />
-        </div>
-        <div>
-          <TextInput
-            label="Заголовок"
-            value={changedHeadings?.grid_head6 ?? ""}
-            onChange={(e) => handleCourseChange(e, "heading")}
-            name="grid_head6"
-          />
-          <Textarea
-            label="Описание"
-            value={changedText?.grid_p6 ?? ""}
-            onChange={(e) => handleCourseChange(e, "text")}
-            name="grid_p6"
-            autosize
-          />
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <Textarea
+              label="Описание"
+              value={changedText?.grid_p4 ?? ""}
+              onChange={(e) => handleCourseChange(e, "text")}
+              name="grid_p4"
+              autosize
+            />
+          </div>
+          <div>
+            <Textarea
+              label="Описание"
+              value={changedText?.grid_p5 ?? ""}
+              onChange={(e) => handleCourseChange(e, "text")}
+              name="grid_p5"
+              autosize
+            />
+          </div>
+          <div>
+            <Textarea
+              label="Описание"
+              value={changedText?.grid_p6 ?? ""}
+              onChange={(e) => handleCourseChange(e, "text")}
+              name="grid_p6"
+              autosize
+            />
+          </div>
         </div>
       </section>
-      <section>
+      <section className="grid grid-cols-3 gap-4 mt-20">
+        <Image
+          className="rounded-primary"
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={course?.images}
+          image={changedImages?.["2"]}
+          onDelete={handleImageDelete}
+          index={2}
+        />
+        <Image
+          className="rounded-primary"
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={course?.images}
+          image={changedImages?.["3"]}
+          onDelete={handleImageDelete}
+          index={3}
+        />
+        <Image
+          className="rounded-primary"
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={course?.images}
+          image={changedImages?.["4"]}
+          onDelete={handleImageDelete}npm run 
+          index={4}
+        />
+      </section>
+      <div className="mt-20">
         <Textarea
-          label="Заголовок блока"
+          label="Заголовок"
           value={changedHeadings?.grid2_main ?? ""}
           onChange={(e) => handleCourseChange(e, "heading")}
           name="grid2_main"
           autosize
-          className="mt-16"
-        />
-      </section>
+        /> 
+      </div>
       <section className="mt-10 grid grid-cols-3 gap-x-10 gap-y-16">
         <div>
           <Textarea
@@ -353,52 +377,33 @@ export const Courses = () => {
             autosize
           />
         </div>
-        <div>
-          <Textarea
-            label="Описание"
-            value={changedText?.grid2_p4 ?? ""}
-            onChange={(e) => handleCourseChange(e, "text")}
-            name="grid2_p4"
-            autosize
-          />
-        </div>
-        <div>
-          <Textarea
-            label="Описание"
-            value={changedText?.grid2_p5 ?? ""}
-            onChange={(e) => handleCourseChange(e, "text")}
-            name="grid2_p5"
-            autosize
-          />
-        </div>
-        <div>
-          <Textarea
-            label="Описание"
-            value={changedText?.grid2_p6 ?? ""}
-            onChange={(e) => handleCourseChange(e, "text")}
-            name="grid2_p6"
-            autosize
-          />
-        </div>
       </section>
+      <div className="grid grid-cols-3 gap-8">
+        <Textarea
+          label="Описание"
+          value={changedText?.grid2_p4 ?? ""}
+          onChange={(e) => handleCourseChange(e, "text")}
+          name="grid2_p4"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.grid2_p5 ?? ""}
+          onChange={(e) => handleCourseChange(e, "text")}
+          name="grid2_p5"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.grid2_p6 ?? ""}
+          onChange={(e) => handleCourseChange(e, "text")}
+          name="grid2_p6"
+          autosize
+        />
+      </div>
 
       <div>
-        <div>
-          <TextInput
-            label='Заголовок'
-
-          />
-          <TextInput />
-          <ReactQuill
-            value={changedText?.editor1 ?? ""}
-            onChange={(e) => {
-              setChangedText({ ...changedText, editor1: e });
-            }}
-            className="h-full"
-            name="editor1"
-          />
-        </div>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 mt-20">
           {Array(3).fill(1).map((_, i) => {
             const index = i + 1
             return (
@@ -431,12 +436,12 @@ export const Courses = () => {
             );
           })}
         </div>
-        {console.log(changedText, 'text')}
       </div>
-
-      <Button className="mt-10" size="lg" fullWidth onClick={saveCourses}>
-        Сохранить
-      </Button>
+      <div className="flex justify-center mt-60">
+        <Button onClick={saveCourses}>
+          Сохранить
+        </Button>
+      </div>
     </div>
   );
 };

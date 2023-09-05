@@ -180,9 +180,23 @@ export const About = () => {
         />
         <Textarea
           label='Описание'
-          value={changedText?.task ?? ''}
+          value={changedText?.task1 ?? ''}
           onChange={(e) => handleAboutChange(e, 'text')}
-          name='task'
+          name='task1'
+          autosize
+        />
+        <Textarea
+          label='Описание'
+          value={changedText?.task2 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='task2'
+          autosize
+        />
+        <Textarea
+          label='Описание'
+          value={changedText?.task3 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='task3'
           autosize
         />
       <Image

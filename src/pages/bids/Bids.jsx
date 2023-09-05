@@ -69,8 +69,8 @@ export const Bids = () => {
         <Tabs>
           <Tabs.List grow>
             <Tabs.Tab value="question">Опросник</Tabs.Tab>
-            <Tabs.Tab value="health">Оздоровление</Tabs.Tab>
-            <Tabs.Tab value="courses">Курсы туризма</Tabs.Tab>
+            {/* <Tabs.Tab value="health">Оздоровление</Tabs.Tab> */}
+            {/* <Tabs.Tab value="courses">Курсы туризма</Tabs.Tab> */}
             <Tabs.Tab value="price">Прайс лист</Tabs.Tab>
             <Tabs.Tab value="resort">Курорты</Tabs.Tab>
           </Tabs.List>

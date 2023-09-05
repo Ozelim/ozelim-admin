@@ -36,7 +36,7 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
     (user?.email === "ozelim.pv@gmail.com" ||
       user?.email === "ozelim-buhgalter@mail.ru" ||
       user?.email === "ozelim-tur@mail.ru") ? (
-    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen ">
+    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen pb-10">
       <div className="w-full h-full border-b">{headerSlot}</div>
       <div className="grid md:grid-cols-[200px_auto] grid-cols-1">
         <div className="border-r">{sidebarSlot}</div>
@@ -44,7 +44,6 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
           <Outlet />
         </div>
       </div>
-      <div className="w-full h-full border-t pt-5">{footerSlot}</div>
     </div>
   ) : (
     <div className="flex items-center justify-center h-screen">

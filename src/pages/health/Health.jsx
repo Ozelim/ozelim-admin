@@ -334,7 +334,7 @@ export const Health = () => {
             onChange={(e) => handleHealthChange(e, "text")}
             name="z4"
           />
-
+{/* 
           <TextInput
             label="Телефон"
             value={changedText?.z5 ?? ""}
@@ -352,7 +352,7 @@ export const Health = () => {
             value={changedText?.z7 ?? ""}
             onChange={(e) => handleHealthChange(e, "text")}
             name="z7"
-          />
+          /> */}
         </div>
       </section>
       <div className="flex justify-center mt-10">

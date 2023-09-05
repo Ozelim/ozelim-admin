@@ -7,6 +7,5 @@ export const baseLayout = (
   <Layout
     sidebarSlot={<Sidebar/>}
     headerSlot={<Header/>}
-    footerSlot={<Footer/>}
   />
 )
