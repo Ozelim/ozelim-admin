@@ -3,7 +3,7 @@ migrate((db) => {
     {
       "id": "6zm7vioi7ekbfhq",
       "created": "2023-07-01 09:00:16.111Z",
-      "updated": "2023-08-24 08:26:17.656Z",
+      "updated": "2023-08-28 07:31:27.597Z",
       "name": "site",
       "type": "base",
       "system": false,
@@ -29,7 +29,7 @@ migrate((db) => {
     {
       "id": "ty023348izzzjbo",
       "created": "2023-07-01 12:04:07.329Z",
-      "updated": "2023-08-24 08:26:17.918Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "partners",
       "type": "base",
       "system": false,
@@ -162,7 +162,7 @@ migrate((db) => {
     {
       "id": "_pb_users_auth_",
       "created": "2023-07-02 09:50:29.551Z",
-      "updated": "2023-08-24 08:26:17.658Z",
+      "updated": "2023-09-03 16:29:41.385Z",
       "name": "users",
       "type": "auth",
       "system": false,
@@ -228,30 +228,6 @@ migrate((db) => {
         },
         {
           "system": false,
-          "id": "jlv9ignn",
-          "name": "iin",
-          "type": "number",
-          "required": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": null
-          }
-        },
-        {
-          "system": false,
-          "id": "h2nacwm0",
-          "name": "phone",
-          "type": "number",
-          "required": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": null
-          }
-        },
-        {
-          "system": false,
           "id": "9gnmqr00",
           "name": "sponsor",
           "type": "relation",
@@ -263,7 +239,7 @@ migrate((db) => {
             "minSelect": null,
             "maxSelect": 1,
             "displayFields": [
-              "email"
+              "id"
             ]
           }
         },
@@ -320,14 +296,54 @@ migrate((db) => {
         },
         {
           "system": false,
-          "id": "i6abdnct",
-          "name": "blnc",
-          "type": "number",
+          "id": "6waeimir",
+          "name": "phone",
+          "type": "text",
           "required": false,
           "unique": false,
           "options": {
             "min": null,
-            "max": null
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "rsp8kuik",
+          "name": "level",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "vv0ltuil",
+          "name": "region",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "s1ndofm0",
+          "name": "adress",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
           }
         }
       ],
@@ -351,7 +367,7 @@ migrate((db) => {
     {
       "id": "dohznrx4zqairb8",
       "created": "2023-07-17 04:33:58.241Z",
-      "updated": "2023-08-24 08:26:17.659Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "pyramid",
       "type": "base",
       "system": false,
@@ -589,7 +605,7 @@ migrate((db) => {
     {
       "id": "ifk200j89xwaa3m",
       "created": "2023-07-21 05:00:27.116Z",
-      "updated": "2023-08-24 08:26:17.659Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "slider",
       "type": "base",
       "system": false,
@@ -673,7 +689,7 @@ migrate((db) => {
     {
       "id": "7e2zxwmzmnxm2ai",
       "created": "2023-07-21 05:05:20.779Z",
-      "updated": "2023-08-24 08:26:17.660Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "text",
       "type": "base",
       "system": false,
@@ -721,7 +737,7 @@ migrate((db) => {
     {
       "id": "oatxc3dg14o3k0m",
       "created": "2023-07-21 05:05:48.228Z",
-      "updated": "2023-08-24 08:26:17.660Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "images",
       "type": "base",
       "system": false,
@@ -901,7 +917,7 @@ migrate((db) => {
     {
       "id": "b6vkhwhjrm8sqph",
       "created": "2023-07-27 09:31:09.843Z",
-      "updated": "2023-08-24 08:26:17.661Z",
+      "updated": "2023-08-28 07:31:27.627Z",
       "name": "resorts",
       "type": "base",
       "system": false,
@@ -1239,18 +1255,6 @@ migrate((db) => {
         },
         {
           "system": false,
-          "id": "y3mykroh",
-          "name": "whats",
-          "type": "number",
-          "required": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": null
-          }
-        },
-        {
-          "system": false,
           "id": "ot7jrbuc",
           "name": "inst",
           "type": "text",
@@ -1274,6 +1278,19 @@ migrate((db) => {
             "max": null,
             "pattern": ""
           }
+        },
+        {
+          "system": false,
+          "id": "nrleddop",
+          "name": "whats",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
         }
       ],
       "indexes": [],
@@ -1287,7 +1304,7 @@ migrate((db) => {
     {
       "id": "crqqvpk5n7i5mif",
       "created": "2023-08-04 06:14:36.229Z",
-      "updated": "2023-08-24 08:26:17.662Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "utils",
       "type": "base",
       "system": false,
@@ -1322,7 +1339,7 @@ migrate((db) => {
     {
       "id": "rhxa53d4lrvj1rg",
       "created": "2023-08-06 07:35:02.854Z",
-      "updated": "2023-08-24 08:26:17.662Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "questions",
       "type": "base",
       "system": false,
@@ -1555,7 +1572,7 @@ migrate((db) => {
     {
       "id": "bfu89j20g87db7m",
       "created": "2023-08-07 11:04:24.196Z",
-      "updated": "2023-08-24 08:26:17.934Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "news",
       "type": "base",
       "system": false,
@@ -1664,119 +1681,9 @@ migrate((db) => {
       "options": {}
     },
     {
-      "id": "pgbcqhwgmjvuo0k",
-      "created": "2023-08-08 16:57:17.104Z",
-      "updated": "2023-08-24 08:26:17.664Z",
-      "name": "healthBids",
-      "type": "base",
-      "system": false,
-      "schema": [
-        {
-          "system": false,
-          "id": "4a8skpha",
-          "name": "name",
-          "type": "text",
-          "required": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": null,
-            "pattern": ""
-          }
-        },
-        {
-          "system": false,
-          "id": "cz8u3vnn",
-          "name": "email",
-          "type": "email",
-          "required": false,
-          "unique": false,
-          "options": {
-            "exceptDomains": null,
-            "onlyDomains": null
-          }
-        },
-        {
-          "system": false,
-          "id": "zt9o7xo9",
-          "name": "phone",
-          "type": "text",
-          "required": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": null,
-            "pattern": ""
-          }
-        }
-      ],
-      "indexes": [],
-      "listRule": "",
-      "viewRule": "",
-      "createRule": "",
-      "updateRule": "",
-      "deleteRule": "",
-      "options": {}
-    },
-    {
-      "id": "w65l3lx0ttyt57p",
-      "created": "2023-08-13 08:54:27.013Z",
-      "updated": "2023-08-24 08:26:17.665Z",
-      "name": "courseBids",
-      "type": "base",
-      "system": false,
-      "schema": [
-        {
-          "system": false,
-          "id": "lbpvznhr",
-          "name": "name",
-          "type": "text",
-          "required": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": null,
-            "pattern": ""
-          }
-        },
-        {
-          "system": false,
-          "id": "tyutvlia",
-          "name": "email",
-          "type": "email",
-          "required": false,
-          "unique": false,
-          "options": {
-            "exceptDomains": null,
-            "onlyDomains": null
-          }
-        },
-        {
-          "system": false,
-          "id": "8o2vn2wr",
-          "name": "phone",
-          "type": "text",
-          "required": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": null,
-            "pattern": ""
-          }
-        }
-      ],
-      "indexes": [],
-      "listRule": "",
-      "viewRule": "",
-      "createRule": "",
-      "updateRule": "",
-      "deleteRule": "",
-      "options": {}
-    },
-    {
       "id": "gvn9s6cbp9p3263",
       "created": "2023-08-18 10:25:17.716Z",
-      "updated": "2023-08-24 08:26:17.665Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "resort_bids",
       "type": "base",
       "system": false,
@@ -1849,7 +1756,7 @@ migrate((db) => {
     {
       "id": "d8cme94imzx9wa6",
       "created": "2023-08-18 11:19:27.419Z",
-      "updated": "2023-08-24 08:26:17.666Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "withdraws",
       "type": "base",
       "system": false,
@@ -1938,7 +1845,7 @@ migrate((db) => {
     {
       "id": "r9wpdl2bslrl1rg",
       "created": "2023-08-18 12:38:55.406Z",
-      "updated": "2023-08-24 08:26:17.666Z",
+      "updated": "2023-08-28 07:31:27.607Z",
       "name": "transfers",
       "type": "base",
       "system": false,
@@ -1998,7 +1905,7 @@ migrate((db) => {
     {
       "id": "ormk8mhzypabbbf",
       "created": "2023-08-22 08:59:16.669Z",
-      "updated": "2023-08-24 08:26:17.667Z",
+      "updated": "2023-08-29 06:52:13.846Z",
       "name": "members",
       "type": "base",
       "system": false,
@@ -2043,6 +1950,19 @@ migrate((db) => {
             "thumbs": [],
             "protected": false
           }
+        },
+        {
+          "system": false,
+          "id": "x9vuhwb7",
+          "name": "link",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
         }
       ],
       "indexes": [],
@@ -2056,7 +1976,7 @@ migrate((db) => {
     {
       "id": "sjiq6j6mn8hpwwj",
       "created": "2023-08-24 08:51:51.877Z",
-      "updated": "2023-08-24 09:03:01.498Z",
+      "updated": "2023-08-29 09:54:51.677Z",
       "name": "bids",
       "type": "base",
       "system": false,
@@ -2112,6 +2032,15 @@ migrate((db) => {
             "max": null,
             "pattern": ""
           }
+        },
+        {
+          "system": false,
+          "id": "3k4rooza",
+          "name": "data",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "options": {}
         }
       ],
       "indexes": [],
@@ -2125,7 +2054,7 @@ migrate((db) => {
     {
       "id": "r16j5jh3f6ukxpm",
       "created": "2023-08-25 16:34:39.352Z",
-      "updated": "2023-08-25 16:34:47.347Z",
+      "updated": "2023-09-04 14:15:38.344Z",
       "name": "price",
       "type": "base",
       "system": false,
@@ -2146,6 +2075,100 @@ migrate((db) => {
         {
           "system": false,
           "id": "3lmpr3wr",
+          "name": "cost",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "x7glx5z3xv1fq5d",
+      "created": "2023-08-30 10:31:06.625Z",
+      "updated": "2023-09-02 15:46:25.866Z",
+      "name": "binary",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "43ce9hdd",
+          "name": "sponsor",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 1,
+            "displayFields": [
+              "id"
+            ]
+          }
+        },
+        {
+          "system": false,
+          "id": "b7fkaql6",
+          "name": "children",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 2,
+            "displayFields": [
+              "id"
+            ]
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "51spmfphzqc5upz",
+      "created": "2023-09-04 14:15:55.890Z",
+      "updated": "2023-09-04 14:15:55.890Z",
+      "name": "price_duplicate",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "11gdunnf",
+          "name": "title",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "uexb1skk",
           "name": "cost",
           "type": "text",
           "required": false,
