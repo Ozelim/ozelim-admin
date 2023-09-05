@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button } from '@mantine/core'
 import { pb } from 'shared/api'
+import { Link } from 'react-router-dom'
 
 export const Header = () => {
 
@@ -14,7 +15,9 @@ export const Header = () => {
       <div className="container">
         <div className='flex'>
           <p className='justify-start font-head font-bold'>
-            OZELIM ADMIN PANEL
+            <Link to={'/'}>
+              OZELIM ADMIN PANEL
+            </Link>
           </p>
           <div className='ml-auto'>
             <Button
