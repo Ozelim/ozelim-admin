@@ -164,18 +164,18 @@ export const Price = () => {
     })
   }, [])
 
-  const removePriceConfrim = (priceId) =>
+  const removePriceConfrim = (priceId, type) =>
     openConfirmModal({
       title: "Подтвердите действие",
       centered: true,
       labels: { confirm: "Подтвердить", cancel: "Отмена" },
       children: <>Вы действительно хотите отклонить данную отправку?</>,
-      onConfirm: () => deletePrice(priceId),
+      onConfirm: () => deletePrice(priceId, type),
     });
 
-  async function deletePrice(priceId) {
+  async function deletePrice(priceId, type) {
     await pb
-      .collection("price")
+      .collection(type ? 'price_duplicate' : 'price')
       .delete(priceId)
   }
  
@@ -317,7 +317,7 @@ export const Price = () => {
               <CiCircleRemove
                 size={35}
                 color="red"
-                onClick={() => removePriceConfrim(o?.id)}
+                onClick={() => removePriceConfrim(o?.id, true)}
                 className="cursor-pointer hover:fill-yellow-500"
               />
             </div>
