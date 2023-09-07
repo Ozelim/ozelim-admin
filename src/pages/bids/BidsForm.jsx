@@ -19,7 +19,7 @@ async function getResorts (diseas, region) {
   })
 
   const regions = resorts.filter(resort => resort?.region === region)
-  const diseases = resorts.filter(resort => resort?.disesas === diseas)
+  const diseases = resorts.filter(resort => resort?.diseas === diseas)
 
   return {
     regions, 
@@ -110,7 +110,7 @@ export const BidsForm = ({ bid }) => {
               />
             )
           })}
-          <TextInput
+          {/* <TextInput
             readOnly
             label="Какая у вас Область?"
             value={bid?.[2]}
@@ -120,7 +120,7 @@ export const BidsForm = ({ bid }) => {
             label="Какая у вас болезнь?"
             value={bid?.[3]}
           />
-          <TextInput readOnly label="Ваш телефон?" value={bid?.[4]} />
+          <TextInput readOnly label="Ваш телефон?" value={bid?.[4]} /> */}
         </div>
         <div className="mt-10">
           <h2>Курорты</h2>
@@ -128,7 +128,9 @@ export const BidsForm = ({ bid }) => {
             <div className="mt-5">
               <h2>По областям:</h2>
               {resorts?.regions?.map((resort) => {
-                return <BomjPlaza resort={resort} key={resort?.id} />
+                return (
+                  <BomjPlaza resort={resort} key={resort?.id} />
+                ) 
               })}
             </div>
           )}
@@ -136,7 +138,9 @@ export const BidsForm = ({ bid }) => {
             <div className="mt-5">
               <h2>По болезням:</h2>
               {resorts?.diseases?.map((resort) => {
-                return <BomjPlaza resort={resort} key={resort?.id} />
+                return (
+                  <BomjPlaza resort={resort} key={resort?.id} />
+                ) 
               })}
             </div>
           )}
