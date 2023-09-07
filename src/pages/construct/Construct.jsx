@@ -15,7 +15,7 @@ export const Construct = () => {
   
   const [questions, setQuestions] = React.useState({});
  
-  const [count, setCount] = React.useState(questions?.id ?? 10)
+  const [count, setCount] = React.useState(questions?.count ?? 10)
 
   const {record, diseases} = useUtils()
   const [changedDiseases, setChangedDiseases] = React.useState(diseases)
