@@ -15,7 +15,7 @@ export const Construct = () => {
   
   const [questions, setQuestions] = React.useState({});
  
-  const [count, setCount] = React.useState(10)
+  const [count, setCount] = React.useState(questions?.id ?? 10)
 
   const {record, diseases} = useUtils()
   const [changedDiseases, setChangedDiseases] = React.useState(diseases)
@@ -41,6 +41,13 @@ export const Construct = () => {
       setQuestions(res);
       // setCount(res.count);
     });
+
+    pb.collection('questions').subscribe('111111111111111', function () {
+      getQuestions().then((res) => {
+        setQuestions(res);
+        // setCount(res.count);
+      });
+    })
   }, []);
 
   const [diseas, setDiseas] = React.useState('')
