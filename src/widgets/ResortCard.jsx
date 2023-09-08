@@ -33,16 +33,18 @@ export const Card = ({ resort, deleteBtn, editBtn, handleDelete }) => {
         <p className="mt-1">{resort?.region}</p>
         <ul className="mt-4">
           <li className="flex items-center gap-2">
-            <LiaCalendarAlt className="text-xl text-slate-400" />
-            <span className="text">c 21.01 по 21.02</span>
+            {/* <LiaCalendarAlt className="text-xl text-slate-400" /> */}
+            <span className="text">
+              {resort?.duration}
+            </span>
           </li>
           <li className="flex items-center gap-2">
-            <CiPlane className="text-xl text-slate-400" />
-            <span className="text">Выезд с алматы</span>
+            {/* <LiaConciergeBellSolid className="text-xl text-slate-400" /> */}
+            <span className="text">{resort?.diet}</span>
           </li>
           <li className="flex items-center gap-2">
-            <LiaConciergeBellSolid className="text-xl text-slate-400" />
-            <span className="text">Все включено</span>
+            {/* <CiPlane className="text-xl text-slate-400" /> */}
+            <span className="text">{resort?.from}</span>
           </li>
         </ul>
         <div className="mt-4">

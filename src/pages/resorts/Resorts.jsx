@@ -359,14 +359,14 @@ export const Resorts = () => {
             />
 
             <TextInput
-              label="Длительность тура"
+              label="Текст 1"
               value={resort.duration ?? ""}
               onChange={(e) =>
                 handleResortChange(e.currentTarget.value, "duration")
               }
             />
             <TextInput
-              label="Питание"
+              label="Текст 2"
               description="Все включено - 2-х разовое"
               value={resort.diet ?? ""}
               onChange={(e) =>
@@ -374,28 +374,28 @@ export const Resorts = () => {
               }
             />
             <TextInput
-              label="Выезд с какого города"
+              label="Текст 3"
               value={resort.from ?? ""}
               onChange={(e) =>
                 handleResortChange(e.currentTarget.value, "from")
               }
             />
-            <TextInput
+            {/* <TextInput
               label="Выезд"
               description="Включен в стоимость - За свой счет"
               value={resort.departure ?? ""}
               onChange={(e) =>
                 handleResortChange(e.currentTarget.value, "departure")
               }
-            />
-            <TextInput
+            /> */}
+            {/* <TextInput
               label="Сезон тура"
               description="Круглый год - Лето - Июль"
               value={resort.season ?? ""}
               onChange={(e) =>
                 handleResortChange(e.currentTarget.value, "season")
               }
-            />
+            /> */}
             <TextInput
               label="Стоимость"
               description="За одного человека"
@@ -418,21 +418,21 @@ export const Resorts = () => {
               onChange={(e) => handleResortChange(e.currentTarget.value, "whats")}
               placeholder="87071218989"
             />
-            <TextInput
+            {/* <TextInput
               label="Instagram"
               description="Имя аккаунта инстаграм"
               value={resort.inst ?? ""}
               onChange={(e) => handleResortChange(e.currentTarget.value, "inst")}
               placeholder="ozelim"
-            />
-            <TextInput
+            /> */}
+            {/* <TextInput
               label="2gis"
               description="Ссылка на 2gis"
               value={resort.twogis ?? ""}
               onChange={(e) => handleResortChange(e.currentTarget.value, "twogis")}
-            />
+            /> */}
 
-            <div className="flex gap-4 flex-wrap">
+            {/* <div className="flex gap-4 flex-wrap">
               {resort?.tags?.map((tag, i) => {
                 return (
                   <Chip key={i} checked onClick={() => handleTagClick(i)}>
@@ -440,7 +440,7 @@ export const Resorts = () => {
                   </Chip>
                 );
               })}
-            </div>
+            </div> */}
             <div className="flex max-w-[250px] items-end">
               <TextInput
                 label="Теги"
@@ -453,6 +453,18 @@ export const Resorts = () => {
           <div className="">
             <ResortCard resort={preview} />
           </div>
+        </div>
+        <div className="max-w-[750px] mx-auto mt-5">
+          <TextInput
+            label="Заголовок"
+            value={resort.inst ?? ""}
+            onChange={(e) => handleResortChange(e.currentTarget.value, "inst")}
+          />
+          <ReactQuill
+            value={resort?.description ?? ""}
+            onChange={(e) => handleResortChange(e, "description")}
+            className="h-full"
+          />
         </div>
         <Image
           image={images?.[1]}
@@ -483,13 +495,7 @@ export const Resorts = () => {
               );
             })}
         </div>
-        <div className="max-w-[750px] mx-auto mt-5">
-          <ReactQuill
-            value={resort?.description ?? ""}
-            onChange={(e) => handleResortChange(e, "description")}
-            className="h-full"
-          />
-        </div>
+
 
         <div className="mt-5">
           <Button onClick={createGoodResort}>Сохранить курорт</Button>

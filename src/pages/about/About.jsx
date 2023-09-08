@@ -241,7 +241,6 @@ export const About = () => {
         >
           Сохранить
         </Button>
-
     </div>
   )
 }
