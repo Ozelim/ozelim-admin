@@ -191,6 +191,12 @@ export const Price = () => {
           index={1}
         />
         <TextInput
+          label="Имя"
+          value={changedText?.name ?? ""}
+          onChange={(e) => handlePriceChange(e, "text")}
+          name="name"
+        />
+        <TextInput
           label="Главный заголовок"
           value={changedHeadings?.[1] ?? ""}
           onChange={(e) => handlePriceChange(e, "heading")}
@@ -263,6 +269,12 @@ export const Price = () => {
           index={2}
         />
         <TextInput
+          label="Имя"
+          value={changedText?.name2 ?? ""}
+          onChange={(e) => handlePriceChange(e, "text")}
+          name="name2"
+        />
+        <TextInput
           label="Главный заголовок"
           value={changedHeadings?.[2] ?? ""}
           onChange={(e) => handlePriceChange(e, "heading")}
@@ -323,6 +335,33 @@ export const Price = () => {
             </div>
           );
         })}
+      </section>
+
+      <section>
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.q1 ?? ""}
+          onChange={(e) => handlePriceChange(e, "heading")}
+          name="q1"
+        />
+        <TextInput
+          label="Текст1"
+          value={changedText?.q1 ?? ""}
+          onChange={(e) => handlePriceChange(e, "text")}
+          name="q1"
+        />
+        <TextInput
+          label="Текст2"
+          value={changedText?.q2 ?? ""}
+          onChange={(e) => handlePriceChange(e, "text")}
+          name="q2"
+        />
+        <TextInput
+          label="Текст3"
+          value={changedText?.q3 ?? ""}
+          onChange={(e) => handlePriceChange(e, "text")}
+          name="q3"
+        />
       </section>
     </div>
   );

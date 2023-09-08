@@ -53,6 +53,7 @@ export const OurTeam = () => {
     const formData = new FormData()
     formData.append('name', member.name)
     formData.append('description', member.description)
+    formData.append('link', member.link)
     if (member?.image) {
       formData.append('image', member.image)
     }
@@ -256,6 +257,7 @@ export const OurTeam = () => {
             name: "",
             description: "",
             image: null,
+            link: ''
           });
         }}
         centered
