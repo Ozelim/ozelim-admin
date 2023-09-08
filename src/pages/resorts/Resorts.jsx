@@ -189,6 +189,11 @@ export const Resorts = () => {
     });
   }
 
+  function openEditModal (val) {
+    setResort(val)
+    setModal(true)
+  }
+
   return (
     <>
       <div className="w-full">
@@ -322,7 +327,10 @@ export const Resorts = () => {
       </Modal>
       <Modal
         opened={modal}
-        onClose={() => setModal(false)}
+        onClose={() => {
+          setModal(false)
+          setResort({})
+        }}
         centered
         title="Добавление курорта"
         fullScreen
