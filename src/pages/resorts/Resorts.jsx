@@ -165,6 +165,9 @@ export const Resorts = () => {
             }
           }
         });
+
+      setModal(false)
+      setResort({})
   }
 
   const [preview, setPreview] = React.useState({});
@@ -367,7 +370,6 @@ export const Resorts = () => {
             />
             <TextInput
               label="Текст 2"
-              description="Все включено - 2-х разовое"
               value={resort.diet ?? ""}
               onChange={(e) =>
                 handleResortChange(e.currentTarget.value, "diet")
