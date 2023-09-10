@@ -5,6 +5,7 @@ import {
   Button,
   Chip,
   Modal,
+  MultiSelect,
   NumberInput,
   Pagination,
   Select,
@@ -354,11 +355,12 @@ export const Resorts = () => {
               value={resort.region ?? ""}
               onChange={(e) => handleResortChange(e, "region")}
             />
-            <Select
+            <MultiSelect
               data={diseases}
               label="Патология"
               value={resort.diseas ?? ""}
               onChange={(e) => handleResortChange(e, "diseas")}
+              multiple
             />
 
             <TextInput
