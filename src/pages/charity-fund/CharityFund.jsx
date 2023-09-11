@@ -105,46 +105,7 @@ export const CharityFund = () => {
             index={1}
           />
         </div>
-        <Textarea
-          label="Заголовок слайдера"
-          value={changedHeadings?.history ?? ""}
-          onChange={(e) => handleCharityChange(e, "heading")}
-          name="history"
-          autosize
-          className="m-auto w-2/4"
-        />
-        <div className="grid grid-cols-3 gap-4 my-10">
-          <div>
-            <Image
-              label={"Картинка"}
-              onChange={handleImagesChange}
-              record={charity?.slider?.image}
-              image={changedImages?.["2"]}
-              onDelete={handleImageDelete}
-              index={2}
-            />
-          </div>
-          <div>
-            <Image
-              label={"Картинка"}
-              onChange={handleImagesChange}
-              record={charity?.slider?.image}
-              image={changedImages?.["3"]}
-              onDelete={handleImageDelete}
-              index={3}
-            />
-          </div>
-          <div>
-            <Image
-              label={"Картинка"}
-              onChange={handleImagesChange}
-              record={charity?.slider?.image}
-              image={changedImages?.["4"]}
-              onDelete={handleImageDelete}
-              index={4}
-            />
-          </div>
-        </div>
+
       </section>
       <TextInput
         label="Заголовок"
@@ -240,6 +201,67 @@ export const CharityFund = () => {
           />
         </div>
       </section>
+      <Textarea
+        label="Заголовок"
+        value={changedHeadings?.history ?? ""}
+        onChange={(e) => handleCharityChange(e, "heading")}
+        name="history"
+        autosize
+        className="m-auto w-2/4"
+      />
+      <div className="grid grid-cols-3 gap-4 my-10">
+        <div>
+          <Image
+            label={"Картинка"}
+            onChange={handleImagesChange}
+            record={charity?.slider?.image}
+            image={changedImages?.["2"]}
+            onDelete={handleImageDelete}
+            index={2}
+          />
+          <TextInput
+            label="Описание"
+            value={changedText?.h1 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="h1"
+            autosize
+          />
+        </div>
+        <div>
+          <Image
+            label={"Картинка"}
+            onChange={handleImagesChange}
+            record={charity?.slider?.image}
+            image={changedImages?.["3"]}
+            onDelete={handleImageDelete}
+            index={3}
+          />
+          <TextInput
+            label="Описание"
+            value={changedText?.h2 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="h2"
+            autosize
+          />
+        </div>
+        <div>
+          <Image
+            label={"Картинка"}
+            onChange={handleImagesChange}
+            record={charity?.slider?.image}
+            image={changedImages?.["4"]}
+            onDelete={handleImageDelete}
+            index={4}
+          />
+          <TextInput
+            label="Описание"
+            value={changedText?.h3 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="h3"
+            autosize
+          />
+        </div>
+      </div>
       <div  className="flex justify-center mt-10">
 
       <Button className="mt-10"  onClick={saveCharity}>

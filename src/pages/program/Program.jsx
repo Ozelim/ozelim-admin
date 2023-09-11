@@ -105,6 +105,41 @@ export const Program = () => {
             index={1}
           />
         </div>
+        <div className="my-10">
+          <Image
+            className="ml-10 w-2/4"
+            label={"Картинка"}
+            onChange={handleImagesChange}
+            record={program?.images}
+            image={changedImages?.["2"]}
+            onDelete={handleImageDelete}
+            index={2}
+          />
+          <div className="max-w-lg">
+            <TextInput
+              label="Заголовок"
+              value={changedHeadings?.fck_heading ?? ""}
+              onChange={(e) => handleProgramChange(e, "heading")}
+              name="fck_heading"
+              autosize
+            />
+            <Textarea
+              label="текст"
+              value={changedText?.fck1 ?? ""}
+              onChange={(e) => handleProgramChange(e, "text")}
+              name="fck1"
+              autosize
+            />
+            <Textarea
+              label="текст"
+              value={changedText?.fck2 ?? ""}
+              onChange={(e) => handleProgramChange(e, "text")}
+              name="fck2"
+              autosize
+            />
+          </div>
+
+        </div>
         <div className="grid grid-cols-3 gap-4 w-2/4">
           <div>
             <Textarea
