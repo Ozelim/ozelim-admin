@@ -263,11 +263,10 @@ export const CharityFund = () => {
         </div>
       </div>
       <div  className="flex justify-center mt-10">
-
-      <Button className="mt-10"  onClick={saveCharity}>
-        Сохранить
-      </Button>
-    </div>
+        <Button className="mt-10"  onClick={saveCharity}>
+          Сохранить
+        </Button>
+      </div>
     </div>
   );
 };

@@ -297,7 +297,7 @@ export const Resorts = () => {
             value={shit.region ?? ""}
             onChange={(e) => setShit({ ...shit, region: e })}
           />
-          <Select
+          <MultiSelect
             data={diseases}
             label="Патология"
             dropdownPosition="bottom"
@@ -305,10 +305,35 @@ export const Resorts = () => {
             value={shit.diseas ?? ""}
             onChange={(e) => setShit({ ...shit, diseas: e })}
           />
+
+          <h2 className="my-10">
+            Данные для менеджера
+          </h2>
+
           <TextInput
             label="Адрес"
             value={shit.adress ?? ""}
             onChange={(e) => setShit({ ...shit, adress: e.target.value })}
+          />
+          <TextInput
+            label="Стоимость"
+            value={shit.cost ?? ""}
+            onChange={(e) => setShit({ ...shit, cost: e.target.value })}
+          />
+          <TextInput
+            label="Телефон"
+            value={shit.phone ?? ""}
+            onChange={(e) => setShit({ ...shit, phone: e.target.value })}
+          />
+          <TextInput
+            label="Доп. услуги"
+            value={shit.content ?? ""}
+            onChange={(e) => setShit({ ...shit, content: e.target.value })}
+          />
+          <TextInput
+            label="Почта"
+            value={shit.email ?? ""}
+            onChange={(e) => setShit({ ...shit, email: e.target.value })}
           />
           <TextInput
             label="Instagram"
@@ -363,7 +388,7 @@ export const Resorts = () => {
               multiple
             />
 
-            <TextInput
+            {/* <TextInput
               label="Текст 1"
               value={resort.duration ?? ""}
               onChange={(e) =>
@@ -383,7 +408,7 @@ export const Resorts = () => {
               onChange={(e) =>
                 handleResortChange(e.currentTarget.value, "from")
               }
-            />
+            /> */}
             {/* <TextInput
               label="Выезд"
               description="Включен в стоимость - За свой счет"
@@ -400,14 +425,14 @@ export const Resorts = () => {
                 handleResortChange(e.currentTarget.value, "season")
               }
             /> */}
-            <TextInput
+            {/* <TextInput
               label="Стоимость"
               description="За одного человека"
               value={resort.cost ?? ""}
               onChange={(e) =>
                 handleResortChange(e.currentTarget.value, "cost")
               }
-            />
+            /> */}
             <TextInput
               label="Адрес"
               value={resort.adress ?? ""}
@@ -445,14 +470,14 @@ export const Resorts = () => {
                 );
               })}
             </div> */}
-            <div className="flex max-w-[250px] items-end">
+            {/* <div className="flex max-w-[250px] items-end">
               <TextInput
                 label="Теги"
                 value={tag}
                 onChange={(e) => handleTagChange(e.currentTarget.value)}
               />
               <Button onClick={addTag}>Добавить</Button>
-            </div>
+            </div> */}
           </div>
           <div className="">
             <ResortCard resort={preview} />

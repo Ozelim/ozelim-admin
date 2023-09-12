@@ -76,7 +76,7 @@ export const BidsForm = ({ bid }) => {
     <div className="w-full">
       <div
         onClick={open}
-        className="border-2 p-5  rounded-primary border-solid border-primary-500 text-[#1e1e1e] mt-5 "
+        className="border-2 p-3  rounded-primary border-solid border-primary-500 text-[#1e1e1e] mt-5 "
       >
         <form className="flex justify-between">
           <div>{bid?.[1]}</div>
