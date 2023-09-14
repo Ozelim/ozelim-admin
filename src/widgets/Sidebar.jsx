@@ -19,6 +19,7 @@ export const Sidebar = () => {
     {path: '/charity-fund', label: 'Благотворительность'},
     {path: '/news', label: 'Новости компании'},
     {path: '/users', label: 'Пользователи'},
+    {path: '/levels', label: 'Уровни'},
     {path: '/binary', label: 'Бинар'},
     {path: '/bids', label: 'Заявки'},
     {path: '/money-flow', label: 'Движение средтв'},

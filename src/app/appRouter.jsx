@@ -21,6 +21,7 @@ import {
   MoneyFlow,
   Binary,
   Construct,
+  Levels,
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { PartnersTest } from "pages/partners/PartnersTest";
@@ -49,6 +50,7 @@ const appRouter = createBrowserRouter([
       { path: "/money-flow", element: <MoneyFlow /> },
       { path: "/binary", element: <Binary /> },
       { path: "/construct", element: <Construct /> },
+      { path: "/Levels", element: <Levels /> },
 
       { path: "*", element: <NotFound /> },
     ],
