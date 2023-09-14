@@ -65,9 +65,10 @@ export const Users = () => {
         verified: true
       })
       .then(async res => {
-        // const sponsor = await pb.collection('users').getOne(res?.sponsor)
-        // const referals = await pb.collection('users').getFullList({filter: `sponsor = '${sponsor?.id}' && verified = true`})
-        // if (referals.length === 2)
+        const sponsor = await pb.collection('users').getOne(res?.sponsor)
+        await pb.collection('users').update(sponsor?.id, {
+          referals: [...sponsor?.referals, res?.id]
+        })
       })
   }
   // Пример использования
@@ -157,7 +158,7 @@ export const Users = () => {
                   <td>{user.name}</td>
                   <td>{user.bin ? "Да" : "Нет"}</td>
                   <td>
-                    {(user?.level && user?.level !== '2-3' && user?.level != '0' && user?.level != '1' ) && (
+                    {(user?.level && user?.level !== '2-3' && user?.level != '0' && user?.level != '' ) && (
                       <Menu
                         compact
                       >

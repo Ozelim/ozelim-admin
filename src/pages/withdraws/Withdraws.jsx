@@ -106,7 +106,7 @@ export const Withdraws = () => {
       return {
         создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
         пользователь: withdraw?.user,
-        фио: `${withdraw?.expand?.user?.name} ${withdraw?.expand?.user?.name}`,
+        фио: `${withdraw?.expand?.user?.name} ${withdraw?.expand?.user?.surname}`,
         банк: withdraw?.bank, 
         сумма: withdraw?.sum,
         владелец_карты: withdraw?.owner,
