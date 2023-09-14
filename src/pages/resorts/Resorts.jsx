@@ -115,7 +115,10 @@ export const Resorts = () => {
     await pb.collection("resorts").create({
       ...shit,
       status: "bomj",
-    });
+    })
+    .then(() => {
+      shitModal(false)
+    })
   }
 
   async function createGoodResort() {
@@ -530,8 +533,6 @@ export const Resorts = () => {
               );
             })}
         </div>
-
-
         <div className="mt-5">
           <Button onClick={createGoodResort}>Сохранить курорт</Button>
         </div>

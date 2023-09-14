@@ -14,7 +14,7 @@ export const BomjPlaza = ({resort}) => {
           {resort?.region}
         </p>
         <div className=''>
-          <p className='flex gap-4 mt-4'>
+          <p className='flex gap-4 mt-4 flex-wrap'>
             {resort?.diseas?.map(q => {
               return <span className='text-blue-400'>{q}</span>
             })}
