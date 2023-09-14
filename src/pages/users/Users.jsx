@@ -157,7 +157,7 @@ export const Users = () => {
                   <td>{user.name}</td>
                   <td>{user.bin ? "Да" : "Нет"}</td>
                   <td>
-                    {(user?.level && user?.level !== '0') && (
+                    {(user?.level && user?.level !== '2-3' && user?.level != '0' && user?.level != '1' ) && (
                       <Menu
                         compact
                       >
@@ -165,7 +165,6 @@ export const Users = () => {
                           <Button color="teal">
                             {user?.level}
                           </Button>
-                       
                         </Menu.Target>
                         <Menu.Dropdown>
                         <Menu.Label>

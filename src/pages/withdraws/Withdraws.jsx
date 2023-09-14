@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Pagination, Table } from '@mantine/core'
+import { Button, Modal, Pagination, Table, Tabs } from '@mantine/core'
 import { pb } from 'shared/api'
 import { formatNumber } from 'shared/lib'
 
@@ -11,21 +11,31 @@ import dayjs from 'dayjs'
 
 import * as XLSX from 'xlsx';
 
-async function getWithdraws (page = 1) {
+async function getWithdraws () {
+  return await pb.collection('withdraws').getFullList({
+    filter: `status = 'created'`,
+    sort: '-created',
+    expand: 'user',
+  })
+}
+
+async function getWithdrawsEnded (page) {
   return await pb.collection('withdraws').getList(page, 20, {
-    // filter: `status = 'created'`
-    sort: '-created'
+    filter: `status != 'created'`,
+    sort: '-created',
+    expand: 'user',
   })
 }
 
 export const Withdraws = () => {
 
-  const [withdraws, setWithdraws] = React.useState({})
+  const [withdraws, setWithdraws] = React.useState([])
+  const [endedWithdraws, setEndedWithdraws] = React.useState({})
 
   async function handleWithdraws (page) {
-    getWithdraws(page)
+    getWithdrawsEnded(page)
     .then(res => {
-      setWithdraws(res)
+      setEndedWithdraws(res)
     })
   }
 
@@ -75,7 +85,11 @@ export const Withdraws = () => {
     })
 
     pb.collection('withdraws').subscribe('*', function ({_, record}) {
-      getWithdraws(withdraws?.page)
+      getWithdrawsEnded(endedWithdraws?.page)
+      .then(res => {
+        setEndedWithdraws(res)
+      })
+      getWithdraws()
       .then(res => {
         setWithdraws(res)
       })
@@ -86,17 +100,14 @@ export const Withdraws = () => {
     }
   }, [])
 
-  const data = [
-    { name: 'John Doe', age: 25, email: 'john@example.com' },
-    { name: 'Jane Smith', age: 30, email: 'jane@example.com' },
-    // Добавьте остальные данные таблицы
-  ]
 
   function exportToExcel () {
-    const array = withdraws?.items?.map((withdraw) => {
+    const array = withdraws?.map((withdraw) => {
       return {
         создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
         пользователь: withdraw?.user,
+        фио: `${withdraw?.expand?.user?.name} ${withdraw?.expand?.user?.name}`,
+        банк: withdraw?.bank, 
         сумма: withdraw?.sum,
         владелец_карты: withdraw?.owner,
         номер_карты: withdraw?.card,
@@ -126,70 +137,182 @@ export const Withdraws = () => {
     document.body.removeChild(link);
   };
 
+  const banks = [
+    "Народный банк Казахстана",
+    "Kaspi Bank",
+    "Банк ЦентрКредит",
+    "Forte Bank",
+    "Евразийский банк",
+    "First Heartland Jusan Bank",
+    "Bank RBK",
+    "Bereke Bank",
+    "Банк Фридом Финанс Казахстан",
+    "Ситибанк Казахстан",
+    "Home Credit Bank Kazakhstan",
+    "Нурбанк"
+  ]
+
+  function customSort(a, b) {
+
+    const indexA = banks.indexOf(a?.bank);
+    const indexB = banks.indexOf(b?.bank);
+  
+    // If both elements are in the sortOrder array, compare their positions
+    if (indexA !== -1 && indexB !== -1) {
+      return indexA - indexB;
+    }
+  
+    // If only one element is in the sortOrder array, prioritize it
+    if (indexA !== -1) {
+      return -1;
+    }
+    if (indexB !== -1) {
+      return 1;
+    }
+  
+    // If neither element is in the sortOrder array, maintain their original order
+    return 0;
+  }
+
+  const sorted = withdraws?.sort(customSort)
+
   return (
     <div className='w-full bg-white'>
-      <Button onClick={exportToExcel}>Скачать Excel</Button>
-      <Table
-        striped
-        className='mt-4'
-      >
-        <thead>
-          <tr>
-            <th>Дата</th>
-            <th>Пользователь</th>
-            <th>Сумма</th>
-            <th>Владелец карты</th>
-            <th>Номер карты</th>
-            <th>Статус</th>
-            <th>Действие</th>
-          </tr>
-        </thead>
-        <tbody>
-          {withdraws?.items?.map((withdraw, i) => {
-            return (
-              <tr 
-                key={i}
-              >
-                <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
-                <td className='!text-lg'>{withdraw?.user}</td>
-                <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
-                <td className='!text-lg'>{withdraw?.owner}</td>
-                <td className='!text-lg'>{withdraw?.card}</td>
-                <td className='!text-lg'>
-                {withdraw?.status === 'created' && 'Создан'}
-                {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
-                {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
-                </td>
-                <td className='flex gap-2 items-center'>
-                  {withdraw?.status === 'created' && (
-                    <>
-                      <BsCheckCircle 
-                        size={30} 
-                        color='green'
-                        onClick={() => confirmWithdrawConfirm(withdraw?.id)}
-                        className='cursor-pointer hover:fill-yellow-500'
-                      />
-                      <CiCircleRemove 
-                        size={35}
-                        color='red'
-                        onClick={() => removeWithdrawConfirm(withdraw)}
-                        className='cursor-pointer hover:fill-yellow-500'
-                      />
-                    </>
-                  )}
-                </td>
+      <Tabs>
+        <Tabs.List>
+          <Tabs.Tab value='created'>Созданные</Tabs.Tab>
+          <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value='created' pt='lg'>
+          <Button onClick={exportToExcel}>Скачать Excel</Button>
+          <Table
+            striped
+            className='mt-4'
+          >
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>ID Пользователя</th>
+                <th>ФИО</th>
+                <th>Банк</th>
+                <th>Сумма</th>
+                <th>Владелец карты</th>
+                <th>Номер карты</th>
+                <th>Статус</th>
+                <th>Действие</th>
               </tr>
-            )
-          })}
-        </tbody>
-      </Table>
-      <div className='flex justify-center'>
-        <Pagination
-          value={withdraws?.page}
-          total={withdraws?.totalPages}
-          onChange={e => handleWithdraws(e)}
-        />
-      </div>
+            </thead>
+            <tbody>
+              {sorted?.map((withdraw, i) => {
+                return (
+                  <tr 
+                    key={i}
+                  >
+                    <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
+                    <td className='!text-lg'>{withdraw?.user}</td>
+                    <td className='!text-lg'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
+                    <td className='!text-lg'>{withdraw?.bank}</td>
+                    <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
+                    <td className='!text-lg'>{withdraw?.owner}</td>
+                    <td className='!text-lg'>{withdraw?.card}</td>
+                    <td className='!text-lg'>
+                    {withdraw?.status === 'created' && 'Создан'}
+                    {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
+                    {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
+                    </td>
+                    <td className='flex gap-2 items-center'>
+                      {withdraw?.status === 'created' && (
+                        <>
+                          <BsCheckCircle 
+                            size={30} 
+                            color='green'
+                            onClick={() => confirmWithdrawConfirm(withdraw?.id)}
+                            className='cursor-pointer hover:fill-yellow-500'
+                          />
+                          <CiCircleRemove 
+                            size={35}
+                            color='red'
+                            onClick={() => removeWithdrawConfirm(withdraw)}
+                            className='cursor-pointer hover:fill-yellow-500'
+                          />
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+
+        </Tabs.Panel>
+        <Tabs.Panel value='ended'>
+          <Table
+            striped
+            className='mt-4'
+          >
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>ID Пользователя</th>
+                <th>ФИО</th>
+                <th>Банк</th>
+                <th>Сумма</th>
+                <th>Владелец карты</th>
+                <th>Номер карты</th>
+                <th>Статус</th>
+                {/* <th>Действие</th> */}
+              </tr>
+            </thead>
+            <tbody>
+              {endedWithdraws?.items?.map((withdraw, i) => {
+                return (
+                  <tr 
+                    key={i}
+                  >
+                    <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
+                    <td className='!text-lg'>{withdraw?.user}</td>
+                    <td className='!text-lg'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
+                    <td className='!text-lg'>{withdraw?.bank}</td>
+                    <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
+                    <td className='!text-lg'>{withdraw?.owner}</td>
+                    <td className='!text-lg'>{withdraw?.card}</td>
+                    <td className='!text-lg'>
+                    {withdraw?.status === 'created' && 'Создан'}
+                    {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
+                    {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
+                    </td>
+                    {/* <td className='flex gap-2 items-center'>
+                      {withdraw?.status === 'created' && (
+                        <>
+                          <BsCheckCircle 
+                            size={30} 
+                            color='green'
+                            onClick={() => confirmWithdrawConfirm(withdraw?.id)}
+                            className='cursor-pointer hover:fill-yellow-500'
+                          />
+                          <CiCircleRemove 
+                            size={35}
+                            color='red'
+                            onClick={() => removeWithdrawConfirm(withdraw)}
+                            className='cursor-pointer hover:fill-yellow-500'
+                          />
+                        </>
+                      )}
+                    </td> */}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        <div className='flex justify-center'>
+          <Pagination
+            value={endedWithdraws?.page}
+            total={endedWithdraws?.totalPages}
+            onChange={e => handleWithdraws(e)}
+          />
+        </div>
+        </Tabs.Panel>
+      </Tabs>
     </div>
   )
 }

@@ -330,6 +330,12 @@ export const Resorts = () => {
             value={shit.content ?? ""}
             onChange={(e) => setShit({ ...shit, content: e.target.value })}
           />
+          <Textarea
+            label="Доп. инфо"
+            value={shit.info ?? ""}
+            onChange={(e) => setShit({ ...shit, info: e.target.value })}
+            autosize
+          />
           <TextInput
             label="Почта"
             value={shit.email ?? ""}
@@ -381,7 +387,7 @@ export const Resorts = () => {
               onChange={(e) => handleResortChange(e, "region")}
             />
             <MultiSelect
-              data={diseases}
+              data={diseases ?? []}
               label="Патология"
               value={resort.diseas ?? ""}
               onChange={(e) => handleResortChange(e, "diseas")}

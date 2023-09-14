@@ -14,13 +14,13 @@ export const BomjPlaza = ({resort}) => {
           {resort?.region}
         </p>
         <div className=''>
-          <p className='flex gap-4 '>
+          <p className='flex gap-4 mt-4'>
             {resort?.diseas?.map(q => {
-              return <span>{q}</span>
+              return <span className='text-blue-400'>{q}</span>
             })}
           </p>
           <p className='flex gap-4'>
-            <span>
+            <span className='text-sm text'>
               Адрес:
             </span>
             <span>
@@ -28,7 +28,7 @@ export const BomjPlaza = ({resort}) => {
             </span>
           </p>
           <p className='flex gap-4'>
-            <span>
+            <span className='text-sm text'>
               Стоимость:
             </span>
             <span>
@@ -36,7 +36,7 @@ export const BomjPlaza = ({resort}) => {
             </span>
           </p>
           <p className='flex gap-4'>
-            <span>
+            <span className='text-sm text'>
               Телефон:
             </span>
             <span>
@@ -44,7 +44,7 @@ export const BomjPlaza = ({resort}) => {
             </span>
           </p>
           <p className='flex gap-4'>
-            <span>
+            <span className='text-sm text'>
               Почта:
             </span>
             <span>
@@ -52,11 +52,19 @@ export const BomjPlaza = ({resort}) => {
             </span>
           </p>
           <p className='flex gap-4'>
-            <span>
-              Доп услугу:
+            <span className='text-sm text'>
+              Доп услуги:
             </span>
             <span>
               {resort?.content}
+            </span>
+          </p>
+          <p className='flex gap-4'>
+            <span className='text-sm text'>
+              Доп инфо:
+            </span>
+            <span>
+              {resort?.info}
             </span>
           </p>
         </div>

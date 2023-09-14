@@ -31,10 +31,11 @@ export const Card = ({ resort, deleteBtn, editBtn, handleDelete }) => {
           </span>
         </Link>
         <p className="mt-1">{resort?.region}</p>
-        <div className="flex flex-wrap gap-2">
-          {resort?.diseas?.map((q, i) => {
+        <div className="flex flex-wrap gap-2 mt-4">
+          <p className="text text-">Направление: </p>
+          {resort?.diseas && resort?.diseas?.map((q, i) => {
             return (
-              <p key={i}>
+              <p key={i} className="text-blue-900">
                 {q}
               </p>
             ) 
@@ -53,11 +54,11 @@ export const Card = ({ resort, deleteBtn, editBtn, handleDelete }) => {
             <span className="text">{resort?.from}</span>
           </li>
         </ul> */}
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <span className="text-xl text-primary-600">
             {formatNumber(resort?.cost)} ₸
           </span>
-        </div>
+        </div> */}
         <div className="mt-4 flex flex-col gap-2">
           {/* <Button>Подробнее</Button> */}
           {deleteBtn}

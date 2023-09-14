@@ -15,11 +15,11 @@ async function getQuestions () {
 
 async function getResorts (diseas, region) {
   const resorts = await pb.collection('resorts').getFullList({
-    filter: `(region = '${region}' || diseas = '${diseas}') && status = 'bomj'`
+    filter: `(region = '${region}' || diseas ~ '${diseas}') && status = 'bomj'`
   })
 
   const regions = resorts.filter(resort => resort?.region === region)
-  const diseases = resorts.filter(resort => resort?.diseas === diseas)
+  const diseases = resorts.filter(resort => resort?.diseas?.includes(diseas))
 
   return {
     regions, 
@@ -104,6 +104,7 @@ export const BidsForm = ({ bid }) => {
 
             return (
               <TextInput 
+                key={i}
                 readOnly 
                 label={questions?.[key]} 
                 value={bid?.[key]} 
@@ -125,7 +126,7 @@ export const BidsForm = ({ bid }) => {
         <div className="mt-10">
           <h2>Курорты</h2>
           {resorts?.regions?.length !== 0 && (
-            <div className="mt-5">
+            <div className="mt-5 space-y-4">
               <h2>По областям:</h2>
               {resorts?.regions?.map((resort) => {
                 return (
@@ -135,7 +136,7 @@ export const BidsForm = ({ bid }) => {
             </div>
           )}
           {resorts?.diseases?.length !== 0 && (
-            <div className="mt-5">
+            <div className="mt-5 space-y-4">
               <h2>По болезням:</h2>
               {resorts?.diseases?.map((resort) => {
                 return (
