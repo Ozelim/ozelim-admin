@@ -9,7 +9,7 @@ import { pb } from 'shared/api';
 import { getImageUrl } from 'shared/lib';
 import { Image } from 'shared/ui';
 
-function CustomNode({ nodeDatum, onNodeClick, sponsor, node, handleSelected }) {
+export function CustomNode({ nodeDatum, onNodeClick, sponsor, node, handleSelected }) {
 
   const data = nodeDatum?.value;
 
@@ -66,7 +66,7 @@ function CustomNode({ nodeDatum, onNodeClick, sponsor, node, handleSelected }) {
   );
 }
 
-function findAndReplaceObjectById(obj, idToFind, replacementObject) {
+export function findAndReplaceObjectById(obj, idToFind, replacementObject) {
   // Check if the current object has an 'id' property that matches the desired ID
   if (obj?.value?.id === idToFind) {
     // Replace the current object with the replacementObject
@@ -87,7 +87,7 @@ function findAndReplaceObjectById(obj, idToFind, replacementObject) {
   return obj;
 }
 
-async function getBinaryById (id) {
+export async function getBinaryById (id) {
 
   let foundSlot = {}
 

@@ -69,6 +69,22 @@ export const Users = () => {
         await pb.collection('users').update(sponsor?.id, {
           referals: [...sponsor?.referals, res?.id]
         })
+        
+        const referals = await pb.collection('users').getFullList({filter: `sponsor = ${sponsor?.id} && verified = true`})
+
+        if (referals?.length === 1) {
+          await pb.collection('users').update(sponsor?.id, {
+            balance: sponsor?.balance + 30000            
+          })
+          return
+        }
+
+        if (referals?.length >=4) {
+          await pb.collection('users').update(sponsor?.id, {
+            balance: sponsor?.balance + 15000            
+          })
+          return
+        }
       })
   }
   // Пример использования

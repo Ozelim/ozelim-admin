@@ -1,7 +1,9 @@
-import { Button, Menu, Pagination, Table, TextInput } from "@mantine/core";
+import React from "react";
+import { Button, Menu, Modal, Pagination, Table, TextInput } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import dayjs from "dayjs";
-import React from "react";
+import { CustomNode, findAndReplaceObjectById, getBinaryById } from "pages/binary/Binary";
+import Tree from "react-d3-tree";
 import { pb } from "shared/api";
 
 async function getUsers() {
@@ -12,91 +14,28 @@ async function getUsers() {
 
 export const Levels = () => {
   const [users, setUsers] = React.useState([]);
-  const [page, setPage] = React.useState({});
-
-  const [search, setSearch] = React.useState("");
-
-  async function searchByValue() {
-    if (!search) {
-      handleUsers(1);
-      return;
-    }
-    const foundUsers = await pb.collection("users").getFullList({
-      filter: `
-        id = '${search}' ||
-        name ?~ '${search}' ||
-        email ?~ '${search}' ||
-        phone ?~ '${search}' ||
-        city ?~ '${search}'
-      `,
-    });
-
-    if (foundUsers.length !== 0) {
-      setUsers(foundUsers);
-      setPage(null);
-    }
-  }
 
   React.useEffect(() => {
     getUsers().then((res) => {
       setUsers(res);
     });
 
-    // pb.collection("users").subscribe("*", function () {
-    //   getUsers(page?.page).then((res) => {
-    //     setUsers(res.items);
-    //     setPage({ ...res, items: null });
-    //   });
-    // });
+    pb.collection("level").subscribe("*", function () {
+      getUsers().then((res) => {
+        setUsers(res);
+      });
+    });
   }, []);
 
   function handleUsers(val) {
     getUsers(val).then((res) => {
-      setUsers(res.items);
-      setPage({ ...res, items: null });
+      setUsers(res);
     });
-  }
-
-  async function verifyUser(userId) {
-    return await pb
-      .collection("users")
-      .update(userId, {
-        verified: true
-      })
-      .then(async res => {
-        const sponsor = await pb.collection('users').getOne(res?.sponsor)
-        await pb.collection('users').update(sponsor?.id, {
-          referals: [...sponsor?.referals, res?.id]
-        })
-      })
   }
   // Пример использования
 
-  const confirmVerifing = (userId) =>
-    openConfirmModal({
-      title: "Подтвердить верификацию",
-      centered: true,
-      children: <>Подтверить верификацию пользователя</>,
-      labels: { confirm: "Подтвердить", cancel: "Отмена" },
-      onConfirm: () => verifyUser(userId),
-  });
+  const [node, setNode] = React.useState(null)
 
-  const confirmLevel = (user, val) => {
-    openConfirmModal({
-      title: "Подтвердить верификацию",
-      centered: true,
-      children: <>Выдать уровень {val} пользователю {user?.id} </>,
-      labels: { confirm: "Подтвердить", cancel: "Отмена" },
-      onConfirm: () => giveLevel(user, val),
-  })}
-
-  async function giveLevel (user, val) {
-    await pb.collection('users').update(user?.id, {
-      level: val
-    })
-  }
-
-  
   const [addModal, setAddModal] = React.useState(false)
 
   const [addBinary, setAddBinary] = React.useState({})
@@ -120,22 +59,6 @@ export const Levels = () => {
             },
           ]
         })
-        // const slot = await pb.collection('binary').getOne(mal?.sponsor, {expand: 'sponsor, children'}) 
-        // setNode(slot)
-        // const obj = findAndReplaceObjectById(addBinary, mal?.sponsor, {
-        //   value: res?.expand?.sponsor,
-        //   children: [
-        //     {
-        //       value: res?.expand?.children?.[0],
-        //       children: []
-        //     },
-        //     {
-        //       value: res?.expand?.children?.[1],
-        //       children: []
-        //     },
-        //   ]
-        // })
-        // setAddBinary({...addBinary, obj})
       })
       .catch(err => {
         console.log(err, 'err');
@@ -143,21 +66,86 @@ export const Levels = () => {
     }
   }, [addModal])
 
+  async function handleNodeClick (data) {
+    getBinaryById(data?.value?.id)
+    .then(async res => {
+      const slot = await pb.collection('binary').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
+      setNode(slot)
+      const obj = findAndReplaceObjectById(addBinary, data?.value?.id, {
+        value: res?.expand?.sponsor,
+        children: [
+          {
+            value: res?.expand?.children?.[0],
+            children: []
+          },
+          {
+            value: res?.expand?.children?.[1],
+            children: []
+          },
+        ]
+      })
+      setAddBinary({...addBinary, ...obj})
+    })
+    .catch(err => {
+      console.log(err, 'err');
+    }) 
+  } 
+
+  const [searchModal, setSearchModal] = React.useState(false)
+  
+  const [mal, setMal] = React.useState(null)
+
+  async function searchByValue(id) {
+    if (id) {
+      getBinaryById(id)
+      .then(async res => {
+        const slot = await pb.collection('binary').getOne(id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        setAddBinary({...addBinary, 
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        setSearchModal(true)
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
+      // handleUsers(1);
+      return;
+    }
+  }
+
+  async function giveNewLevel (user, newLevel, id) {
+    return await pb.collection('users').update(user?.id, {
+      level: newLevel,
+    })
+    .then(async () => {
+      await pb.collection('level').delete(id)
+    })
+  }
+
+  const confirmNewLevel = (user, newLevel, id) => openConfirmModal({
+    title: 'Подтвердите действие',
+    centered: true, 
+    labels: {confirm: 'Подтвердить', cancel: 'Отмена'},
+    children: (
+      <>Действительно выдать вознаграждение и повысить уровень до 4?</>
+    ),
+    onConfirm: () => giveNewLevel(user, newLevel, id)
+  })
+
   return (
     <>
       <div className="w-full">
-        <div className="flex items-end">
-          <TextInput
-            label="Поиск"
-            value={search}
-            onChange={(e) => setSearch(e.currentTarget.value)}
-          />
-          <Button
-            onClick={() => searchByValue()}
-          >
-            Поиск
-          </Button>
-        </div>
         <Table className="mt-4">
           <thead>
             <tr>
@@ -181,13 +169,27 @@ export const Levels = () => {
                   <td>
                     {dayjs(user?.created).format(`DD.MM.YY, HH:mm`)}
                   </td>
-                  <td>{user?.id}</td>
+                  <td>
+                    <Button
+                      compact
+                      variant="outline"
+                      onClick={() => searchByValue(user?.user)}
+                    >
+                      {user?.user}
+                    </Button>
+                  </td>
                   <td>
                     {user?.level}
                   </td>
                   <td>
-                    {user?.new_level === '4.1' && '4.  Путевка'}
-                    {user?.new_level === '4.2' && '4.  Курс'}
+                    <Button
+                      compact
+                      variant="outline"
+                      onClick={() => confirmNewLevel(user?.expand?.user, user?.new_level, user?.id)}
+                    >
+                      {user?.new_level === '4.1' && '4.  Путевка'}
+                      {user?.new_level === '4.2' && '4.  Курс'}
+                    </Button>
                   </td>
                   <td>{user?.expand?.user?.name}</td>
                   <td>{user?.expand?.user?.surname}</td>
@@ -198,22 +200,15 @@ export const Levels = () => {
             })}
           </tbody>
         </Table>
-        {page && (
-          <Pagination
-            value={page?.page}
-            total={page?.totalPages}
-            onChange={handleUsers}
-          />
-        )}
       </div>
-      {/* <Modal
-        opened={addModal}
-        onClose={() => {
-          setAddModal(false)
-          setMal(null)
-        }}
-        fullScreen
+      <Modal
+        opened={searchModal}
         centered
+        fullScreen
+        onClose={() => {
+          setSearchModal(false)
+          // setBinary(null)
+        }}
       >
         <div className="h-[70vh] mt-4 border-2 border-primary-400 p-4 w-full">
           <Tree 
@@ -230,22 +225,14 @@ export const Levels = () => {
               <CustomNode 
                 {...props}
                 onNodeClick={handleNodeClick}
-                handleNodeAdd={handleNodeAdd}
+                // handleNodeAdd={handleNodeAdd}
                 sponsor={mal}
                 node={node}
               />
             )}
           />
         </div>
-        <div className='mt-4 flex justify-center'>
-          <Button
-            disabled={disabled}
-            onClick={handleNodeAdd}
-          >
-            Добавить
-          </Button>
-        </div>
-      </Modal> */}
+      </Modal>
     </>
   );
 };
