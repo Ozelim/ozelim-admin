@@ -126,6 +126,45 @@ export async function getBinaryById (id) {
   return foundSlot
 }
 
+export async function getBinaryById2 (id) {
+
+  let foundSlot = {}
+
+  await pb.collection('binary2').getFirstListItem(`sponsor = '${id}'`, {
+    expand: 'sponsor, children'
+  })
+  .then((res) => {
+    foundSlot = res
+  })
+  .catch(async err => {
+    const user = await pb.collection('users').getOne(id)
+    await pb.collection('binary2').getFirstListItem(`sponsor = ${user?.sponsor}`, {expand: 'sponsor, children'})
+    .then(res => {
+      foundSlot = res
+    })
+    .catch(async err => {      
+      let userId = user?.sponsor
+      for (let i = 1; i < 5; i++) {
+        const user = await pb.collection('users').getOne(userId)
+        await pb.collection('binary2').getFirstListItem(`sponsor = "${userId}"`, {expand: `sponsor, children`})
+        .then(res => {
+          foundSlot = res
+        })
+        .catch(async err => {
+          const spons = await pb.collection('users').getOne(user?.sponsor)
+          userId = spons?.id
+        })
+      }
+    })
+  })
+
+  if (!foundSlot?.id) return await pb.collection('binary').getFirstListItem(`sponsor = '111111111111111'`, {
+    expand: 'sponsor, children'
+  })
+
+  return foundSlot
+}
+
 async function getWorthyUsers () {
   const users = await pb.collection('users').getFullList({filter: `verified = true && bin = false`, expand: 'sponsor, referals'})
 
