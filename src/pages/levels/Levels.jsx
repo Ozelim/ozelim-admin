@@ -5,40 +5,33 @@ import dayjs from "dayjs";
 import { CustomNode, findAndReplaceObjectById, getBinaryById } from "pages/binary/Binary";
 import Tree from "react-d3-tree";
 import { pb } from "shared/api";
+import { CiCircleRemove } from "react-icons/ci";
 
 async function getUsers() {
   return await pb.collection("level").getFullList({
     expand: `user`,
-    filter: `status = 'created'`
-  })
-}
-
-async function getUs () {
-  return await pb.collection("level").getFullList({
-    expand: `user`,
-    filter: `status = 'succ'`
   })
 }
 
 export const Levels = () => {
 
   const [users, setUsers] = React.useState([]);
-  const [endedUsers, setEndedUsers] = React.useState([]);
+
+  const created = users?.filter((bid => bid?.status === 'created'))
+  const ended = users?.filter(q => q?.status === 'succ')
+
+  const travel = ended?.filter(q => q?.new_level === '4.1')
+  const courses = ended?.filter(q => q?.new_level === '4.2')
+  const five = ended?.filter(q => q?.new_level === '5')
+  const six = ended?.filter(q => q?.new_level === '6')
 
   React.useEffect(() => {
     getUsers().then((res) => {
       setUsers(res);
     });
-    getUs().then((res) => {
-      setEndedUsers(res);
-    });
-
     pb.collection("level").subscribe("*", function () {
       getUsers().then((res) => {
         setUsers(res);
-      });
-      getUs().then((res) => {
-        setEndedUsers(res);
       });
     });
   }, []);
@@ -141,11 +134,42 @@ export const Levels = () => {
   }
 
   async function giveNewLevel (user, newLevel, id) {
+    if (newLevel == 5) {
+      const u = await pb.collection('users').getOne(user?.id)
+      return await pb.collection('users').update(user?.id, {
+        balance: u?.balance + 500000,
+        level: newLevel,
+        cock: false
+      })
+      .then(async () => {
+        await pb.collection('level').update(id, {
+          status: 'succ'
+        })
+      })
+    }
+
+    if (newLevel == 6) {
+      const u = await pb.collection('users').getOne(user?.id)
+      return await pb.collection('users').update(user?.id, {
+        balance: u?.balance + 1000000,
+        level: newLevel,
+        cock: false
+      })
+      .then(async () => {
+        await pb.collection('level').update(id, {
+          status: 'succ'
+        })
+      })
+    }
+
     return await pb.collection('users').update(user?.id, {
       level: newLevel,
+      cock: false
     })
     .then(async () => {
-      await pb.collection('level').delete(id)
+      await pb.collection('level').update(id, {
+        status: 'succ'
+      })
     })
   }
 
@@ -154,9 +178,32 @@ export const Levels = () => {
     centered: true, 
     labels: {confirm: 'Подтвердить', cancel: 'Отмена'},
     children: (
-      <>Действительно выдать вознаграждение и повысить уровень до 4?</>
+      <>Действительно выдать вознаграждение и повысить уровень до {
+        newLevel === '4.1' && '4' || 
+        newLevel === '4.2' && '4' || 
+        newLevel
+      }?</>
     ),
     onConfirm: () => giveNewLevel(user, newLevel, id)
+  })
+
+  async function deleteWithdraw (id, userId) {
+    await pb.collection('level').delete(id)
+    .then(async () => {
+      await pb.collection('users').update(userId, {
+        cock: false
+      })
+    })
+  }
+
+  const removeWithdrawConfirm = (id, userId) => openConfirmModal({
+    title: 'Подтвердите действие',
+    centered: true,
+    labels: { confirm: 'Подтвердить', cancel: 'Отмена'},
+    children: (
+      <>Вы действительно хотите удалить данную заявку?</>
+    ),
+    onConfirm: () => deleteWithdraw(id, userId)
   })
 
   return (
@@ -164,82 +211,271 @@ export const Levels = () => {
       <div className="w-full">
         <Tabs>
           <Tabs.List>
+            <Tabs.Tab value="5">Активные</Tabs.Tab>
             <Tabs.Tab value="1">Путевки</Tabs.Tab>
-            <Tabs.Tab value="2">Курсу</Tabs.Tab>
+            <Tabs.Tab value="2">Курсы</Tabs.Tab>
             <Tabs.Tab value="3">5 уровень</Tabs.Tab>
             <Tabs.Tab value="4">6 уровень</Tabs.Tab>
-            <Tabs.Tab value="5">Завершенные</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="1">
-            
+            <Table className="mt-4">
+            <thead>
+              <tr>
+                <th>Дата подачи</th>
+                <th>Бинар ID</th>
+                <th>Уровень</th>
+                <th>Новый уровень</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Телефон</th>
+                <th>Область</th>
+              </tr>
+            </thead>
+            <tbody>
+              {travel.map((user, i) => {
+                return (
+                  <tr
+                    key={i}
+                    // onClick={() => openChangeModal(user)}
+                  >
+                    <td>
+                      {dayjs(user?.created).format(`DD.MM.YY, HH:mm`)}
+                    </td>
+                    <td>
+                        {user?.user}
+                    </td>
+                    <td>
+                      {user?.level === '4.1' && '4.Путевка'}
+                      {user?.level === '4.2' && '4.Курса'}
+                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                    </td>
+                    <td>
+                          {user?.new_level === '4.1' && '4'}
+                          {user?.new_level === '4.2' && '4'}
+                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                    </td>
+                    <td>{user?.expand?.user?.name}</td>
+                    <td>{user?.expand?.user?.surname}</td>
+                    <td>{user?.expand?.user?.phone}</td>
+                    <td>{user?.expand?.user?.region}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            </Table>
           </Tabs.Panel>
           <Tabs.Panel value="2">
-            
+            <Table className="mt-4">
+            <thead>
+              <tr>
+                <th>Дата подачи</th>
+                <th>Бинар ID</th>
+                <th>Уровень</th>
+                <th>Новый уровень</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Телефон</th>
+                <th>Область</th>
+              </tr>
+            </thead>
+            <tbody>
+              {courses.map((user, i) => {
+                return (
+                  <tr
+                    key={i}
+                    // onClick={() => openChangeModal(user)}
+                  >
+                    <td>
+                      {dayjs(user?.created).format(`DD.MM.YY, HH:mm`)}
+                    </td>
+                    <td>
+                        {user?.user}
+                    </td>
+                    <td>
+                    {user?.level === '4.1' && '4.Путевка'}
+                      {user?.level === '4.2' && '4.Курса'}
+                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                    </td>
+                    <td>
+                          {user?.new_level === '4.1' && '4'}
+                          {user?.new_level === '4.2' && '4'}
+                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                    </td>
+                    <td>{user?.expand?.user?.name}</td>
+                    <td>{user?.expand?.user?.surname}</td>
+                    <td>{user?.expand?.user?.phone}</td>
+                    <td>{user?.expand?.user?.region}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            </Table>
           </Tabs.Panel>
           <Tabs.Panel value="3">
-            
+            <Table className="mt-4">
+            <thead>
+              <tr>
+                <th>Дата подачи</th>
+                <th>Бинар ID</th>
+                <th>Уровень</th>
+                <th>Новый уровень</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Телефон</th>
+                <th>Область</th>
+              </tr>
+            </thead>
+            <tbody>
+              {five.map((user, i) => {
+                return (
+                  <tr
+                    key={i}
+                    // onClick={() => openChangeModal(user)}
+                  >
+                    <td>
+                      {dayjs(user?.created).format(`DD.MM.YY, HH:mm`)}
+                    </td>
+                    <td>
+   
+                        {user?.user}
+                    </td>
+                    <td>
+                    {user?.level === '4.1' && '4.Путевка'}
+                      {user?.level === '4.2' && '4.Курса'}
+                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                    </td>
+                    <td>
+                          {user?.new_level === '4.1' && '4'}
+                          {user?.new_level === '4.2' && '4'}
+                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                    </td>
+                    <td>{user?.expand?.user?.name}</td>
+                    <td>{user?.expand?.user?.surname}</td>
+                    <td>{user?.expand?.user?.phone}</td>
+                    <td>{user?.expand?.user?.region}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            </Table>
           </Tabs.Panel>
           <Tabs.Panel value="4">
-            
+            <Table className="mt-4">
+              <thead>
+                <tr>
+                  <th>Дата подачи</th>
+                  <th>Бинар ID</th>
+                  <th>Уровень</th>
+                  <th>Новый уровень</th>
+                  <th>Имя</th>
+                  <th>Фамилия</th>
+                  <th>Телефон</th>
+                  <th>Область</th>
+                </tr>
+              </thead>
+            <tbody>
+              {six.map((user, i) => {
+                return (
+                  <tr
+                    key={i}
+                    // onClick={() => openChangeModal(user)}
+                  >
+                    <td>
+                      {dayjs(user?.created).format(`DD.MM.YY, HH:mm`)}
+                    </td>
+                    <td>
+                      {user?.user}
+                    </td>
+                    <td>
+                    {user?.level === '4.1' && '4.Путевка'}
+                      {user?.level === '4.2' && '4.Курса'}
+                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                    </td>
+                    <td>
+                          {user?.new_level === '4.1' && '4'}
+                          {user?.new_level === '4.2' && '4'}
+                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                    </td>
+                    <td>{user?.expand?.user?.name}</td>
+                    <td>{user?.expand?.user?.surname}</td>
+                    <td>{user?.expand?.user?.phone}</td>
+                    <td>{user?.expand?.user?.region}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            </Table>
           </Tabs.Panel>
           <Tabs.Panel value="5">
-            
+            <Table className="mt-4">
+              <thead>
+                <tr>
+                  <th>Дата подачи</th>
+                  <th>Бинар ID</th>
+                  <th>Уровень</th>
+                  <th>Новый уровень</th>
+                  <th>Имя</th>
+                  <th>Фамилия</th>
+                  <th>Телефон</th>
+                  <th>Область</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {created.map((user, i) => {
+                  return (
+                    <tr
+                      key={i}
+                      // onClick={() => openChangeModal(user)}
+                    >
+                      <td>
+                        {dayjs(user?.created).format(`DD.MM.YY, HH:mm`)}
+                      </td>
+                      <td>
+                        <Button
+                          compact
+                          variant="outline"
+                          onClick={() => searchByValue(user?.user)}
+                        >
+                          {user?.user}
+                        </Button>
+                      </td>
+                      <td>
+                      {user?.level === '4.1' && '4.Путевка'}
+                      {user?.level === '4.2' && '4.Курса'}
+                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                      </td>
+                      <td>
+                        <Button
+                          compact
+                          variant="outline"
+                          onClick={() => confirmNewLevel(user?.expand?.user, user?.new_level, user?.id)}
+                        >
+                          {user?.new_level === '4.1' && '4.Путевка'}
+                          {user?.new_level === '4.2' && '4.Курс'}
+                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                        </Button>
+                      </td>
+                      <td>{user?.expand?.user?.name}</td>
+                      <td>{user?.expand?.user?.surname}</td>
+                      <td>{user?.expand?.user?.phone}</td>
+                      <td>{user?.expand?.user?.region}</td>
+                      <td>
+                        <CiCircleRemove 
+                          size={35}
+                          color='red'
+                          onClick={() => removeWithdrawConfirm(user?.id, user?.user)}
+                          className='cursor-pointer hover:fill-yellow-500'
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
           </Tabs.Panel>
         </Tabs>
-        <Table className="mt-4">
-          <thead>
-            <tr>
-              <th>Дата подачи</th>
-              <th>Бинар ID</th>
-              <th>Уровень</th>
-              <th>Новый уровень</th>
-              <th>Имя</th>
-              <th>Фамилия</th>
-              <th>Телефон</th>
-              <th>Область</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, i) => {
-              return (
-                <tr
-                  key={i}
-                  // onClick={() => openChangeModal(user)}
-                >
-                  <td>
-                    {dayjs(user?.created).format(`DD.MM.YY, HH:mm`)}
-                  </td>
-                  <td>
-                    <Button
-                      compact
-                      variant="outline"
-                      onClick={() => searchByValue(user?.user)}
-                    >
-                      {user?.user}
-                    </Button>
-                  </td>
-                  <td>
-                    {user?.level}
-                  </td>
-                  <td>
-                    <Button
-                      compact
-                      variant="outline"
-                      onClick={() => confirmNewLevel(user?.expand?.user, user?.new_level, user?.id)}
-                    >
-                      {user?.new_level === '4.1' && '4.  Путевка'}
-                      {user?.new_level === '4.2' && '4.  Курс'}
-                    </Button>
-                  </td>
-                  <td>{user?.expand?.user?.name}</td>
-                  <td>{user?.expand?.user?.surname}</td>
-                  <td>{user?.expand?.user?.phone}</td>
-                  <td>{user?.expand?.user?.region}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+     
       </div>
       <Modal
         opened={searchModal}

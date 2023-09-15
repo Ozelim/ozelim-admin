@@ -1,7 +1,7 @@
+import React from "react";
 import { Button, Menu, Pagination, Table, TextInput } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import dayjs from "dayjs";
-import React from "react";
 import { pb } from "shared/api";
 
 import { AiFillCheckCircle, AiFillLock } from "react-icons/ai";
@@ -44,12 +44,13 @@ export const Users = () => {
     });
 
     pb.collection("users").subscribe("*", function () {
+      console.log('asd');
       getUsers(page?.page).then((res) => {
         setUsers(res.items);
         setPage({ ...res, items: null });
       });
     });
-  }, []);
+  }, []); 
 
   function handleUsers(val) {
     getUsers(val).then((res) => {
@@ -57,6 +58,7 @@ export const Users = () => {
       setPage({ ...res, items: null });
     });
   }
+
 
   async function verifyUser(userId) {
     return await pb
@@ -166,6 +168,7 @@ export const Users = () => {
                         variant={"subtle"}
                         color="yellow"
                         onClick={() => confirmVerifing(user?.id)}
+                        // onClick={() => verifyUser(user?.id)}
                       >
                         <AiFillLock size={20} />
                       </Button>
@@ -243,7 +246,7 @@ export const Users = () => {
           <Pagination
             value={page?.page}
             total={page?.totalPages}
-            onChange={handleUsers}
+            onChange={(e) => handleUsers(e)}
           />
         )}
       </div>

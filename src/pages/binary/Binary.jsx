@@ -129,14 +129,15 @@ export async function getBinaryById (id) {
 async function getWorthyUsers () {
   const users = await pb.collection('users').getFullList({filter: `verified = true && bin = false`, expand: 'sponsor, referals'})
 
-  function hasThreeOrMoreVerifiedReferrals(user) {
-    const verifiedReferrals = user?.expand?.referals?.filter(referal => referal.verified == true);
-    return verifiedReferrals?.length >= 3;
-  }
+  // function hasThreeOrMoreVerifiedReferrals(user) {
+  //   const verifiedReferrals = user?.expand?.referals?.filter(referal => referal.verified == true);
+  //   return verifiedReferrals?.length >= 3;
+  // }
   
-  const usersWithThreeOrMoreVerifiedReferrals = users?.filter(user => hasThreeOrMoreVerifiedReferrals(user));
+  // const usersWithThreeOrMoreVerifiedReferrals = users?.filter(user => hasThreeOrMoreVerifiedReferrals(user));
   
-  return usersWithThreeOrMoreVerifiedReferrals ?? []
+  // return usersWithThreeOrMoreVerifiedReferrals ?? []
+  return users
 }
 
 export const Binary = () => {
@@ -174,12 +175,12 @@ export const Binary = () => {
     // })
 
     pb.collection('users').subscribe('*', function ({_, record}) {
-      if (record?.bin) {
+      // if (record?.bin) {
         getWorthyUsers()
         .then(res => {
           setMals(res)
         })
-      }
+      // }
     })
   }, [])
 
@@ -297,7 +298,10 @@ export const Binary = () => {
         setAddBinary({...addBinary, obj})
       })
     })
+    setShow(false)
   }
+
+  const [show, setShow] = React.useState(true)
 
   const handleNodeAdd = () => {
     openConfirmModal({
@@ -336,6 +340,7 @@ export const Binary = () => {
             },
           ]
         })
+        setShow(true)
         // const slot = await pb.collection('binary').getOne(mal?.sponsor, {expand: 'sponsor, children'}) 
         // setNode(slot)
         // const obj = findAndReplaceObjectById(addBinary, mal?.sponsor, {
@@ -459,7 +464,7 @@ export const Binary = () => {
         </div>
         <div className='mt-4 flex justify-center'>
           <Button
-            disabled={disabled}
+            disabled={disabled || !show}
             onClick={handleNodeAdd}
           >
             Добавить
