@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Menu, Modal, Pagination, Table, TextInput } from "@mantine/core";
+import { Button, Menu, Modal, Pagination, Table, Tabs, TextInput } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import dayjs from "dayjs";
 import { CustomNode, findAndReplaceObjectById, getBinaryById } from "pages/binary/Binary";
@@ -8,21 +8,37 @@ import { pb } from "shared/api";
 
 async function getUsers() {
   return await pb.collection("level").getFullList({
-    expand: `user`
+    expand: `user`,
+    filter: `status = 'created'`
+  })
+}
+
+async function getUs () {
+  return await pb.collection("level").getFullList({
+    expand: `user`,
+    filter: `status = 'succ'`
   })
 }
 
 export const Levels = () => {
+
   const [users, setUsers] = React.useState([]);
+  const [endedUsers, setEndedUsers] = React.useState([]);
 
   React.useEffect(() => {
     getUsers().then((res) => {
       setUsers(res);
     });
+    getUs().then((res) => {
+      setEndedUsers(res);
+    });
 
     pb.collection("level").subscribe("*", function () {
       getUsers().then((res) => {
         setUsers(res);
+      });
+      getUs().then((res) => {
+        setEndedUsers(res);
       });
     });
   }, []);
@@ -146,6 +162,30 @@ export const Levels = () => {
   return (
     <>
       <div className="w-full">
+        <Tabs>
+          <Tabs.List>
+            <Tabs.Tab value="1">Путевки</Tabs.Tab>
+            <Tabs.Tab value="2">Курсу</Tabs.Tab>
+            <Tabs.Tab value="3">5 уровень</Tabs.Tab>
+            <Tabs.Tab value="4">6 уровень</Tabs.Tab>
+            <Tabs.Tab value="5">Завершенные</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value="1">
+            
+          </Tabs.Panel>
+          <Tabs.Panel value="2">
+            
+          </Tabs.Panel>
+          <Tabs.Panel value="3">
+            
+          </Tabs.Panel>
+          <Tabs.Panel value="4">
+            
+          </Tabs.Panel>
+          <Tabs.Panel value="5">
+            
+          </Tabs.Panel>
+        </Tabs>
         <Table className="mt-4">
           <thead>
             <tr>
