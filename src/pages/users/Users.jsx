@@ -54,7 +54,6 @@ export const Users = () => {
     });
   }
 
-
   async function verifyUser(userId) {
     return await pb
       .collection("users")
@@ -173,7 +172,11 @@ export const Users = () => {
                   <td>{user.name}</td>
                   <td>{user.bin ? "Да" : "Нет"}</td>
                   <td>
-                    {(user?.level && user?.level !== '2-3' && user?.level != '0' && user?.level != '' ) && (
+                    {user?.level === '4.1' && '4.Путевка'}
+                    {user?.level === '4.2' && '4.Курса'}
+                    {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+
+                    {/* {(user?.level && user?.level !== '2-3' && user?.level != '0' && user?.level != '' ) && (
                       <Menu
                         compact
                       >
@@ -222,7 +225,7 @@ export const Users = () => {
                       >
                         0
                       </Button>
-                    )}
+                    )} */}
                   </td>
                   <td>{user.balance}</td>
                   <td>{user.email}</td>
