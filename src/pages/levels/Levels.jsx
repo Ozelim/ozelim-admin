@@ -106,6 +106,8 @@ export const Levels = () => {
     }
   }, [addModal])
 
+  console.log(loading, 'loading');
+
   async function handleNodeClick (data) {
     setLoading(true)
     if (b === 2) {
@@ -271,9 +273,9 @@ export const Levels = () => {
   }
 
   async function searchByValue(user, newLevel, bidId) {
+    if (!user?.id) return
     setShow(true)
     setLoading(true)
-    if (!user?.id) return
     if (newLevel == 6 && user?.binary == 0) {
       setB(2)
       getBinaryById2(user?.id)
