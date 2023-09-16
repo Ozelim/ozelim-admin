@@ -158,9 +158,51 @@ export async function getBinaryById2 (id) {
     })
   })
 
-  if (!foundSlot?.id) return await pb.collection('binary').getFirstListItem(`sponsor = '111111111111111'`, {
+  if (!foundSlot?.id) {
+    return await pb.collection('binary2').getFirstListItem(`sponsor = '111111111111111'`, {
+      expand: 'sponsor, children'
+    })
+  } 
+
+  return foundSlot
+}
+export async function getBinaryById3 (id) {
+
+  let foundSlot = {}
+
+  await pb.collection('binary3').getFirstListItem(`sponsor = '${id}'`, {
     expand: 'sponsor, children'
   })
+  .then((res) => {
+    foundSlot = res
+  })
+  .catch(async err => {
+    const user = await pb.collection('users').getOne(id)
+    await pb.collection('binary3').getFirstListItem(`sponsor = ${user?.sponsor}`, {expand: 'sponsor, children'})
+    .then(res => {
+      foundSlot = res
+    })
+    .catch(async err => {      
+      let userId = user?.sponsor
+      for (let i = 1; i < 5; i++) {
+        const user = await pb.collection('users').getOne(userId)
+        await pb.collection('binary3').getFirstListItem(`sponsor = "${userId}"`, {expand: `sponsor, children`})
+        .then(res => {
+          foundSlot = res
+        })
+        .catch(async err => {
+          const spons = await pb.collection('users').getOne(user?.sponsor)
+          userId = spons?.id
+        })
+      }
+    })
+  })
+
+  if (!foundSlot?.id) {
+    return await pb.collection('binary3').getFirstListItem(`sponsor = '111111111111111'`, {
+      expand: 'sponsor, children'
+    })
+  } 
 
   return foundSlot
 }
@@ -283,6 +325,58 @@ export const Binary = () => {
   const [node, setNode] = React.useState(null)
 
   async function handleNodeClick (data) {
+    if (mal?.expand?.sponsor?.binary === 2) {
+      getBinaryById2(data?.value?.id)
+      .then(async res => {
+        const slot = await pb.collection('binary2').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        const obj = findAndReplaceObjectById(addBinary, data?.value?.id, {
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        setAddBinary({...addBinary, ...obj})
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
+      return
+    }
+
+    if (mal?.expand?.sponsor?.binary === 3) {
+      getBinaryById3(data?.value?.id)
+      .then(async res => {
+        const slot = await pb.collection('binary3').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        const obj = findAndReplaceObjectById(addBinary, data?.value?.id, {
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        setAddBinary({...addBinary, ...obj})
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
+      return
+    }
+
     getBinaryById(data?.value?.id)
     .then(async res => {
       const slot = await pb.collection('binary').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
@@ -308,6 +402,74 @@ export const Binary = () => {
   } 
 
   async function addNode () {
+    if (mal?.expand?.sponsor?.binary === 2) {
+      await pb.collection('binary2').update(node?.id, {
+        children: [...node?.children, mal?.id]
+      })
+      .then(async () => {
+        await pb.collection('binary2').create({
+          id: mal?.id,
+          sponsor: mal?.id, 
+        })
+        await pb.collection('users').update(mal?.id, {
+          bin: true
+        })
+        await getBinaryById2(node?.id)
+        .then(res => {
+          const obj = findAndReplaceObjectById(addBinary, node?.id, {
+            value: res?.expand?.sponsor,
+            children: [
+              {
+                value: res?.expand?.children?.[0],
+                children: []
+              },
+              {
+                value: res?.expand?.children?.[1],
+                children: []
+              },
+            ]
+          })
+          setAddBinary({...addBinary, obj})
+        })
+      })
+      setShow(false)
+      return
+    }
+    
+    if (mal?.expand?.sponsor?.binary === 3) {
+      await pb.collection('binary3').update(node?.id, {
+        children: [...node?.children, mal?.id]
+      })
+      .then(async () => {
+        await pb.collection('binary3').create({
+          id: mal?.id,
+          sponsor: mal?.id, 
+        })
+        await pb.collection('users').update(mal?.id, {
+          bin: true
+        })
+        await getBinaryById3(node?.id)
+        .then(res => {
+          const obj = findAndReplaceObjectById(addBinary, node?.id, {
+            value: res?.expand?.sponsor,
+            children: [
+              {
+                value: res?.expand?.children?.[0],
+                children: []
+              },
+              {
+                value: res?.expand?.children?.[1],
+                children: []
+              },
+            ]
+          })
+          setAddBinary({...addBinary, obj})
+        })
+      })
+      setShow(false)
+      return
+    }
+    
     await pb.collection('binary').update(node?.id, {
       children: [...node?.children, mal?.id]
     })
@@ -362,6 +524,56 @@ export const Binary = () => {
 
   React.useEffect(() => {
     if (addModal) {
+      if (mal?.expand?.sponsor?.binary === 2) {
+        getBinaryById2(mal?.sponsor)
+        .then(async res => {
+          const slot = await pb.collection('binary2').getOne(res?.id, {expand: 'sponsor, children'}) 
+          setNode(slot)
+          setAddBinary({
+            value: res?.expand?.sponsor,
+            children: [
+              {
+                value: res?.expand?.children?.[0],
+                children: []
+              },
+              {
+                value: res?.expand?.children?.[1],
+                children: []
+              },
+            ]
+          })
+          setShow(true)
+        })
+        .catch(err => {
+          console.log(err, 'err');
+        }) 
+        return
+      }
+      if (mal?.expand?.sponsor?.binary === 3) {
+        getBinaryById3(mal?.sponsor)
+        .then(async res => {
+          const slot = await pb.collection('binary3').getOne(res?.id, {expand: 'sponsor, children'}) 
+          setNode(slot)
+          setAddBinary({
+            value: res?.expand?.sponsor,
+            children: [
+              {
+                value: res?.expand?.children?.[0],
+                children: []
+              },
+              {
+                value: res?.expand?.children?.[1],
+                children: []
+              },
+            ]
+          })
+          setShow(true)
+        })
+        .catch(err => {
+          console.log(err, 'err');
+        }) 
+        return
+      }
       getBinaryById(mal?.sponsor)
       .then(async res => {
         const slot = await pb.collection('binary').getOne(res?.id, {expand: 'sponsor, children'}) 
@@ -380,22 +592,6 @@ export const Binary = () => {
           ]
         })
         setShow(true)
-        // const slot = await pb.collection('binary').getOne(mal?.sponsor, {expand: 'sponsor, children'}) 
-        // setNode(slot)
-        // const obj = findAndReplaceObjectById(addBinary, mal?.sponsor, {
-        //   value: res?.expand?.sponsor,
-        //   children: [
-        //     {
-        //       value: res?.expand?.children?.[0],
-        //       children: []
-        //     },
-        //     {
-        //       value: res?.expand?.children?.[1],
-        //       children: []
-        //     },
-        //   ]
-        // })
-        // setAddBinary({...addBinary, obj})
       })
       .catch(err => {
         console.log(err, 'err');

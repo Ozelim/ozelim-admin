@@ -6,8 +6,8 @@ import { pb } from "shared/api";
 
 import { AiFillCheckCircle, AiFillLock } from "react-icons/ai";
 
-async function getUsers(page = 1) {
-  return await pb.collection("users").getList(page, 50);
+async function getUsers() {
+  return await pb.collection("users").getFullList();
 }
 
 export const Users = () => {
@@ -33,29 +33,24 @@ export const Users = () => {
 
     if (foundUsers.length !== 0) {
       setUsers(foundUsers);
-      setPage(null);
     }
   }
 
   React.useEffect(() => {
     getUsers().then((res) => {
-      setUsers(res.items);
-      setPage({ ...res, items: null });
+      setUsers(res);
     });
 
     pb.collection("users").subscribe("*", function () {
-      console.log('asd');
-      getUsers(page?.page).then((res) => {
-        setUsers(res.items);
-        setPage({ ...res, items: null });
+      getUsers().then((res) => {
+        setUsers(res);
       });
     });
   }, []); 
 
   function handleUsers(val) {
     getUsers(val).then((res) => {
-      setUsers(res.items);
-      setPage({ ...res, items: null });
+      setUsers(res);
     });
   }
 
@@ -72,7 +67,8 @@ export const Users = () => {
           referals: [...sponsor?.referals, res?.id]
         })
         
-        const referals = await pb.collection('users').getFullList({filter: `sponsor = ${sponsor?.id} && verified = true`})
+        const referals = await pb.collection('users').getFullList({filter: `sponsor = '${sponsor?.id}' && verified = true`})
+
 
         if (referals?.length === 1) {
           await pb.collection('users').update(sponsor?.id, {
@@ -81,7 +77,7 @@ export const Users = () => {
           return
         }
 
-        if (referals?.length >=4) {
+        if (referals?.length >= 4) {
           await pb.collection('users').update(sponsor?.id, {
             balance: sponsor?.balance + 15000            
           })
@@ -242,13 +238,6 @@ export const Users = () => {
             })}
           </tbody>
         </Table>
-        {page && (
-          <Pagination
-            value={page?.page}
-            total={page?.totalPages}
-            onChange={(e) => handleUsers(e)}
-          />
-        )}
       </div>
     </>
   );

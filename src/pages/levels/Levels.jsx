@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Menu, Modal, Pagination, Table, Tabs, TextInput } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import dayjs from "dayjs";
-import { CustomNode, findAndReplaceObjectById, getBinaryById } from "pages/binary/Binary";
+import { CustomNode, findAndReplaceObjectById, getBinaryById, getBinaryById2, getBinaryById3 } from "pages/binary/Binary";
 import Tree from "react-d3-tree";
 import { pb } from "shared/api";
 import { CiCircleRemove } from "react-icons/ci";
@@ -49,8 +49,34 @@ export const Levels = () => {
 
   const [addBinary, setAddBinary] = React.useState({})
 
+  const [b, setB] = React.useState(1)
+
   React.useEffect(() => {
     if (addModal) {
+      if (b === 2) {
+        getBinaryById(mal?.sponsor)
+        .then(async res => {
+          const slot = await pb.collection('binary2').getOne(res?.id, {expand: 'sponsor, children'}) 
+          setNode(slot)
+          setAddBinary({
+            value: res?.expand?.sponsor,
+            children: [
+              {
+                value: res?.expand?.children?.[0],
+                children: []
+              },
+              {
+                value: res?.expand?.children?.[1],
+                children: []
+              },
+            ]
+          })
+        })
+        .catch(err => {
+          console.log(err, 'err');
+        }) 
+        return
+      }
       getBinaryById(mal?.sponsor)
       .then(async res => {
         const slot = await pb.collection('binary').getOne(res?.id, {expand: 'sponsor, children'}) 
@@ -76,6 +102,57 @@ export const Levels = () => {
   }, [addModal])
 
   async function handleNodeClick (data) {
+    if (b === 2) {
+      getBinaryById2(data?.value?.id)
+      .then(async res => {
+        const slot = await pb.collection('binary2').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        const obj = findAndReplaceObjectById(addBinary, data?.value?.id, {
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        setAddBinary({...addBinary, ...obj})
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
+      return
+    }
+    if (b === 3) {
+      getBinaryById3(data?.value?.id)
+      .then(async res => {
+        const slot = await pb.collection('binary3').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        const obj = findAndReplaceObjectById(addBinary, data?.value?.id, {
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        setAddBinary({...addBinary, ...obj})
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
+      return
+    }
+
     getBinaryById(data?.value?.id)
     .then(async res => {
       const slot = await pb.collection('binary').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
@@ -103,13 +180,93 @@ export const Levels = () => {
   const [searchModal, setSearchModal] = React.useState(false)
   
   const [mal, setMal] = React.useState(null)
+  const [bid, setBid] = React.useState(null)
 
-  async function searchByValue(id) {
-    if (id) {
-      getBinaryById(id)
+  const handleNodeAdd = () => {
+    openConfirmModal({
+      title: 'Подтверждение действия',
+      centered: true,
+      labels: {confirm: 'Подтвердить', cancel: 'Отмена'},
+      children: (
+        <>Вы действительно хотите добавить пользователя с ID: {mal?.id} под пользователя {node?.id}?</>
+      ),
+      onConfirm: () => addNode()
+    })
+  } 
+
+  async function addNode () {
+    await pb.collection(`binary${b}`).update(node?.id, {
+      children: [...node?.children, mal]
+    })
+    .then(async () => {
+      await pb.collection(`binary${b}`).create({
+        id: mal,
+        sponsor: mal, 
+      })
+      const u = await pb.collection('users').getOne(mal)
+
+      await pb.collection('users').update(mal, {
+        bin: true,
+        balance: u?.balance + 1000000,
+        level: '',
+        cock: false,
+        binary: b,
+      })
+      await pb.collection('level').update(bid, {
+        status: 'succ'
+      })
+      if (b === 2) {
+        await getBinaryById2(node?.id)
+        .then(res => {
+          const obj = findAndReplaceObjectById(addBinary, node?.id, {
+            value: res?.expand?.sponsor,
+            children: [
+              {
+                value: res?.expand?.children?.[0],
+                children: []
+              },
+              {
+                value: res?.expand?.children?.[1],
+                children: []
+              },
+            ]
+          })
+          setAddBinary({...addBinary, obj})
+        })
+      }
+      if (b === 3) {
+        await getBinaryById3(node?.id)
+        .then(res => {
+          const obj = findAndReplaceObjectById(addBinary, node?.id, {
+            value: res?.expand?.sponsor,
+            children: [
+              {
+                value: res?.expand?.children?.[0],
+                children: []
+              },
+              {
+                value: res?.expand?.children?.[1],
+                children: []
+              },
+            ]
+          })
+          setAddBinary({...addBinary, obj})
+        })
+      }
+    })
+    setShow(false)
+  }
+
+  async function searchByValue(user, newLevel, bidId) {
+    if (!user?.id) return
+    if (newLevel == 6 && user?.binary == 0) {
+      setB(2)
+      getBinaryById2(user?.id)
       .then(async res => {
-        const slot = await pb.collection('binary').getOne(id, {expand: 'sponsor, children'}) 
+        const slot = await pb.collection('binary2').getOne(res?.id, {expand: 'sponsor, children'}) 
         setNode(slot)
+        setMal(user?.id)
+        setBid(bidId)
         setAddBinary({...addBinary, 
           value: res?.expand?.sponsor,
           children: [
@@ -128,9 +285,61 @@ export const Levels = () => {
       .catch(err => {
         console.log(err, 'err');
       }) 
+      return
+    } 
+
+    if (newLevel == 6 && user?.binary == 2) {
+      setB(3)
+      getBinaryById3(user?.id)
+      .then(async res => {
+        const slot = await pb.collection('binary3').getOne(res?.id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        setMal(user?.id)
+        setBid(bidId)
+        setAddBinary({...addBinary, 
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        setSearchModal(true)
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
+      return
+    } 
+      // setB(1)
+      // getBinaryById(user?.id)
+      // .then(async res => {
+      //   const slot = await pb.collection('binary').getOne(user?.id, {expand: 'sponsor, children'}) 
+      //   setNode(slot)
+      //   setAddBinary({...addBinary, 
+      //     value: res?.expand?.sponsor,
+      //     children: [
+      //       {
+      //         value: res?.expand?.children?.[0],
+      //         children: []
+      //       },
+      //       {
+      //         value: res?.expand?.children?.[1],
+      //         children: []
+      //       },
+      //     ]
+      //   })
+      //   setSearchModal(true)
+      // })
+      // .catch(err => {
+      //   console.log(err, 'err');
+      // }) 
       // handleUsers(1);
-      return;
-    }
   }
 
   async function giveNewLevel (user, newLevel, id) {
@@ -205,6 +414,10 @@ export const Levels = () => {
     ),
     onConfirm: () => deleteWithdraw(id, userId)
   })
+
+  const [show, setShow] = React.useState(true)
+
+  const disabled = (!node) || node?.children?.length >= 2 
 
   return (
     <>
@@ -340,14 +553,14 @@ export const Levels = () => {
                         {user?.user}
                     </td>
                     <td>
-                    {user?.level === '4.1' && '4.Путевка'}
+                      {user?.level === '4.1' && '4.Путевка'}
                       {user?.level === '4.2' && '4.Курса'}
                       {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
                     </td>
                     <td>
-                          {user?.new_level === '4.1' && '4'}
-                          {user?.new_level === '4.2' && '4'}
-                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                      {user?.new_level === '4.1' && '4'}
+                      {user?.new_level === '4.2' && '4'}
+                      {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
                     </td>
                     <td>{user?.expand?.user?.name}</td>
                     <td>{user?.expand?.user?.surname}</td>
@@ -449,7 +662,9 @@ export const Levels = () => {
                         <Button
                           compact
                           variant="outline"
-                          onClick={() => confirmNewLevel(user?.expand?.user, user?.new_level, user?.id)}
+                          onClick={user?.new_level == 6 
+                            ? () => searchByValue(user?.expand?.user, user?.new_level, user?.id) 
+                            : () => confirmNewLevel(user?.expand?.user, user?.new_level, user?.id)}
                         >
                           {user?.new_level === '4.1' && '4.Путевка'}
                           {user?.new_level === '4.2' && '4.Курс'}
@@ -475,7 +690,6 @@ export const Levels = () => {
             </Table>
           </Tabs.Panel>
         </Tabs>
-     
       </div>
       <Modal
         opened={searchModal}
@@ -501,12 +715,20 @@ export const Levels = () => {
               <CustomNode 
                 {...props}
                 onNodeClick={handleNodeClick}
-                // handleNodeAdd={handleNodeAdd}
+                handleNodeAdd={handleNodeAdd}
                 sponsor={mal}
                 node={node}
               />
             )}
           />
+        </div>
+        <div className='mt-4 flex justify-center'>
+          <Button
+            disabled={disabled || !show}
+            onClick={handleNodeAdd}
+          >
+            Добавить
+          </Button>
         </div>
       </Modal>
     </>
