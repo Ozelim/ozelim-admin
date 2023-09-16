@@ -243,6 +243,7 @@ export const Levels = () => {
           })
           setAddBinary({...addBinary, obj})
           setShow(false)
+          setLoading(false)
         })
       }
       if (b === 3) {
@@ -263,14 +264,15 @@ export const Levels = () => {
           })
           setAddBinary({...addBinary, obj})
           setShow(false)
+          setLoading(false)
         })
       }
     })
-    setLoading(true)
   }
 
   async function searchByValue(user, newLevel, bidId) {
     setShow(true)
+    setLoading(true)
     if (!user?.id) return
     if (newLevel == 6 && user?.binary == 0) {
       setB(2)
@@ -295,6 +297,7 @@ export const Levels = () => {
         })
         setSearchModal(true)
         setShow(false)
+        setLoading(false)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -324,7 +327,7 @@ export const Levels = () => {
           ]
         })
         setSearchModal(true)
-        setShow(false)
+        setLoading(false)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -358,7 +361,7 @@ export const Levels = () => {
   }
 
   async function giveNewLevel (user, newLevel, id) {
-    setShow(true)
+    setLoading(true)
     if (newLevel == 5) {
       const u = await pb.collection('users').getOne(user?.id)
       return await pb.collection('users').update(user?.id, {
@@ -370,7 +373,7 @@ export const Levels = () => {
         await pb.collection('level').update(id, {
           status: 'succ'
         })
-        setShow(false)
+        setLoading(false)
       })
     }
 
@@ -385,7 +388,7 @@ export const Levels = () => {
         await pb.collection('level').update(id, {
           status: 'succ'
         })
-        setShow(false)
+        setLoading(false)
       })
     }
 
@@ -397,7 +400,7 @@ export const Levels = () => {
       await pb.collection('level').update(id, {
         status: 'succ'
       })
-      setShow(false)
+      setLoading(false)
     })
   }
 
@@ -416,13 +419,13 @@ export const Levels = () => {
   })
 
   async function deleteWithdraw (id, userId) {
-    setShow(true)
+    setLoading(true)
     await pb.collection('level').delete(id)
     .then(async () => {
       await pb.collection('users').update(userId, {
         cock: false
       })
-      setShow(true)
+      setLoading(true)
     })
   }
 
