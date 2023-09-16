@@ -258,7 +258,7 @@ export const Levels = () => {
   }
 
   async function searchByValue(user, newLevel, bidId) {
-    if (!user?.id) return
+    // if (!user?.id) return
     if (newLevel == 6 && user?.binary == 0) {
       setB(2)
       getBinaryById2(user?.id)
