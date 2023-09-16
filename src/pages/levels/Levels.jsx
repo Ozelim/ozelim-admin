@@ -442,10 +442,10 @@ export const Levels = () => {
 
   return (
     <>
-      <LoadingOverlay
-        visible={loading}
-      />
       <div className="w-full">
+        <LoadingOverlay
+          visible={loading}
+        />
         <Tabs>
           <Tabs.List>
             <Tabs.Tab value="5">Активные</Tabs.Tab>
