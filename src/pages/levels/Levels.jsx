@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Menu, Modal, Pagination, Table, Tabs, TextInput } from "@mantine/core";
+import { Button, LoadingOverlay, Menu, Modal, Pagination, Table, Tabs, TextInput } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import dayjs from "dayjs";
 import { CustomNode, findAndReplaceObjectById, getBinaryById, getBinaryById2, getBinaryById3 } from "pages/binary/Binary";
@@ -43,6 +43,8 @@ export const Levels = () => {
   }
   // Пример использования
 
+  const [loading, setLoading] = React.useState(false)
+
   const [node, setNode] = React.useState(null)
 
   const [addModal, setAddModal] = React.useState(false)
@@ -53,6 +55,7 @@ export const Levels = () => {
 
   React.useEffect(() => {
     if (addModal) {
+      setLoading(true)
       if (b === 2) {
         getBinaryById(mal?.sponsor)
         .then(async res => {
@@ -71,6 +74,7 @@ export const Levels = () => {
               },
             ]
           })
+          setLoading(false)
         })
         .catch(err => {
           console.log(err, 'err');
@@ -94,6 +98,7 @@ export const Levels = () => {
             },
           ]
         })
+        setLoading(false)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -102,6 +107,7 @@ export const Levels = () => {
   }, [addModal])
 
   async function handleNodeClick (data) {
+    setLoading(true)
     if (b === 2) {
       getBinaryById2(data?.value?.id)
       .then(async res => {
@@ -121,6 +127,7 @@ export const Levels = () => {
           ]
         })
         setAddBinary({...addBinary, ...obj})
+        setLoading(false)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -146,6 +153,7 @@ export const Levels = () => {
           ]
         })
         setAddBinary({...addBinary, ...obj})
+        setLoading(false)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -171,6 +179,7 @@ export const Levels = () => {
         ]
       })
       setAddBinary({...addBinary, ...obj})
+      setLoading(false)
     })
     .catch(err => {
       console.log(err, 'err');
@@ -195,6 +204,7 @@ export const Levels = () => {
   } 
 
   async function addNode () {
+    setLoading(true)
     await pb.collection(`binary${b}`).update(node?.id, {
       children: [...node?.children, mal]
     })
@@ -232,6 +242,7 @@ export const Levels = () => {
             ]
           })
           setAddBinary({...addBinary, obj})
+          setShow(false)
         })
       }
       if (b === 3) {
@@ -251,14 +262,16 @@ export const Levels = () => {
             ]
           })
           setAddBinary({...addBinary, obj})
+          setShow(false)
         })
       }
     })
-    setShow(false)
+    setLoading(true)
   }
 
   async function searchByValue(user, newLevel, bidId) {
-    // if (!user?.id) return
+    setShow(true)
+    if (!user?.id) return
     if (newLevel == 6 && user?.binary == 0) {
       setB(2)
       getBinaryById2(user?.id)
@@ -281,6 +294,7 @@ export const Levels = () => {
           ]
         })
         setSearchModal(true)
+        setShow(false)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -310,6 +324,7 @@ export const Levels = () => {
           ]
         })
         setSearchModal(true)
+        setShow(false)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -343,6 +358,7 @@ export const Levels = () => {
   }
 
   async function giveNewLevel (user, newLevel, id) {
+    setShow(true)
     if (newLevel == 5) {
       const u = await pb.collection('users').getOne(user?.id)
       return await pb.collection('users').update(user?.id, {
@@ -354,6 +370,7 @@ export const Levels = () => {
         await pb.collection('level').update(id, {
           status: 'succ'
         })
+        setShow(false)
       })
     }
 
@@ -368,6 +385,7 @@ export const Levels = () => {
         await pb.collection('level').update(id, {
           status: 'succ'
         })
+        setShow(false)
       })
     }
 
@@ -379,6 +397,7 @@ export const Levels = () => {
       await pb.collection('level').update(id, {
         status: 'succ'
       })
+      setShow(false)
     })
   }
 
@@ -397,11 +416,13 @@ export const Levels = () => {
   })
 
   async function deleteWithdraw (id, userId) {
+    setShow(true)
     await pb.collection('level').delete(id)
     .then(async () => {
       await pb.collection('users').update(userId, {
         cock: false
       })
+      setShow(true)
     })
   }
 
@@ -421,6 +442,9 @@ export const Levels = () => {
 
   return (
     <>
+      <LoadingOverlay
+        visible={loading}
+      />
       <div className="w-full">
         <Tabs>
           <Tabs.List>
