@@ -106,8 +106,6 @@ export const Levels = () => {
     }
   }, [addModal])
 
-  console.log(loading, 'loading');
-
   async function handleNodeClick (data) {
     setLoading(true)
     if (b === 2) {
