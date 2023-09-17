@@ -272,7 +272,7 @@ export const Levels = () => {
 
   async function searchByValue(user, newLevel, bidId) {
     if (!user?.id) return
-    setShow(true)
+    setShow(false)
     setLoading(true)
     if (newLevel == 6 && user?.binary == 0) {
       setB(2)
@@ -296,7 +296,7 @@ export const Levels = () => {
           ]
         })
         setSearchModal(true)
-        setShow(false)
+        setShow(true)
         setLoading(false)
       })
       .catch(err => {
@@ -327,7 +327,7 @@ export const Levels = () => {
           ]
         })
         setSearchModal(true)
-        setShow(false)
+        setShow(true)
         setLoading(false)
       })
       .catch(err => {
@@ -354,7 +354,7 @@ export const Levels = () => {
           ]
         })
         setSearchModal(true)
-        setShow(false)
+        setShow(true)
         setLoading(false)
       })
       .catch(err => {
