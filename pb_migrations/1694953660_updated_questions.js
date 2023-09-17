@@ -1,12 +1,12 @@
 migrate((db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("od25rnktb4uc8yt")
+  const collection = dao.findCollectionByNameOrId("rhxa53d4lrvj1rg")
 
   // add
   collection.schema.addField(new SchemaField({
     "system": false,
-    "id": "eslwljde",
-    "name": "status",
+    "id": "3lrthjea",
+    "name": "status_",
     "type": "select",
     "required": false,
     "unique": false,
@@ -14,7 +14,8 @@ migrate((db) => {
       "maxSelect": 1,
       "values": [
         "created",
-        "succ"
+        "succ",
+        "fall"
       ]
     }
   }))
@@ -22,10 +23,10 @@ migrate((db) => {
   return dao.saveCollection(collection)
 }, (db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("od25rnktb4uc8yt")
+  const collection = dao.findCollectionByNameOrId("rhxa53d4lrvj1rg")
 
   // remove
-  collection.schema.removeField("eslwljde")
+  collection.schema.removeField("3lrthjea")
 
   return dao.saveCollection(collection)
 })

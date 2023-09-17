@@ -1,12 +1,12 @@
 migrate((db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("b6vkhwhjrm8sqph")
+  const collection = dao.findCollectionByNameOrId("sjiq6j6mn8hpwwj")
 
   // add
   collection.schema.addField(new SchemaField({
     "system": false,
-    "id": "gbpxeu6a",
-    "name": "content",
+    "id": "jyzz253c",
+    "name": "admin",
     "type": "text",
     "required": false,
     "unique": false,
@@ -20,10 +20,10 @@ migrate((db) => {
   return dao.saveCollection(collection)
 }, (db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("b6vkhwhjrm8sqph")
+  const collection = dao.findCollectionByNameOrId("sjiq6j6mn8hpwwj")
 
   // remove
-  collection.schema.removeField("gbpxeu6a")
+  collection.schema.removeField("jyzz253c")
 
   return dao.saveCollection(collection)
 })

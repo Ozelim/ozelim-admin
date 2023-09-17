@@ -128,6 +128,7 @@ export const Levels = () => {
         })
         setAddBinary({...addBinary, ...obj})
         setLoading(false)
+        setShow(true)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -154,6 +155,7 @@ export const Levels = () => {
         })
         setAddBinary({...addBinary, ...obj})
         setLoading(false)
+        setShow(true)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -180,6 +182,7 @@ export const Levels = () => {
       })
       setAddBinary({...addBinary, ...obj})
       setLoading(false)
+      setShow(true)
     })
     .catch(err => {
       console.log(err, 'err');
@@ -242,7 +245,7 @@ export const Levels = () => {
             ]
           })
           setAddBinary({...addBinary, obj})
-          setShow(false)
+          setShow(true)
           setLoading(false)
         })
       }
@@ -354,12 +357,13 @@ export const Levels = () => {
           ]
         })
         setSearchModal(true)
-        setShow(true)
+        // setShow(true)
         setLoading(false)
       })
       .catch(err => {
         console.log(err, 'err');
       }) 
+      setLoading(false)
   }
 
   async function giveNewLevel (user, newLevel, id) {
@@ -654,8 +658,8 @@ export const Levels = () => {
                 <tr>
                   <th>Дата подачи</th>
                   <th>Бинар ID</th>
-                  <th>Уровень</th>
-                  <th>Новый уровень</th>
+                  <th>Завер. ур.</th>
+                  <th>Новый ур.</th>
                   <th>Имя</th>
                   <th>Фамилия</th>
                   <th>Телефон</th>

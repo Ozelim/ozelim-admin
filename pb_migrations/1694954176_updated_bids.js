@@ -1,12 +1,12 @@
 migrate((db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("_pb_users_auth_")
+  const collection = dao.findCollectionByNameOrId("sjiq6j6mn8hpwwj")
 
   // add
   collection.schema.addField(new SchemaField({
     "system": false,
-    "id": "ntk5uyqa",
-    "name": "binary",
+    "id": "cye2s4b2",
+    "name": "admin",
     "type": "text",
     "required": false,
     "unique": false,
@@ -20,10 +20,10 @@ migrate((db) => {
   return dao.saveCollection(collection)
 }, (db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("_pb_users_auth_")
+  const collection = dao.findCollectionByNameOrId("sjiq6j6mn8hpwwj")
 
   // remove
-  collection.schema.removeField("ntk5uyqa")
+  collection.schema.removeField("cye2s4b2")
 
   return dao.saveCollection(collection)
 })

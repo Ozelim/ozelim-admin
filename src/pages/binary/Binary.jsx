@@ -344,6 +344,7 @@ export const Binary = () => {
           ]
         })
         setAddBinary({...addBinary, ...obj})
+        setShow(true)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -370,6 +371,7 @@ export const Binary = () => {
           ]
         })
         setAddBinary({...addBinary, ...obj})
+        setShow(true)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -395,6 +397,7 @@ export const Binary = () => {
         ]
       })
       setAddBinary({...addBinary, ...obj})
+      setShow(true)
     })
     .catch(err => {
       console.log(err, 'err');

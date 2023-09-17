@@ -8,6 +8,8 @@ import { BomjPlaza } from "widgets/BomjPlaza";
 import dayjs from "dayjs";
 import { CiCircleRemove } from "react-icons/ci";
 import { openConfirmModal } from "@mantine/modals";
+import { useAuth } from "shared/hooks";
+import { BiBadgeCheck } from "react-icons/bi";
 
 async function getQuestions () {
   return (await pb.collection('questions').getFullList({filter: `question = true`}))[0]
@@ -27,7 +29,9 @@ async function getResorts (diseas, region) {
   }
 }
 
-export const BidsForm = ({ bid }) => {
+export const BidsForm = ({ bid, ended }) => {
+
+  const {user} = useAuth()
 
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -55,45 +59,65 @@ export const BidsForm = ({ bid }) => {
     })
   }, [])
 
+  async function deleteWithdraw () {
+    await pb.collection('questions').update(bid?.id, {
+      status: 'succ',
+      admin: user?.email
+    })
+  }
+
+  async function deleteWithdraw1 () {
+    await pb.collection('questions').update(bid?.id, {
+      status: 'fall',
+      admin: user?.email
+    })
+  }
+
+
   const removeWithdrawConfirm = (e) => {
     e?.stopPropagation()
     openConfirmModal({
       title: 'Подтвердите действие',
       centered: true,
-      labels: { confirm: 'Подтвердить', cancel: 'Отмена'},
+      labels: { confirm: 'Успешно', cancel: 'Отклонено'},
       children: (
-        <>Вы действительно хотите отклонить данную отправку?</>
+        <></>
       ),
-      onConfirm: () => deleteWithdraw()
+      onConfirm: () => deleteWithdraw(),
+      onCancel: () => deleteWithdraw1()
     })
   }
 
-  async function deleteWithdraw () {
-    await pb.collection('questions').delete(bid?.id)
-  }
-
   return (
-    <div className="w-full">
-      <div
+    <>
+      <tr 
         onClick={open}
-        className="border-2 p-3  rounded-primary border-solid border-primary-500 text-[#1e1e1e] mt-5 "
       >
-        <form className="flex justify-between">
-          <div>{bid?.[1]}</div>
-          <div>{bid?.[2]}</div>
-          <div>{bid?.[3]}</div>
-          <div>{bid?.[4]}</div>
-          <div>{dayjs(bid?.created).format('YY-MM-DD, HH-mm')}</div>
-          <div>
-            <CiCircleRemove
-              size={35}
-              color='red'
-              onClick={removeWithdrawConfirm}
-              className='cursor-pointer hover:fill-yellow-500'
-            />
-          </div>
-        </form>
-      </div>
+        <td>{bid?.[1]}</td>
+        <td>{bid?.[2]}</td>
+        <td>{bid?.[3]}</td>
+        <td>{bid?.[4]}</td>
+        {ended 
+          ? 
+            <>
+              <td>{dayjs(bid?.created).format('YY-MM-DD, HH-mm')}</td>
+              <td>{(bid?.status === 'succ' ? 'Успешно' : 'Отклонено')}</td>
+              <td>{bid?.admin}</td>
+            </> 
+          : 
+            <>
+              <td>{dayjs(bid?.created).format('YY-MM-DD, HH-mm')}</td>
+              <td>   
+                <BiBadgeCheck
+                  size={35}
+                  color='red'
+                  onClick={removeWithdrawConfirm}
+                  className='cursor-pointer hover:fill-yellow-500'
+                />
+              </td>
+            </>
+        }
+      </tr>
       <Modal 
         opened={opened} 
         onClose={close}
@@ -101,7 +125,6 @@ export const BidsForm = ({ bid }) => {
       >
         <div>
           {Object.keys(questions)?.map((key, i) => {
-
             return (
               <TextInput 
                 key={i}
@@ -147,6 +170,16 @@ export const BidsForm = ({ bid }) => {
           )}
         </div>
       </Modal>
-    </div>
+    </>
+    // <div className="w-full">
+    //   <div
+    //     onClick={open}
+    //     className="border-2 p-3  rounded-primary border-solid border-primary-500 text-[#1e1e1e] mt-5 "
+    //   >
+        
+  
+    //   </div>
+
+    // </div>
   );
 };

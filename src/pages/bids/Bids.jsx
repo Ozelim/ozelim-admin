@@ -1,10 +1,13 @@
+import React from "react";
 import { Modal, Table, Tabs, TextInput } from "@mantine/core";
 import dayjs from "dayjs";
-import React from "react";
 import { pb } from "shared/api";
 import { BidsForm } from "./BidsForm";
 import { CiCircleRemove } from "react-icons/ci";
 import { openConfirmModal } from "@mantine/modals";
+
+import { BiAccessibility, BiBadgeCheck } from 'react-icons/bi'
+import { useAuth } from "shared/hooks";
 
 async function getAnswers () {
   return await pb.collection("questions").getFullList({
@@ -19,6 +22,8 @@ export const Bids = () => {
 
   const [answers, setAnswers] = React.useState([])
   const [bids, setBids] = React.useState([]);
+
+  const { user } = useAuth()
 
   React.useEffect(() => {
     getAnswers().then((res) => {
@@ -45,23 +50,40 @@ export const Bids = () => {
 
   const healthBids = bids?.filter(bid => bid?.type === 'health')
   const coursesBids = bids?.filter(bid => bid?.type === 'course')
-  const priceBids = bids?.filter(bid => bid?.type === 'price')
-  const resortsBids = bids?.filter(bid => bid?.type === 'resort')
 
-  async function deleteWithdraw (id) {
-    await pb.collection('bids').delete(id)
+  const activeAnswers = answers?.filter(bid => bid?.status === 'created')
+  const endedAndwers = answers?.filter(bid => bid?.status !== 'created')
+
+  const priceBids = bids?.filter(bid => bid?.type === 'price' && bid?.status === 'created')
+  const resortsBids = bids?.filter(bid => bid?.type === 'resort' && bid?.status === 'created')
+
+  const priceBids1 = bids?.filter(bid => bid?.type === 'price' && bid?.status !== 'created')
+  const resortsBids1 = bids?.filter(bid => bid?.type === 'resort' && bid?.status !== 'created')
+
+  async function deleteWithdraw (id, bid) {
+    await pb.collection(bid ? 'questions' : 'bids').update(id, {
+      status: 'succ',
+      admin: user?.email
+    })
   }
 
-  const removeWithdrawConfirm = (id) => openConfirmModal({
+  async function deleteWithdraw1 (id, bid) {
+    await pb.collection(bid ? 'questions' : 'bids').update(id, {
+      status: 'fall',
+      admin: user?.email
+    })
+  }
+
+  const removeWithdrawConfirm = (id, bid) => openConfirmModal({
     title: 'Подтвердите действие',
     centered: true,
-    labels: { confirm: 'Подтвердить', cancel: 'Отмена'},
+    labels: { confirm: 'Успешно', cancel: 'Отклонено'},
     children: (
-      <>Вы действительно хотите отклонить данную отправку?</>
+      <></>
     ),
-    onConfirm: () => deleteWithdraw(id)
+    onConfirm: () => deleteWithdraw(id, bid),
+    onCancel: () => deleteWithdraw1(id, bid)
   })
-
 
   return (
     <>
@@ -73,13 +95,50 @@ export const Bids = () => {
             {/* <Tabs.Tab value="courses">Курсы туризма</Tabs.Tab> */}
             <Tabs.Tab value="price">Прайс лист</Tabs.Tab>
             <Tabs.Tab value="resort">Курорты</Tabs.Tab>
+            <Tabs.Tab value="question1">Опросник ( Завер. )</Tabs.Tab>
+            <Tabs.Tab value="price1">Прайс лист ( Завер. )</Tabs.Tab>
+            <Tabs.Tab value="resort1">Курорты ( Завер. )</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="question">
-            {answers?.map((bid) => (
-              <BidsForm bid={bid} key={bid.id} />
-            ))}
+            <Table>
+              <thead>
+                <tr>
+                  <th>Вопрос 1</th>
+                  <th>Вопрос 2</th>
+                  <th>Вопрос 3</th>
+                  <th>Вопрос 4</th>
+                  <th>Дата</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {activeAnswers?.map((bid) => (
+                  <BidsForm bid={bid} key={bid.id} />
+                ))}
+              </tbody>
+            </Table>
           </Tabs.Panel>
-          <Tabs.Panel value="health">
+          <Tabs.Panel value="question1">
+          <Table>
+              <thead>
+                <tr>
+                  <th>Вопрос 1</th>
+                  <th>Вопрос 2</th>
+                  <th>Вопрос 3</th>
+                  <th>Вопрос 4</th>
+                  <th>Дата</th>
+                  <th>Статус</th>
+                  <th>Завершил</th>
+                </tr>
+              </thead>
+              <tbody>
+                {endedAndwers?.map((bid) => (
+                  <BidsForm bid={bid} key={bid.id} ended/>
+                ))}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          {/* <Tabs.Panel value="health">
             <Table>
               <thead>
                 <tr>
@@ -113,8 +172,8 @@ export const Bids = () => {
                 })}
               </tbody>
             </Table>
-          </Tabs.Panel>
-          <Tabs.Panel value="courses">
+          </Tabs.Panel> */}
+          {/* <Tabs.Panel value="courses">
             <Table>
               <thead>
                 <tr>
@@ -150,7 +209,7 @@ export const Bids = () => {
                 })}
               </tbody>
             </Table>
-          </Tabs.Panel>
+          </Tabs.Panel> */}
           <Tabs.Panel value="price">
             <Table>
               <thead>
@@ -171,7 +230,7 @@ export const Bids = () => {
                       <td>{price?.email}</td>
                       <td>{price?.phone}</td>
                       <td>
-                        <CiCircleRemove
+                        <BiBadgeCheck
                           size={35}
                           color='red'
                           onClick={() => removeWithdrawConfirm(price?.id)}
@@ -212,13 +271,77 @@ export const Bids = () => {
                         </a>
                       </td>
                       <td>
-                        <CiCircleRemove
+                        <BiBadgeCheck
                           size={35}
                           color="red"
                           onClick={() => removeWithdrawConfirm(resort?.id)}
                           className="cursor-pointer hover:fill-yellow-500"
                         />
                       </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value="price1">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Имя</th>
+                  <th>Почта</th>
+                  <th>Телефон</th>
+                  <th>Статус</th>
+                  <th>Завершил</th>
+                </tr>
+              </thead>
+              <tbody>
+                {priceBids1?.map((price) => {
+                  return (
+                    <tr key={price?.id}>
+                      <td>{dayjs(price?.created).format("YY-MM-DD, HH:mm")}</td>
+                      <td>{price?.name}</td>
+                      <td>{price?.email}</td>
+                      <td>{price?.phone}</td>
+                      <td>{price?.status === 'succ' ? 'Успешно' : 'Отклонено'}</td>
+                      <td>{price?.admin}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value="resort1">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Имя</th>
+                  <th>Почта</th>
+                  <th>Телефон</th>
+                  <th>Курорт</th>
+                  <th>Статус</th>
+                  <th>Завершил</th>
+                </tr>
+              </thead>
+              <tbody>
+                {resortsBids1?.map((resort) => {
+                  return (
+                    <tr key={resort?.id}>
+                      <td>
+                        {dayjs(resort?.created).format("YY-MM-DD, HH:mm")}
+                      </td>
+                      <td>{resort?.name}</td>
+                      <td>{resort?.email}</td>
+                      <td>{resort?.phone}</td>
+                      <td>
+                        <a href={`https://oz-elim.kz/resort/${resort?.data}`} target="_blank">
+                          {resort?.data}
+                        </a>
+                      </td>
+                      <td>{resort?.status === 'succ' ? 'Успешно' : 'Отклонено'}</td>
+                      <td>{resort?.admin}</td>
                     </tr>
                   );
                 })}
