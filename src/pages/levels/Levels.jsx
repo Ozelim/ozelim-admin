@@ -334,30 +334,30 @@ export const Levels = () => {
       }) 
       return
     } 
-      // setB(1)
-      // getBinaryById(user?.id)
-      // .then(async res => {
-      //   const slot = await pb.collection('binary').getOne(user?.id, {expand: 'sponsor, children'}) 
-      //   setNode(slot)
-      //   setAddBinary({...addBinary, 
-      //     value: res?.expand?.sponsor,
-      //     children: [
-      //       {
-      //         value: res?.expand?.children?.[0],
-      //         children: []
-      //       },
-      //       {
-      //         value: res?.expand?.children?.[1],
-      //         children: []
-      //       },
-      //     ]
-      //   })
-      //   setSearchModal(true)
-      // })
-      // .catch(err => {
-      //   console.log(err, 'err');
-      // }) 
-      // handleUsers(1);
+      setB(1)
+      getBinaryById(user?.id)
+      .then(async res => {
+        const slot = await pb.collection('binary').getOne(user?.id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        setAddBinary({...addBinary, 
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        setSearchModal(true)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
   }
 
   async function giveNewLevel (user, newLevel, id) {
@@ -675,7 +675,7 @@ export const Levels = () => {
                         <Button
                           compact
                           variant="outline"
-                          onClick={() => searchByValue(user?.user)}
+                          onClick={() => searchByValue(user?.expand?.user)}
                         >
                           {user?.user}
                         </Button>
