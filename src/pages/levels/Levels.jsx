@@ -327,6 +327,7 @@ export const Levels = () => {
           ]
         })
         setSearchModal(true)
+        setShow(false)
         setLoading(false)
       })
       .catch(err => {
@@ -353,6 +354,7 @@ export const Levels = () => {
           ]
         })
         setSearchModal(true)
+        setShow(false)
         setLoading(false)
       })
       .catch(err => {
@@ -682,7 +684,7 @@ export const Levels = () => {
                       </td>
                       <td>
                       {user?.level === '4.1' && '4.Путевка'}
-                      {user?.level === '4.2' && '4.Курса'}
+                      {user?.level === '4.2' && '4.Курс'}
                       {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
                       </td>
                       <td>
