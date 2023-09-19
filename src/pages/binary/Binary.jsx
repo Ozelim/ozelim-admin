@@ -210,14 +210,14 @@ export async function getBinaryById3 (id) {
 async function getWorthyUsers () {
   const users = await pb.collection('users').getFullList({filter: `verified = true && bin = false`, expand: 'sponsor, referals'})
 
-  // function hasThreeOrMoreVerifiedReferrals(user) {
-  //   const verifiedReferrals = user?.expand?.referals?.filter(referal => referal.verified == true);
-  //   return verifiedReferrals?.length >= 3;
-  // }
+  function hasThreeOrMoreVerifiedReferrals(user) {
+    const verifiedReferrals = user?.expand?.referals?.filter(referal => referal.verified == true);
+    return verifiedReferrals?.length >= 3;
+  }
   
-  // const usersWithThreeOrMoreVerifiedReferrals = users?.filter(user => hasThreeOrMoreVerifiedReferrals(user));
+  const usersWithThreeOrMoreVerifiedReferrals = users?.filter(user => hasThreeOrMoreVerifiedReferrals(user));
   
-  // return usersWithThreeOrMoreVerifiedReferrals ?? []
+  return usersWithThreeOrMoreVerifiedReferrals ?? []
   return users
 }
 
