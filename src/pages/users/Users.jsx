@@ -7,7 +7,9 @@ import { pb } from "shared/api";
 import { AiFillCheckCircle, AiFillLock } from "react-icons/ai";
 
 async function getUsers() {
-  return await pb.collection("users").getFullList();
+  return await pb.collection("users").getFullList({
+    sort: '-created'
+  });
 }
 
 export const Users = () => {
