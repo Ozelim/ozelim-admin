@@ -133,13 +133,13 @@ export const Users = () => {
               <th>ID</th>
               <th></th>
               <th>Имя</th>
+              <th>Фамилия</th>
               <th>Бинар</th>
               <th>Маркетинг</th>
               <th>Баланс</th>
               <th>Почта</th>
               <th>Телефон</th>
               <th>Город</th>
-              <th>Дата рождения</th>
               <th>Область</th>
               <th>Адрес</th>
               <th>Спонсор</th>
@@ -172,6 +172,7 @@ export const Users = () => {
                     )}
                   </td>
                   <td>{user.name}</td>
+                  <td>{user.surname}</td>
                   <td>{user.bin ? "Да" : "Нет"}</td>
                   <td>
                     {user?.level === '4.1' && '4.Путевка'}
@@ -233,7 +234,6 @@ export const Users = () => {
                   <td>{user.email}</td>
                   <td>{user.phone}</td>
                   <td>{user.city}</td>
-                  <td>{dayjs(user.birthday).format(`DD.MM.YY`)}</td>
                   <td>{user.region}</td>
                   <td>{user.adress}</td>
                   <td>{user.sponsor}</td>
