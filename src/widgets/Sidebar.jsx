@@ -16,7 +16,7 @@ export const Sidebar = () => {
     {path: '/price', label: 'Прайс лист'},
     {path: '/program', label: 'Партнерская программа'},
     {path: '/our-team', label: 'Наша команда'},
-    {path: '/charity-fund', label: 'Благотворительность'},
+    {path: '/charity-fund', label: 'Доброе дело'},
     {path: '/news', label: 'Новости компании'},
     {path: '/users', label: 'Пользователи'},
     {path: '/levels', label: 'Уровни'},

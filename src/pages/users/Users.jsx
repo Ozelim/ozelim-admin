@@ -139,7 +139,6 @@ export const Users = () => {
               <th>Баланс</th>
               <th>Почта</th>
               <th>Телефон</th>
-              <th>Город</th>
               <th>Область</th>
               <th>Адрес</th>
               <th>Спонсор</th>
@@ -233,7 +232,6 @@ export const Users = () => {
                   <td>{user.balance}</td>
                   <td>{user.email}</td>
                   <td>{user.phone}</td>
-                  <td>{user.city}</td>
                   <td>{user.region}</td>
                   <td>{user.adress}</td>
                   <td>{user.sponsor}</td>
