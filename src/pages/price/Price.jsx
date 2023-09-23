@@ -6,163 +6,124 @@ import { Image } from 'shared/ui';
 import { CiCircleRemove } from 'react-icons/ci';
 import { openConfirmModal } from '@mantine/modals';
 
-async function getPs () {
-  return await pb.collection('price').getFullList()
-}
-
-async function getOs () {
-  return await pb.collection('price_duplicate').getFullList()
+async function getPrices () {
+  return await pb.collection('prices').getFullList({expand: 'prices'})
 }
 
 export const Price = () => {
 
-  const [price, setPrice] = React.useState({});
+  const [prices, setPrices] = React.useState([])
+  const [p, setP] = React.useState({})
 
-  const [images, setImages] = React.useState({});
-  const [changedImages, setChangedImages] = React.useState({});
+  const [about, setAbout] = React.useState({})
 
-  const [headings, setHeadings] = React.useState({});
-  const [text, setText] = React.useState({});
+  const [images, setImages] = React.useState({})
+  const [changedImages, setChangedImages] = React.useState({})
 
-  const [changedHeadings, setChangedHeadings] = React.useState({});
-  const [changedText, setChangedText] = React.useState({});
+  const [headings, setHeadings] = React.useState({})
+  const [text, setText] = React.useState({})
 
-  function handlePriceChange(val, type) {
-    const { value, name } = val?.target;
+  const [changedHeadings, setChangedHeadings] = React.useState({})
+  const [changedText, setChangedText] = React.useState({})
 
-    if (type === "heading") {
-      setChangedHeadings({ ...changedHeadings, [name]: value });
-      return;
+  function handleAboutChange (val, type) {
+    const {value, name} = val?.target
+
+    if (type === 'heading') {
+      setChangedHeadings({...changedHeadings, [name]: value})
+      return 
     }
 
-    setChangedText({ ...changedText, [name]: value });
-    return;
+    setChangedText({...changedText, [name]: value})
+    return 
   }
 
-  function handleImagesChange(val, index) {
-    setChangedImages({ ...changedImages, [`${index}`]: val });
+  
+  function handleImagesChange (val, index) {
+    setChangedImages({...changedImages, [`${index}`]: val})
   }
 
-  function handleImageDelete(index) {
-    setChangedImages({ ...changedImages, [index]: "" });
+  function handleImageDelete (index) {
+    setChangedImages({...changedImages, [index]: ''})
   }
 
-  async function savePrice() {
+  async function saveAbout () {
+
     for (const index in changedImages) {
       if (!isNaN(index)) {
         if (changedImages?.[index] instanceof File) {
-          const formData = new FormData();
-          formData.append([`${index}`], changedImages?.[index]);
-          await pb
-            .collection("images")
-            .update(price?.images?.id, formData)
-            .then((res) => {
-              console.log(res);
-            });
+          const formData = new FormData()
+          formData.append([`${index}`], changedImages?.[index])
+          await pb.collection('images').update(about?.images?.id, formData)
+          .then(res => {
+            console.log(res);
+          })
         }
       }
     }
-    await pb.collection("text").update(price?.text?.id, {
-      headings: changedHeadings,
-      text: changedText,
-    });
+    await pb.collection('text').update(about?.text?.id, {
+      headings: changedHeadings, 
+      text: changedText
+    })
   }
 
+  
   React.useEffect(() => {
-    getData("price").then((res) => {
-      setPrice(res);
-      setHeadings(res?.text?.headings);
-      setText(res?.text?.text);
-      setImages(res?.images);
-    });
-  }, []);
-
-  React.useEffect(() => {
-    setChangedHeadings(headings);
-    setChangedText(text);
-  }, [headings, text]);
-
-  React.useEffect(() => {
-    setChangedImages(images);
-  }, [images]);
-
-  const [o, setO] = React.useState({
-    title: '',
-    cost: '',
-  })
-
-  const [os, setOs] = React.useState([])
-
-  function handleOChange (e) {
-    const { value, name } = e?.currentTarget
-    setO({...o, [name]: value})
-  }
-
-  async function createPrice () {
-    await pb.collection('price').create(p)
-    .then(() => {
-      setP({
-        title: '',
-        cost: ''
-      })
-    })
-  }
-
-  async function createOPrice () {
-    await pb.collection('price_duplicate').create(o)
-    .then(() => {
-      setO({
-        title: '',
-        cost: ''
-      })
-    })
-  }
-
-  const [p, setP] = React.useState({
-    title: '',
-    cost: '',
-  })
-
-  const [ps, setPs] = React.useState([])
-
-  function handlePChange (e) {
-    const { value, name } = e?.currentTarget
-    setP({...p, [name]: value})
-  }
-
-  async function createPrice () {
-    await pb.collection('price').create(p)
-    .then(() => {
-      setP({
-        title: '',
-        cost: ''
-      })
-    })
-  }
-
-  React.useEffect(() => {
-    getPs()
-    .then(res => {
-      setPs(res)
-    })
-
-    getOs()
-    .then(res => {
-      setOs(res)
-    })
-
-    pb.collection('price').subscribe('*', function () {
-      console.log('asd');
-      getPs().then((res) => {
-        setPs(res);
-      });
-    })
-    pb.collection('price_duplicate').subscribe('*', function () {
-      getOs().then((res) => {
-        setOs(res);
-      });
+    getData('price').then(res => {
+      setAbout(res);
+      setHeadings(res?.text?.headings)
+      setText(res?.text?.text)
+      setImages(res?.images)
     })
   }, [])
+  
+  React.useEffect(() => {
+    setChangedHeadings(headings)
+    setChangedText(text)
+  }, [headings, text])
+
+  React.useEffect(() => {
+    setChangedImages(images)
+  }, [images])
+
+  React.useEffect(() => {
+    getPrices()
+    .then(res => {
+      setPrices(res)
+    })
+
+    pb.collection('prices').subscribe('*', function () {
+      getPrices()
+      .then(res => {
+        setPrices(res)
+      })
+    })
+  }, [])
+
+  async function createPrice (price) {
+    await pb.collection('price').create({
+      title: p?.[`${price?.id}_d`],
+      cost: p?.[`${price?.id}_c`],
+    })
+    .then(async (res) => {
+      await pb.collection('prices').update(price?.id, {
+        prices: [...price?.prices, res?.id]
+      })
+    })
+  }
+
+  async function savePrice (price) {
+    const formData = new FormData()
+    formData.append('name', price?.name)
+    formData.append('heading', price?.heading)
+    formData.append('image', price?.image)
+    formData.append('1', price?.[1])
+    formData.append('2', price?.[2])
+    formData.append('3', price?.[3])
+    formData.append('4', price?.[4])
+
+    await pb.collection('prices').update(price?.id, formData)
+  }
 
   const removePriceConfrim = (priceId, type) =>
     openConfirmModal({
@@ -178,190 +139,179 @@ export const Price = () => {
       .collection(type ? 'price_duplicate' : 'price')
       .delete(priceId)
   }
- 
+
+  function handlePriceChange (val, name, index) {
+    setPrices(q => q.map((e, i) => {
+      if (i === index) {
+        return { ...e, [name]: val }
+      } else {
+        return e
+      }
+    }))
+  }
+
+  function handlePriceDelete (name, index) {
+    setPrices(q => q.map((e, i) => {
+      if (i === index) {
+        return { ...e, [name]: null }
+      } else {
+        return e
+      }
+    }))
+  }
+  
+  const confirmPDelete = (priceId) => openConfirmModal({
+    title: 'Подтвердите действие', 
+    centered: true,
+    labels: { confirm: 'Подтвердить', cancel: 'Отмена' },
+    onConfirm: async () => {
+      await pb.collection('prices').delete(priceId)
+    },
+    children: <>Данный человек и все его стоимости услуг будут удалены</>
+  })
+
   return (
     <div className="w-full">
-      <section>
-        <Image
-          label={"Картинка"}
-          onChange={handleImagesChange}
-          record={price?.images}
-          image={changedImages?.["1"]}
-          onDelete={handleImageDelete}
-          index={1}
-        />
-        <TextInput
-          label="Имя"
-          value={changedText?.name ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
-          name="name"
-        />
-        <TextInput
-          label="Главный заголовок"
-          value={changedHeadings?.[1] ?? ""}
-          onChange={(e) => handlePriceChange(e, "heading")}
-          name="1"
-        />
-        <TextInput
-          label="Текст"
-          value={changedText?.[1] ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
-          name="1"
-        />
-        <TextInput
-          label="Текст"
-          value={changedText?.[2] ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
-          name="2"
-        />
-        <TextInput
-          label="Текст"
-          value={changedText?.[3] ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
-          name="3"
-        />
-        <TextInput
-          label="Текст"
-          value={changedText?.[4] ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
-          name="4"
-        />
-        <Button onClick={savePrice}>Сохранить</Button>
-      </section>
-      <section className="mt-10">
-        <TextInput
-          value={p?.title}
-          onChange={handlePChange}
-          label="Описание"
-          name="title"
-        />
-        <TextInput
-          value={p?.cost}
-          onChange={handlePChange}
-          label="Цена"
-          name="cost"
-        />
-        <Button onClick={createPrice}>Добавить цену</Button>
-      </section>
-      <section className="mt-10 space-y-4">
-        {ps?.map((p, i) => {
-          return (
-            <div className="flex gap-4 w-full" key={i}>
-              <PriceCard price={p} key={i} />
-              <CiCircleRemove
-                size={35}
-                color="red"
-                onClick={() => removePriceConfrim(p?.id)}
-                className="cursor-pointer hover:fill-yellow-500"
+      {prices?.map((price, i) => {
+        return (
+          <div key={i} className='mt-10'>
+            <hr/>
+            <Button
+              onClick={() => confirmPDelete(price?.id)}
+              compact
+              variant='outline'
+              color='red'
+              my={16}
+            >
+              Удалить человека
+            </Button>
+            <section>
+              <Image
+                label={"Картинка"}
+                onChange={(e) => handlePriceChange(e, 'image', i)}
+                record={price}
+                image={price?.image}
+                onDelete={(e) => handlePriceDelete('image', i)}
+                index={'image'}
               />
-            </div>
-          );
-        })}
-      </section>
-
-      <section className='mt-20'>
-        <Image
-          label={"Картинка"}
-          onChange={handleImagesChange}
-          record={price?.images}
-          image={changedImages?.["2"]}
-          onDelete={handleImageDelete}
-          index={2}
-        />
-        <TextInput
-          label="Имя"
-          value={changedText?.name2 ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
-          name="name2"
-        />
-        <TextInput
-          label="Главный заголовок"
-          value={changedHeadings?.[2] ?? ""}
-          onChange={(e) => handlePriceChange(e, "heading")}
-          name="2"
-        />
-        <TextInput
-          label="Текст"
-          value={changedText?.[5] ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
-          name="5"
-        />
-        <TextInput
-          label="Текст"
-          value={changedText?.[6] ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
-          name="6"
-        />
-        <TextInput
-          label="Текст"
-          value={changedText?.[7] ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
-          name="7"
-        />
-        <TextInput
-          label="Текст"
-          value={changedText?.[8] ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
-          name="8"
-        />
-        <Button onClick={savePrice}>Сохранить</Button>
-      </section>
-      <section className="mt-10">
-        <TextInput
-          value={o?.title}
-          onChange={handleOChange}
-          label="Описание"
-          name="title"
-        />
-        <TextInput
-          value={o?.cost}
-          onChange={handleOChange}
-          label="Цена"
-          name="cost"
-        />
-        <Button onClick={createOPrice}>Добавить цену</Button>
-      </section>
-      <section className="mt-10 space-y-4">
-        {os?.map((o, i) => {
-          return (
-            <div className="flex gap-4 w-full" key={i}>
-              <PriceCard price={o} key={i} />
-              <CiCircleRemove
-                size={35}
-                color="red"
-                onClick={() => removePriceConfrim(o?.id, true)}
-                className="cursor-pointer hover:fill-yellow-500"
+              <TextInput
+                label="Имя"
+                value={price?.name ?? ""}
+                onChange={(e) => handlePriceChange(e.currentTarget.value, "name", i)}
+                name="name"
               />
-            </div>
-          );
-        })}
-      </section>
+              <TextInput
+                label="Главный заголовок"
+                value={price?.heading ?? ""}
+                onChange={(e) => handlePriceChange(e.currentTarget.value, "heading", i)}
+                name="heading"
+              />
+              <TextInput
+                label="Текст"
+                value={price?.[1] ?? ""}
+                onChange={(e) => handlePriceChange(e.currentTarget.value, '1', i)}
+                name="1"
+              />
+              <TextInput
+                label="Текст"
+                value={price?.[2] ?? ""}
+                onChange={(e) => handlePriceChange(e.currentTarget.value, '2', i)}
+                name="2"
+              />
+              <TextInput
+                label="Текст"
+                value={price?.[3] ?? ""}
+                onChange={(e) => handlePriceChange(e.currentTarget.value, '3', i)}
+                name="3"
+              />
+              <TextInput
+                label="Текст"
+                value={price?.[4] ?? ""}
+                onChange={(e) => handlePriceChange(e.currentTarget.value, '4', i)}
+                name="4"
+              />
+              <Button mt={16} onClick={() => savePrice(price)}>Сохранить</Button>
+            </section>
+            <section className="mt-10">
+              <TextInput
+                value={p?.[`${price?.id}_d`]}
+                onChange={e => setP({...p, [`${price?.id}_d`]: e.currentTarget.value})}
+                label="Описание"
+              />
+              <TextInput
+                value={p?.[`${price?.id}_c`]}
+                onChange={e => setP({...p, [`${price?.id}_c`]: e.currentTarget.value})}
+                label="Цена"
+              />
+              <Button mt={16} onClick={() => createPrice(price)}>Добавить цену</Button>
+            </section>
+            <section className="mt-10 space-y-4">
+              {price?.expand?.prices?.map((p, i) => {
+                return (
+                  <div className="flex gap-4 w-full" key={i}>
+                    <PriceCard price={p} key={i} />
+                    <CiCircleRemove
+                      size={35}
+                      color="red"
+                      onClick={() => removePriceConfrim(p?.id)}
+                      className="cursor-pointer hover:fill-yellow-500"
+                    />
+                  </div>
+                );
+              })}
+            </section>
+  
+          </div>
+        )
+      })}
 
-      <section>
+      <Button
+        onClick={async () => {
+          await pb.collection('prices').create()
+        }}
+        compact
+        variant='outline'
+        mt={50}
+      >
+        Добавить человека
+      </Button>
+
+       <section>
         <TextInput
           label="Заголовок"
           value={changedHeadings?.q1 ?? ""}
-          onChange={(e) => handlePriceChange(e, "heading")}
+          onChange={(e) => handleAboutChange(e, "heading")}
           name="q1"
         />
         <TextInput
           label="Текст1"
           value={changedText?.q1 ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
+          onChange={(e) => handleAboutChange(e, "text")}
           name="q1"
         />
         <TextInput
           label="Текст2"
           value={changedText?.q2 ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
+          onChange={(e) => handleAboutChange(e, "text")}
           name="q2"
         />
         <TextInput
           label="Текст3"
           value={changedText?.q3 ?? ""}
-          onChange={(e) => handlePriceChange(e, "text")}
+          onChange={(e) => handleAboutChange(e, "text")}
           name="q3"
         />
+        <TextInput
+          label="Текст3"
+          value={changedText?.q4 ?? ""}
+          onChange={(e) => handleAboutChange(e, "text")}
+          name="q4"
+        />
+        <Button 
+          onClick={saveAbout}
+        >
+          Сохранить
+        </Button>
       </section>
     </div>
   );
