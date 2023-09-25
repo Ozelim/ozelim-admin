@@ -19,7 +19,7 @@ async function getWithdraws () {
   })
 }
 
-async function getWithdrawsEnded (page) {
+async function getWithdrawsEnded (page = 1) {
   return await pb.collection('withdraws').getList(page, 20, {
     filter: `status != 'created'`,
     sort: '-created',
@@ -35,6 +35,7 @@ export const Withdraws = () => {
   async function handleWithdraws (page) {
     getWithdrawsEnded(page)
     .then(res => {
+      console.log(res, 'res');
       setEndedWithdraws(res)
     })
   }
@@ -84,6 +85,12 @@ export const Withdraws = () => {
       setWithdraws(res)
     })
 
+    getWithdrawsEnded()
+    .then(res => {
+      console.log(res, 'res');
+      setEndedWithdraws(res)
+    })
+
     pb.collection('withdraws').subscribe('*', function ({_, record}) {
       getWithdrawsEnded(endedWithdraws?.page)
       .then(res => {
@@ -100,6 +107,7 @@ export const Withdraws = () => {
     }
   }, [])
 
+  console.log(endedWithdraws, 'ended');
 
   function exportToExcel () {
     const array = withdraws?.map((withdraw) => {
