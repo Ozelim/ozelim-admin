@@ -354,7 +354,7 @@ export const Levels = () => {
               value: res?.expand?.children?.[1],
               children: []
             },
-          ]
+        ]
         })
         setSearchModal(true)
         // setShow(true)

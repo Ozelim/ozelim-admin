@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Menu, Pagination, Table, TextInput } from "@mantine/core";
+import { Button, LoadingOverlay, Menu, Pagination, Table, TextInput } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import dayjs from "dayjs";
 import { pb } from "shared/api";
@@ -13,8 +13,10 @@ async function getUsers() {
 }
 
 export const Users = () => {
+
   const [users, setUsers] = React.useState([]);
-  const [page, setPage] = React.useState({});
+
+  const [loading, setLoading] = React.useState(false)
 
   const [search, setSearch] = React.useState("");
 
@@ -57,6 +59,7 @@ export const Users = () => {
   }
 
   async function verifyUser(userId) {
+    setLoading(true)
     return await pb
       .collection("users")
       .update(userId, {
@@ -69,10 +72,12 @@ export const Users = () => {
         })
         
         const referals = await pb.collection('users').getFullList({filter: `sponsor = '${sponsor?.id}' && verified = true`})
+
         if (referals?.length === 1) {
           await pb.collection('users').update(sponsor?.id, {
             balance: sponsor?.balance + 30000            
           })
+          setLoading(false)
           return
         }
 
@@ -80,8 +85,13 @@ export const Users = () => {
           await pb.collection('users').update(sponsor?.id, {
             balance: sponsor?.balance + 15000            
           })
+          setLoading(false)
           return
         }
+        setLoading(false)
+      })
+      .catch(err => {
+        setLoading(false)
       })
   }
   // Пример использования
@@ -113,6 +123,7 @@ export const Users = () => {
   return (
     <>
       <div className="w-full">
+        <LoadingOverlay visible={loading} />
         <div className="flex items-end">
           <TextInput
             label="Поиск"

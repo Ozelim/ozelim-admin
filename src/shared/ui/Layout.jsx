@@ -32,6 +32,20 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
 
   const [err, setErr] = React.useState('')
 
+  React.useEffect(() => {
+    const beforeUnloadHandler = (event) => {
+      // You can customize the warning message here
+    };
+
+    // Add the event listener when the component mounts
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+    };
+  }, []);
+
   return user &&
     (user?.email === "ozelim.pv@gmail.com" ||
       user?.email === "ozelim-buhgalter@mail.ru" ||
