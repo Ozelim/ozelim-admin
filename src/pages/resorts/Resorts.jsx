@@ -223,7 +223,7 @@ export const Resorts = () => {
               <Select data={diseases} label="По патологиям" />
             </div> */}
             <div className="space-y-4 flex flex-col items-center mt-4">
-              {/* {resorts?.items?.map((resort, i) => {
+              {resorts?.items?.map((resort, i) => {
                 return (
                   <div key={i} className="flex gap-2 w-full">
                     <BomjPlaza resort={resort} key={i} />
@@ -236,7 +236,7 @@ export const Resorts = () => {
                     </ActionIcon>
                   </div>
                 );
-              })} */}
+              })}
             </div>
             <div className="mt-5 flex justify-center">
               <Pagination
