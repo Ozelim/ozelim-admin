@@ -266,9 +266,9 @@ export const Bids = () => {
                       <td>{resort?.email}</td>
                       <td>{resort?.phone}</td>
                       <td>
-                        <a href={`https://oz-elim.kz/resort/${resort?.data}`} target="_blank">
+                        {/* <a href={`https://oz-elim.kz/resort/${resort?.data}`} target="_blank"> */}
                           {resort?.data}
-                        </a>
+                        {/* </a> */}
                       </td>
                       <td>
                         <BiBadgeCheck
