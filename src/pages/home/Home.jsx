@@ -121,6 +121,37 @@ export const Home = () => {
           autosize
         />
       </div>
+      <div className='mt-10'>
+        <TextInput 
+          label='Заголовок'
+          value={changedHeadings?.[2] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='2'
+        />
+        <div>
+        <Textarea 
+          label='Текст'
+          value={changedText?.z1 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='z1'
+          autosize
+        />        
+        <Textarea 
+          label='Текст'
+          value={changedText?.z2 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='z2'
+          autosize
+        />        
+        <Textarea 
+          label='Текст'
+          value={changedText?.z3 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='z3'
+          autosize
+        />
+        </div>
+      </div>
       <Button
         className='mt-5'
         onClick={saveAbout}
