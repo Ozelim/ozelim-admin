@@ -136,7 +136,7 @@ export const Home = () => {
           name='z1'
           autosize
         />        
-        <Textarea 
+        {/* <Textarea 
           label='Текст'
           value={changedText?.z2 ?? ''}
           onChange={(e) => handleAboutChange(e, 'text')}
@@ -149,7 +149,7 @@ export const Home = () => {
           onChange={(e) => handleAboutChange(e, 'text')}
           name='z3'
           autosize
-        />
+        /> */}
         </div>
       </div>
       <Button
