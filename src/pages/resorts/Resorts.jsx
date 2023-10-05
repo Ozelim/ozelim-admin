@@ -226,7 +226,7 @@ export const Resorts = () => {
               {resorts?.items?.map((resort, i) => {
                 return (
                   <div key={i} className="flex gap-2 w-full">
-                    <BomjPlaza resort={resort} />
+                    <BomjPlaza resort={resort} key={i} />
                     <ActionIcon
                       color="red"
                       size="md"
@@ -293,7 +293,7 @@ export const Resorts = () => {
             onChange={(e) => setShit({ ...shit, title: e.target.value })}
           />
           <Select
-            data={regions}
+            data={regions ?? []}
             label="Область"
             dropdownPosition="bottom"
             searchable
@@ -301,7 +301,7 @@ export const Resorts = () => {
             onChange={(e) => setShit({ ...shit, region: e })}
           />
           <MultiSelect
-            data={diseases}
+            data={diseases ?? []}
             label="Патология"
             dropdownPosition="bottom"
             searchable
@@ -384,7 +384,7 @@ export const Resorts = () => {
               }
             />
             <Select
-              data={regions}
+              data={regions ?? []}
               label="Область"
               value={resort.region ?? ""}
               onChange={(e) => handleResortChange(e, "region")}

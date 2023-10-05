@@ -12,10 +12,13 @@ import { useAuth } from "shared/hooks";
 async function getAnswers () {
   return await pb.collection("questions").getFullList({
     filter: `question = false`,
+    sort: '-created'
   });
 }
 async function getBids () {
-  return await pb.collection('bids').getFullList()
+  return await pb.collection('bids').getFullList({
+    sort: '-created'
+  })
 }
 
 export const Bids = () => {
