@@ -53,11 +53,17 @@ export const BidsForm = ({ bid, ended }) => {
       }
       setQuestions(qs)
     })
-    getResorts(bid?.[1], bid?.[2])
-    .then(res => {
-      setResorts(res)
-    })
+
   }, [])
+
+  React.useEffect(() => {
+    if (opened) {
+      getResorts(bid?.[1], bid?.[2])
+      .then(res => {
+        setResorts(res)
+      })
+    }
+  }, [opened])
 
   async function deleteWithdraw () {
     await pb.collection('questions').update(bid?.id, {
