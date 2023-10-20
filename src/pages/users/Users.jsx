@@ -40,7 +40,7 @@ export const Users = () => {
     }
   }
 
-  React.useEffect(() => {
+  React.useEffect(()  => {
     getUsers().then((res) => {
       setUsers(res);
     });
@@ -235,7 +235,7 @@ export const Users = () => {
                         color="gray"
                       >
                         0
-                      </Button>
+                      </Button> 
                     )} */}
                   </td>
                   <td>{user.balance}</td>
