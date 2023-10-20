@@ -12,7 +12,7 @@ import { useAuth } from "shared/hooks";
 import { BiBadgeCheck } from "react-icons/bi";
 
 async function getQuestions () {
-  return (await pb.collection('questions').getFullList({filter: `question = true`}))[0]
+  return (await pb.collection('questions').getFirstListItem(`question = true`))
 }
 
 async function getResorts (diseas, region) {
