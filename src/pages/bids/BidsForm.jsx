@@ -11,10 +11,6 @@ import { openConfirmModal } from "@mantine/modals";
 import { useAuth } from "shared/hooks";
 import { BiBadgeCheck } from "react-icons/bi";
 
-async function getQuestions () {
-  return (await pb.collection('questions').getFirstListItem(`question = true`))
-}
-
 async function getResorts (diseas, region) {
   const resorts = await pb.collection('resorts').getFullList({
     filter: `(region = '${region}' || diseas ~ '${diseas}') && status = 'bomj'`
@@ -29,31 +25,27 @@ async function getResorts (diseas, region) {
   }
 }
 
-export const BidsForm = ({ bid, ended }) => {
+export const BidsForm = ({ bid, ended, q }) => {
 
   const {user} = useAuth()
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  const [questions, setQuestions] = React.useState({})
-
   const [resorts, setResorts] = React.useState({})
 
+  const [questions, setQuestions] = React.useState({})
+
   React.useEffect(() => {
-    getQuestions()
-    .then(res => {
-      let qs = {}
-      for (const key in res) {
-        if (!isNaN(key) && Number(key) <= res?.count) {
-          qs = {
-            ...qs, 
-            [key]: res?.[key]
-          }
+    let qs = {}
+    for (const key in q) {
+      if (!isNaN(key) && Number(key) <= q?.count) {
+        qs = {
+          ...qs, 
+          [key]: q?.[key]
         }
       }
-      setQuestions(qs)
-    })
-
+    }
+    setQuestions(qs)
   }, [])
 
   React.useEffect(() => {
