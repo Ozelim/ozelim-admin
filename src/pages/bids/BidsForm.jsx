@@ -146,7 +146,7 @@ export const BidsForm = ({ bid, ended, q }) => {
         </div>
         <div className="mt-10">
           <h2>Курорты</h2>
-          {resorts?.regions?.length !== 0 && (
+          {/* {resorts?.regions?.length !== 0 && (
             <div className="mt-5 space-y-4">
               <h2>По областям:</h2>
               {resorts?.regions?.map((resort) => {
@@ -155,7 +155,7 @@ export const BidsForm = ({ bid, ended, q }) => {
                 ) 
               })}
             </div>
-          )}
+          )} */}
           {resorts?.diseases?.length !== 0 && (
             <div className="mt-5 space-y-4">
               <h2>По болезням:</h2>
