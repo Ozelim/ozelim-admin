@@ -11,10 +11,6 @@ import { openConfirmModal } from "@mantine/modals";
 import { useAuth } from "shared/hooks";
 import { BiBadgeCheck } from "react-icons/bi";
 
-async function getQuestions () {
-  return (await pb.collection('questions').getFullList({filter: `question = true`}))[0]
-}
-
 async function getResorts (diseas, region) {
   const resorts = await pb.collection('resorts').getFullList({
     filter: `(region = '${region}' || diseas ~ '${diseas}') && status = 'bomj'`
@@ -29,35 +25,37 @@ async function getResorts (diseas, region) {
   }
 }
 
-export const BidsForm = ({ bid, ended }) => {
+export const BidsForm = ({ bid, ended, q }) => {
 
   const {user} = useAuth()
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  const [questions, setQuestions] = React.useState({})
-
   const [resorts, setResorts] = React.useState({})
 
+  const [questions, setQuestions] = React.useState({})
+
   React.useEffect(() => {
-    getQuestions()
-    .then(res => {
-      let qs = {}
-      for (const key in res) {
-        if (!isNaN(key) && Number(key) <= res?.count) {
-          qs = {
-            ...qs, 
-            [key]: res?.[key]
-          }
+    let qs = {}
+    for (const key in q) {
+      if (!isNaN(key) && Number(key) <= q?.count) {
+        qs = {
+          ...qs, 
+          [key]: q?.[key]
         }
       }
-      setQuestions(qs)
-    })
-    getResorts(bid?.[1], bid?.[2])
-    .then(res => {
-      setResorts(res)
-    })
+    }
+    setQuestions(qs)
   }, [])
+
+  React.useEffect(() => {
+    if (opened) {
+      getResorts(bid?.[1], bid?.[2])
+      .then(res => {
+        setResorts(res)
+      })
+    }
+  }, [opened])
 
   async function deleteWithdraw () {
     await pb.collection('questions').update(bid?.id, {
@@ -148,7 +146,7 @@ export const BidsForm = ({ bid, ended }) => {
         </div>
         <div className="mt-10">
           <h2>Курорты</h2>
-          {resorts?.regions?.length !== 0 && (
+          {/* {resorts?.regions?.length !== 0 && (
             <div className="mt-5 space-y-4">
               <h2>По областям:</h2>
               {resorts?.regions?.map((resort) => {
@@ -157,7 +155,7 @@ export const BidsForm = ({ bid, ended }) => {
                 ) 
               })}
             </div>
-          )}
+          )} */}
           {resorts?.diseases?.length !== 0 && (
             <div className="mt-5 space-y-4">
               <h2>По болезням:</h2>

@@ -15,6 +15,11 @@ async function getAnswers () {
     sort: '-created'
   });
 }
+
+async function getQuestions () {
+  return (await pb.collection('questions').getFirstListItem(`question = true`))
+}
+
 async function getBids () {
   return await pb.collection('bids').getFullList({
     sort: '-created'
@@ -26,12 +31,18 @@ export const Bids = () => {
   const [answers, setAnswers] = React.useState([])
   const [bids, setBids] = React.useState([]);
 
+  const [questions, setQuestions] = React.useState([])
+
   const { user } = useAuth()
 
   React.useEffect(() => {
     getAnswers().then((res) => {
       setAnswers(res);
     });
+
+    getQuestions().then(res => {
+      setQuestions(res)
+    })
 
     getBids().then((res) => {
       setBids(res);
@@ -116,7 +127,7 @@ export const Bids = () => {
               </thead>
               <tbody>
                 {activeAnswers?.map((bid) => (
-                  <BidsForm bid={bid} key={bid.id} />
+                  <BidsForm bid={bid} key={bid.id} q={questions} />
                 ))}
               </tbody>
             </Table>
