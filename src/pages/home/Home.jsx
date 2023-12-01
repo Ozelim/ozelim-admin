@@ -264,8 +264,12 @@ export const Home = () => {
               })}
             </tbody>
           </Table>
+          <div className='mt-4'>
+            Количество лиюдей: {foundUsers?.length}
+          </div>
         </div>
       )}
+      
     </div>
   );
 };
