@@ -4,8 +4,29 @@ import { Tree } from 'react-d3-tree';
 import { Button, TextInput, Textarea } from '@mantine/core'
 import { getData, pb } from 'shared/api'
 import { Image } from 'shared/ui'
+import { DatePickerInput } from '@mantine/dates';
 
 export const Home = () => {
+
+  const [foundUsers, setFoundUsers] = React.useState([])
+
+  const [date, setDate] = React.useState({
+    from: new Date (),
+    to: new Date()
+  })
+
+  function handleDateChange (e, name) {
+    setDate({...date, [name]: e})
+  }
+
+  async function searchUsers () {
+    await pb.collection('users').getFullList({
+      filter: `created >= '${date?.from}' && created <= '${date?.to}'`
+    })
+    .then(res => {
+      console.log(res, 'res');
+    })
+  }
 
   const [about, setAbout] = React.useState({})
 
@@ -67,6 +88,8 @@ export const Home = () => {
   React.useEffect(() => {
     setChangedImages(images)
   }, [images])
+
+
   return (
     <div className='w-full'>
       <TextInput 
@@ -158,6 +181,23 @@ export const Home = () => {
       >
         Сохранить
       </Button>
+      <div className='flex gap-4 items-end mt-8'>
+        <DatePickerInput
+          value={date?.from}
+          name='from'
+          onChange={e => handleDateChange(e, 'from')}
+          label='От'
+        />
+        <DatePickerInput
+          value={date?.to}
+          name='to'
+          onChange={e => handleDateChange(e, 'to')}
+          label='До'
+        />
+        <Button onClick={searchUsers}>
+          Показать
+        </Button>
+      </div>
     </div>
   );
 };
