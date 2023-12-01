@@ -1,10 +1,12 @@
 import React from 'react';
 import { Tree } from 'react-d3-tree';
 
-import { Button, TextInput, Textarea } from '@mantine/core'
+import { Button, Table, TextInput, Textarea } from '@mantine/core'
 import { getData, pb } from 'shared/api'
 import { Image } from 'shared/ui'
 import { DatePickerInput } from '@mantine/dates';
+import dayjs from 'dayjs';
+import { AiFillCheckCircle, AiFillLock } from 'react-icons/ai';
 
 export const Home = () => {
 
@@ -21,10 +23,11 @@ export const Home = () => {
 
   async function searchUsers () {
     await pb.collection('users').getFullList({
-      filter: `created >= '${date?.from}' && created <= '${date?.to}'`
+      filter: `created >= '${date?.from.toISOString()}' && created <= '${date?.to.toISOString()}'`
     })
     .then(res => {
       console.log(res, 'res');
+      setFoundUsers(res)
     })
   }
 
@@ -88,7 +91,6 @@ export const Home = () => {
   React.useEffect(() => {
     setChangedImages(images)
   }, [images])
-
 
   return (
     <div className='w-full'>
@@ -187,17 +189,83 @@ export const Home = () => {
           name='from'
           onChange={e => handleDateChange(e, 'from')}
           label='От'
+          locale='ru'
         />
         <DatePickerInput
           value={date?.to}
           name='to'
           onChange={e => handleDateChange(e, 'to')}
           label='До'
+          locale='ru'
         />
         <Button onClick={searchUsers}>
           Показать
         </Button>
       </div>
+      {foundUsers?.length !== 0 && (
+        <div className='mt-5'>
+          <Table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th></th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Бинар</th>
+                <th>Маркетинг</th>
+                <th>Баланс</th>
+                <th>Почта</th>
+                <th>Телефон</th>
+                <th>Область</th>
+                <th>Адрес</th>
+                <th>Спонсор</th>
+                <th>Дата регистрации</th>
+              </tr>
+            </thead>
+            <tbody>
+              {foundUsers?.map((user, i) => {
+                return (
+                  <tr
+                    key={i}
+                  >
+                    <td>{user.id}</td>
+                    <td>
+                      {user?.verified ? (
+                        <Button compact variant={"subtle"} color={"green"}>
+                          <AiFillCheckCircle size={20} />
+                        </Button>
+                      ) : (
+                        <Button
+                          compact
+                          variant={"subtle"}
+                          color="yellow"
+                        >
+                          <AiFillLock size={20} />
+                        </Button>
+                      )}
+                    </td>
+                    <td>{user.name}</td>
+                    <td>{user.surname}</td>
+                    <td>{user.bin ? "Да" : "Нет"}</td>
+                    <td>
+                      {user?.level === '4.1' && '4.Путевка'}
+                      {user?.level === '4.2' && '4.Курса'}
+                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                    </td>
+                    <td>{user.balance}</td>
+                    <td>{user.email}</td>
+                    <td>{user.phone}</td>
+                    <td>{user.region}</td>
+                    <td>{user.adress}</td>
+                    <td>{user.sponsor}</td>
+                    <td>{dayjs(user.created).format(`DD.MM.YY`)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 };
