@@ -107,8 +107,6 @@ export const Withdraws = () => {
     }
   }, [])
 
-  console.log(endedWithdraws, 'ended');
-
   function exportToExcel () {
     const array = withdraws?.map((withdraw) => {
       return {
@@ -118,7 +116,8 @@ export const Withdraws = () => {
         банк: withdraw?.bank, 
         сумма: withdraw?.sum,
         владелец_карты: withdraw?.owner,
-        номер_карты: withdraw?.card,
+        иин: withdraw?.iin,
+        IBAN: withdraw?.iban,
         статус: (
           (withdraw?.status === 'created' && 'Создан') ||
           (withdraw?.status === 'paid' && 'Оплачен') ||
@@ -205,7 +204,8 @@ export const Withdraws = () => {
                 <th>Банк</th>
                 <th>Сумма</th>
                 <th>Владелец карты</th>
-                <th>Номер карты</th>
+                <th>ИИН</th>
+                <th>IBAN</th>
                 <th>Статус</th>
                 <th>Действие</th>
               </tr>
@@ -222,7 +222,8 @@ export const Withdraws = () => {
                     <td className='!text-lg'>{withdraw?.bank}</td>
                     <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
                     <td className='!text-lg'>{withdraw?.owner}</td>
-                    <td className='!text-lg'>{withdraw?.card}</td>
+                    <td className='!text-lg'>{withdraw?.iin}</td>
+                    <td className='!text-lg'>{withdraw?.iban}</td>
                     <td className='!text-lg'>
                     {withdraw?.status === 'created' && 'Создан'}
                     {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
@@ -266,7 +267,8 @@ export const Withdraws = () => {
                 <th>Банк</th>
                 <th>Сумма</th>
                 <th>Владелец карты</th>
-                <th>Номер карты</th>
+                <th>ИИН</th>
+                <th>IBAN</th>
                 <th>Статус</th>
                 {/* <th>Действие</th> */}
               </tr>
@@ -283,7 +285,9 @@ export const Withdraws = () => {
                     <td className='!text-lg'>{withdraw?.bank}</td>
                     <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
                     <td className='!text-lg'>{withdraw?.owner}</td>
-                    <td className='!text-lg'>{withdraw?.card}</td>
+                    <td className='!text-lg'>{withdraw?.iin}</td>
+                    <td className='!text-lg'>{withdraw?.iban}</td>
+                    {/* <td className='!text-lg'>{withdraw?.card}</td> */}
                     <td className='!text-lg'>
                     {withdraw?.status === 'created' && 'Создан'}
                     {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
