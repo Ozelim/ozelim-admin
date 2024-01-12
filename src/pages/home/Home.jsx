@@ -12,6 +12,9 @@ export const Home = () => {
 
   const [foundUsers, setFoundUsers] = React.useState([])
 
+  const notVerifiedUsers = foundUsers.filter(q => q?.verified !== true)
+  const verifiedUsers = foundUsers.filter(q => q?.verified == true)
+
   const [date, setDate] = React.useState({
     from: new Date (),
     to: new Date()
@@ -201,6 +204,15 @@ export const Home = () => {
         <Button onClick={searchUsers}>
           Показать
         </Button>
+        <div className='mt-4'>
+          Зарегистрировано: {foundUsers?.length}
+        </div>
+        <div className='mt-4'>
+          Не верифицировано: {notVerifiedUsers?.length}
+        </div>
+        <div className='mt-4'>
+          Верифицировано: {verifiedUsers?.length}
+        </div>
       </div>
       {foundUsers?.length !== 0 && (
         <div className='mt-5'>
@@ -212,7 +224,7 @@ export const Home = () => {
                 <th>Имя</th>
                 <th>Фамилия</th>
                 <th>Бинар</th>
-                <th>Маркетинг</th>
+                <th>Уровень</th>
                 <th>Баланс</th>
                 <th>Почта</th>
                 <th>Телефон</th>
@@ -248,9 +260,10 @@ export const Home = () => {
                     <td>{user.surname}</td>
                     <td>{user.bin ? "Да" : "Нет"}</td>
                     <td>
-                      {user?.level === '4.1' && '4.Путевка'}
-                      {user?.level === '4.2' && '4.Курса'}
-                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                      {user?.level 
+                      ? (user?.level === '4.1' && '4.Путевка' || 
+                        user?.level === '4.2' && '4.Курса' || user?.level)
+                      : !user?.level && 0}
                     </td>
                     <td>{user.balance}</td>
                     <td>{user.email}</td>
@@ -264,9 +277,6 @@ export const Home = () => {
               })}
             </tbody>
           </Table>
-          <div className='mt-4'>
-            Количество лиюдей: {foundUsers?.length}
-          </div>
         </div>
       )}
       

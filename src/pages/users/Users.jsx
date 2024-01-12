@@ -144,7 +144,7 @@ export const Users = () => {
               <th>Имя</th>
               <th>Фамилия</th>
               <th>Бинар</th>
-              <th>Маркетинг</th>
+              <th>Уровни</th>
               <th>Баланс</th>
               <th>Почта</th>
               <th>Телефон</th>
@@ -183,10 +183,13 @@ export const Users = () => {
                   <td>{user.surname}</td>
                   <td>{user.bin ? "Да" : "Нет"}</td>
                   <td>
-                    {user?.level === '4.1' && '4.Путевка'}
+                    {/* {user?.level === '4.1' && '4.Путевка'}
                     {user?.level === '4.2' && '4.Курса'}
-                    {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
-
+                    {(user?.level != '4.1' && user?.level != '4.2') && user?.level} */}
+                    {user?.level 
+                      ? (user?.level === '4.1' && '4.Путевка' || 
+                        user?.level === '4.2' && '4.Курса' || user?.level)
+                      : !user?.level && 0}
                     {/* {(user?.level && user?.level !== '2-3' && user?.level != '0' && user?.level != '' ) && (
                       <Menu
                         compact

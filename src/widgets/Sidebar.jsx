@@ -11,7 +11,7 @@ export const Sidebar = () => {
     {path: '/about', label: 'О компании'},
     {path: '/health', label: 'Твое здоровье'},
     {path: '/courses', label: 'Курсы по туризму'},
-    {path: '/resorts', label: 'Наши курорты', tur: true},
+    {path: '/resorts', label: 'Санатории', tur: true},
     {path: '/partners', label: 'Бизнес-Партнеры'},
     {path: '/price', label: 'Прайс лист'},
     {path: '/program', label: 'Партнерская программа'},
