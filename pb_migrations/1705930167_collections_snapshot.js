@@ -3,7 +3,7 @@ migrate((db) => {
     {
       "id": "6zm7vioi7ekbfhq",
       "created": "2023-07-01 09:00:16.111Z",
-      "updated": "2023-08-28 07:31:27.597Z",
+      "updated": "2023-09-05 14:49:14.445Z",
       "name": "site",
       "type": "base",
       "system": false,
@@ -29,7 +29,7 @@ migrate((db) => {
     {
       "id": "ty023348izzzjbo",
       "created": "2023-07-01 12:04:07.329Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2023-09-05 14:49:14.447Z",
       "name": "partners",
       "type": "base",
       "system": false,
@@ -162,7 +162,7 @@ migrate((db) => {
     {
       "id": "_pb_users_auth_",
       "created": "2023-07-02 09:50:29.551Z",
-      "updated": "2023-09-04 07:35:34.794Z",
+      "updated": "2023-12-19 10:36:18.991Z",
       "name": "users",
       "type": "auth",
       "system": false,
@@ -178,6 +178,65 @@ migrate((db) => {
             "min": null,
             "max": null,
             "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "xcwjdqrn",
+          "name": "surname",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "9gnmqr00",
+          "name": "sponsor",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 1,
+            "displayFields": [
+              "id"
+            ]
+          }
+        },
+        {
+          "system": false,
+          "id": "rkddvnyh",
+          "name": "referals",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": null,
+            "displayFields": [
+              "id"
+            ]
+          }
+        },
+        {
+          "system": false,
+          "id": "gs8mzzck",
+          "name": "balance",
+          "type": "number",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null
           }
         },
         {
@@ -228,71 +287,12 @@ migrate((db) => {
         },
         {
           "system": false,
-          "id": "9gnmqr00",
-          "name": "sponsor",
-          "type": "relation",
-          "required": false,
-          "unique": false,
-          "options": {
-            "collectionId": "_pb_users_auth_",
-            "cascadeDelete": false,
-            "minSelect": null,
-            "maxSelect": 1,
-            "displayFields": [
-              "id"
-            ]
-          }
-        },
-        {
-          "system": false,
-          "id": "rkddvnyh",
-          "name": "referals",
-          "type": "relation",
-          "required": false,
-          "unique": false,
-          "options": {
-            "collectionId": "_pb_users_auth_",
-            "cascadeDelete": false,
-            "minSelect": null,
-            "maxSelect": null,
-            "displayFields": [
-              "email"
-            ]
-          }
-        },
-        {
-          "system": false,
           "id": "7bcpc48o",
           "name": "bin",
           "type": "bool",
           "required": false,
           "unique": false,
           "options": {}
-        },
-        {
-          "system": false,
-          "id": "xcwjdqrn",
-          "name": "surname",
-          "type": "text",
-          "required": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": null,
-            "pattern": ""
-          }
-        },
-        {
-          "system": false,
-          "id": "gs8mzzck",
-          "name": "balance",
-          "type": "number",
-          "required": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": null
-          }
         },
         {
           "system": false,
@@ -345,6 +345,36 @@ migrate((db) => {
             "max": null,
             "pattern": ""
           }
+        },
+        {
+          "system": false,
+          "id": "2d4fgojp",
+          "name": "cock",
+          "type": "bool",
+          "required": false,
+          "unique": false,
+          "options": {}
+        },
+        {
+          "system": false,
+          "id": "u8brae08",
+          "name": "binary",
+          "type": "number",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null
+          }
+        },
+        {
+          "system": false,
+          "id": "gv8xq8do",
+          "name": "pay",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "options": {}
         }
       ],
       "indexes": [],
@@ -367,7 +397,7 @@ migrate((db) => {
     {
       "id": "dohznrx4zqairb8",
       "created": "2023-07-17 04:33:58.241Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2023-09-05 14:49:14.447Z",
       "name": "pyramid",
       "type": "base",
       "system": false,
@@ -605,7 +635,7 @@ migrate((db) => {
     {
       "id": "ifk200j89xwaa3m",
       "created": "2023-07-21 05:00:27.116Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2023-09-05 14:49:14.448Z",
       "name": "slider",
       "type": "base",
       "system": false,
@@ -689,7 +719,7 @@ migrate((db) => {
     {
       "id": "7e2zxwmzmnxm2ai",
       "created": "2023-07-21 05:05:20.779Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2023-09-05 14:49:14.448Z",
       "name": "text",
       "type": "base",
       "system": false,
@@ -737,7 +767,7 @@ migrate((db) => {
     {
       "id": "oatxc3dg14o3k0m",
       "created": "2023-07-21 05:05:48.228Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2023-09-05 14:49:14.448Z",
       "name": "images",
       "type": "base",
       "system": false,
@@ -917,7 +947,7 @@ migrate((db) => {
     {
       "id": "b6vkhwhjrm8sqph",
       "created": "2023-07-27 09:31:09.843Z",
-      "updated": "2023-08-28 07:31:27.627Z",
+      "updated": "2023-10-30 17:19:28.918Z",
       "name": "resorts",
       "type": "base",
       "system": false,
@@ -1177,19 +1207,6 @@ migrate((db) => {
         },
         {
           "system": false,
-          "id": "qieelnie",
-          "name": "diseas",
-          "type": "text",
-          "required": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": null,
-            "pattern": ""
-          }
-        },
-        {
-          "system": false,
           "id": "elmoqnyg",
           "name": "description",
           "type": "text",
@@ -1291,6 +1308,15 @@ migrate((db) => {
             "max": null,
             "pattern": ""
           }
+        },
+        {
+          "system": false,
+          "id": "olgdfvts",
+          "name": "diseas",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "options": {}
         }
       ],
       "indexes": [],
@@ -1304,7 +1330,7 @@ migrate((db) => {
     {
       "id": "crqqvpk5n7i5mif",
       "created": "2023-08-04 06:14:36.229Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2023-09-05 14:49:14.449Z",
       "name": "utils",
       "type": "base",
       "system": false,
@@ -1339,7 +1365,7 @@ migrate((db) => {
     {
       "id": "rhxa53d4lrvj1rg",
       "created": "2023-08-06 07:35:02.854Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2023-09-20 09:33:30.423Z",
       "name": "questions",
       "type": "base",
       "system": false,
@@ -1559,6 +1585,35 @@ migrate((db) => {
           "required": false,
           "unique": false,
           "options": {}
+        },
+        {
+          "system": false,
+          "id": "fw32farj",
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "values": [
+              "created",
+              "succ",
+              "fall"
+            ]
+          }
+        },
+        {
+          "system": false,
+          "id": "sken02ja",
+          "name": "admin",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
         }
       ],
       "indexes": [],
@@ -1572,7 +1627,7 @@ migrate((db) => {
     {
       "id": "bfu89j20g87db7m",
       "created": "2023-08-07 11:04:24.196Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2023-09-05 14:49:14.449Z",
       "name": "news",
       "type": "base",
       "system": false,
@@ -1683,7 +1738,7 @@ migrate((db) => {
     {
       "id": "gvn9s6cbp9p3263",
       "created": "2023-08-18 10:25:17.716Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2023-09-05 14:49:14.449Z",
       "name": "resort_bids",
       "type": "base",
       "system": false,
@@ -1756,7 +1811,7 @@ migrate((db) => {
     {
       "id": "d8cme94imzx9wa6",
       "created": "2023-08-18 11:19:27.419Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2024-01-12 18:30:21.016Z",
       "name": "withdraws",
       "type": "base",
       "system": false,
@@ -1832,6 +1887,44 @@ migrate((db) => {
               "rejected"
             ]
           }
+        },
+        {
+          "system": false,
+          "id": "s07txcan",
+          "name": "bank",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "eykhtysj",
+          "name": "iban",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "xt0ej0ig",
+          "name": "iin",
+          "type": "number",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null
+          }
         }
       ],
       "indexes": [],
@@ -1845,7 +1938,7 @@ migrate((db) => {
     {
       "id": "r9wpdl2bslrl1rg",
       "created": "2023-08-18 12:38:55.406Z",
-      "updated": "2023-08-28 07:31:27.607Z",
+      "updated": "2023-09-05 14:49:14.449Z",
       "name": "transfers",
       "type": "base",
       "system": false,
@@ -1905,7 +1998,7 @@ migrate((db) => {
     {
       "id": "ormk8mhzypabbbf",
       "created": "2023-08-22 08:59:16.669Z",
-      "updated": "2023-08-29 06:52:13.846Z",
+      "updated": "2023-09-05 14:49:14.450Z",
       "name": "members",
       "type": "base",
       "system": false,
@@ -1976,7 +2069,7 @@ migrate((db) => {
     {
       "id": "sjiq6j6mn8hpwwj",
       "created": "2023-08-24 08:51:51.877Z",
-      "updated": "2023-08-29 09:54:51.677Z",
+      "updated": "2023-09-05 14:49:14.450Z",
       "name": "bids",
       "type": "base",
       "system": false,
@@ -2054,7 +2147,7 @@ migrate((db) => {
     {
       "id": "r16j5jh3f6ukxpm",
       "created": "2023-08-25 16:34:39.352Z",
-      "updated": "2023-08-25 16:34:47.347Z",
+      "updated": "2023-09-05 14:49:14.450Z",
       "name": "price",
       "type": "base",
       "system": false,
@@ -2096,8 +2189,8 @@ migrate((db) => {
     },
     {
       "id": "x7glx5z3xv1fq5d",
-      "created": "2023-08-30 10:31:06.625Z",
-      "updated": "2023-09-01 10:15:29.876Z",
+      "created": "2023-09-05 14:49:14.450Z",
+      "updated": "2023-09-05 14:49:14.450Z",
       "name": "binary",
       "type": "base",
       "system": false,
@@ -2134,6 +2227,358 @@ migrate((db) => {
             "displayFields": [
               "id"
             ]
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "51spmfphzqc5upz",
+      "created": "2023-09-05 14:49:14.450Z",
+      "updated": "2023-09-05 14:49:14.450Z",
+      "name": "price_duplicate",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "11gdunnf",
+          "name": "title",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "uexb1skk",
+          "name": "cost",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "clzdkpavhrb8t04",
+      "created": "2023-09-15 07:54:11.474Z",
+      "updated": "2023-09-16 10:15:00.628Z",
+      "name": "level",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "vpkx77rl",
+          "name": "level",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "ckzpmnbn",
+          "name": "new_level",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "m1wbcntu",
+          "name": "user",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 1,
+            "displayFields": []
+          }
+        },
+        {
+          "system": false,
+          "id": "4zfr9jy8",
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "values": [
+              "created",
+              "succ"
+            ]
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "qt2d6qla7ci3sl9",
+      "created": "2023-09-16 10:17:39.619Z",
+      "updated": "2023-09-16 10:17:39.619Z",
+      "name": "binary2",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "tucnslkv",
+          "name": "sponsor",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 1,
+            "displayFields": [
+              "id"
+            ]
+          }
+        },
+        {
+          "system": false,
+          "id": "ivev0mpy",
+          "name": "children",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 2,
+            "displayFields": [
+              "id"
+            ]
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "zcv8z2f1n3u3iti",
+      "created": "2023-09-16 10:18:01.740Z",
+      "updated": "2023-09-16 10:18:01.740Z",
+      "name": "binary3",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "dwlhulw7",
+          "name": "sponsor",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 1,
+            "displayFields": [
+              "id"
+            ]
+          }
+        },
+        {
+          "system": false,
+          "id": "vgxskj1k",
+          "name": "children",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "_pb_users_auth_",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 2,
+            "displayFields": [
+              "id"
+            ]
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": "",
+      "viewRule": "",
+      "createRule": "",
+      "updateRule": "",
+      "deleteRule": "",
+      "options": {}
+    },
+    {
+      "id": "kisvcdvr1a2ke35",
+      "created": "2023-09-23 12:02:03.522Z",
+      "updated": "2023-09-23 12:04:59.822Z",
+      "name": "prices",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "system": false,
+          "id": "1v9c8yi0",
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "mfrubvhe",
+          "name": "heading",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "gdk7jp9x",
+          "name": "text",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "options": {}
+        },
+        {
+          "system": false,
+          "id": "xepswdwl",
+          "name": "image",
+          "type": "file",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "maxSize": 5242880,
+            "mimeTypes": [],
+            "thumbs": [],
+            "protected": false
+          }
+        },
+        {
+          "system": false,
+          "id": "pwf1rjqt",
+          "name": "1",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "ievy8tlo",
+          "name": "2",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "xlyndtp2",
+          "name": "3",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "cwqhnkkg",
+          "name": "4",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "system": false,
+          "id": "tnlueuur",
+          "name": "prices",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "r16j5jh3f6ukxpm",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": null,
+            "displayFields": []
           }
         }
       ],

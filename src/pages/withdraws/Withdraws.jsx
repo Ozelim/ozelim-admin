@@ -7,6 +7,9 @@ import { BsCheckCircle } from 'react-icons/bs'
 import { CiCircleRemove } from 'react-icons/ci'
 import { openConfirmModal } from '@mantine/modals'
 
+import { LuHeartHandshake } from "react-icons/lu";
+
+
 import dayjs from 'dayjs'
 
 import * as XLSX from 'xlsx';
@@ -64,7 +67,9 @@ export const Withdraws = () => {
     centered: true,
     labels: { confirm: 'Подтвердить', cancel: 'Отмена'},
     children: (
-      <>Вы действительно хотите отправить данную сумму?</>
+      <>
+        Вы действительно хотите отправить данную сумму?
+      </>
     ),
     onConfirm: () => confirmWithdraw(withdrawId)
   })
@@ -183,148 +188,180 @@ export const Withdraws = () => {
 
   const sorted = withdraws?.sort(customSort)
 
-  return (
-    <div className='w-full bg-white'>
-      <Tabs>
-        <Tabs.List>
-          <Tabs.Tab value='created'>Созданные</Tabs.Tab>
-          <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value='created' pt='lg'>
-          <Button onClick={exportToExcel}>Скачать Excel</Button>
-          <Table
-            striped
-            className='mt-4'
-          >
-            <thead>
-              <tr>
-                <th>Дата</th>
-                <th>ID Пользователя</th>
-                <th>ФИО</th>
-                <th>Банк</th>
-                <th>Сумма</th>
-                <th>Владелец карты</th>
-                <th>ИИН</th>
-                <th>IBAN</th>
-                <th>Статус</th>
-                <th>Действие</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sorted?.map((withdraw, i) => {
-                return (
-                  <tr 
-                    key={i}
-                  >
-                    <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
-                    <td className='!text-lg'>{withdraw?.user}</td>
-                    <td className='!text-lg'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
-                    <td className='!text-lg'>{withdraw?.bank}</td>
-                    <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
-                    <td className='!text-lg'>{withdraw?.owner}</td>
-                    <td className='!text-lg'>{withdraw?.iin}</td>
-                    <td className='!text-lg'>{withdraw?.iban}</td>
-                    <td className='!text-lg'>
-                    {withdraw?.status === 'created' && 'Создан'}
-                    {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
-                    {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
-                    </td>
-                    <td className='flex gap-2 items-center'>
-                      {withdraw?.status === 'created' && (
-                        <>
-                          <BsCheckCircle 
-                            size={30} 
-                            color='green'
-                            onClick={() => confirmWithdrawConfirm(withdraw?.id)}
-                            className='cursor-pointer hover:fill-yellow-500'
-                          />
-                          <CiCircleRemove 
-                            size={35}
-                            color='red'
-                            onClick={() => removeWithdrawConfirm(withdraw)}
-                            className='cursor-pointer hover:fill-yellow-500'
-                          />
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </Table>
+  const [confirmModal, setConfirmModal] = React.useState({
+    // id
+  })
 
-        </Tabs.Panel>
-        <Tabs.Panel value='ended'>
-          <Table
-            striped
-            className='mt-4'
-          >
-            <thead>
-              <tr>
-                <th>Дата</th>
-                <th>ID Пользователя</th>
-                <th>ФИО</th>
-                <th>Банк</th>
-                <th>Сумма</th>
-                <th>Владелец карты</th>
-                <th>ИИН</th>
-                <th>IBAN</th>
-                <th>Статус</th>
-                {/* <th>Действие</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              {endedWithdraws?.items?.map((withdraw, i) => {
-                return (
-                  <tr 
-                    key={i}
-                  >
-                    <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
-                    <td className='!text-lg'>{withdraw?.user}</td>
-                    <td className='!text-lg'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
-                    <td className='!text-lg'>{withdraw?.bank}</td>
-                    <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
-                    <td className='!text-lg'>{withdraw?.owner}</td>
-                    <td className='!text-lg'>{withdraw?.iin}</td>
-                    <td className='!text-lg'>{withdraw?.iban}</td>
-                    {/* <td className='!text-lg'>{withdraw?.card}</td> */}
-                    <td className='!text-lg'>
-                    {withdraw?.status === 'created' && 'Создан'}
-                    {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
-                    {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
-                    </td>
-                    <td className='flex gap-2 items-center'>
-                      {/* {withdraw?.status === 'created' && (
-                        <>
-                          <BsCheckCircle 
-                            size={30} 
-                            color='green'
-                            onClick={() => confirmWithdrawConfirm(withdraw?.id)}
-                            className='cursor-pointer hover:fill-yellow-500'
-                          />
-                          <CiCircleRemove 
-                            size={35}
-                            color='red'
-                            onClick={() => removeWithdrawConfirm(withdraw)}
-                            className='cursor-pointer hover:fill-yellow-500'
-                          />
-                        </>
-                      )} */}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </Table>
-        <div className='flex justify-center'>
-          <Pagination
-            value={endedWithdraws?.page}
-            total={endedWithdraws?.totalPages}
-            onChange={e => handleWithdraws(e)}
-          />
+  return (
+    <>
+      <div className='w-full bg-white'>
+        <Tabs>
+          <Tabs.List>
+            <Tabs.Tab value='created'>Созданные</Tabs.Tab>
+            <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value='created' pt='lg'>
+            <Button onClick={exportToExcel}>Скачать Excel</Button>
+            <Table
+              striped
+              className='mt-4'
+            >
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>ID Пользователя</th>
+                  <th>ФИО</th>
+                  <th>Ур.</th>
+                  <th>Банк</th>
+                  <th>Сумма</th>
+                  <th>Владелец карты</th>
+                  <th>ИИН</th>
+                  <th>IBAN</th>
+                  <th>Статус</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sorted?.map((withdraw, i) => {
+                  return (
+                    <tr 
+                      key={i}
+                    >
+                      <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
+                      <td className='!text-lg'>{withdraw?.user}</td>
+                      <td className='!text-lg'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
+                      <td className='!text-lg '>
+                        <span className='text-lg mr-2'>
+                          {withdraw.expand.user?.level}
+                        </span>
+                        {withdraw?.expand.user?.charity 
+                          ? <LuHeartHandshake color='teal' size={20} className='inline' />
+                          : <LuHeartHandshake color='teal' size={20} className='inline' />
+                        }
+                      </td>
+                      <td className='!text-lg'>{withdraw?.bank}</td>
+                      <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
+                      <td className='!text-lg'>{withdraw?.owner}</td>
+                      <td className='!text-lg'>{withdraw?.iin}</td>
+                      <td className='!text-lg'>{withdraw?.iban}</td>
+                      <td className='!text-lg'>
+                      {withdraw?.status === 'created' && 'Создан'}
+                      {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
+                      {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
+                      </td>
+                      <td className='flex gap-2 items-center'>
+                        {withdraw?.status === 'created' && (
+                          <>
+                            <BsCheckCircle 
+                              size={30} 
+                              color='green'
+                              onClick={() => confirmWithdrawConfirm(withdraw?.id)}
+                              className='cursor-pointer hover:fill-yellow-500'
+                            />
+                            <CiCircleRemove 
+                              size={35}
+                              color='red'
+                              onClick={() => removeWithdrawConfirm(withdraw)}
+                              className='cursor-pointer hover:fill-yellow-500'
+                            />
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+
+          </Tabs.Panel>
+          <Tabs.Panel value='ended'>
+            <Table
+              striped
+              className='mt-4'
+            >
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>ID Пользователя</th>
+                  <th>ФИО</th>
+                  <th>Банк</th>
+                  <th>Сумма</th>
+                  <th>Владелец карты</th>
+                  <th>ИИН</th>
+                  <th>IBAN</th>
+                  <th>Статус</th>
+                  {/* <th>Действие</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                {endedWithdraws?.items?.map((withdraw, i) => {
+                  return (
+                    <tr 
+                      key={i}
+                    >
+                      <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
+                      <td className='!text-lg'>{withdraw?.user}</td>
+                      <td className='!text-lg'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
+                      <td className='!text-lg'>{withdraw?.bank}</td>
+                      <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
+                      <td className='!text-lg'>{withdraw?.owner}</td>
+                      <td className='!text-lg'>{withdraw?.iin}</td>
+                      <td className='!text-lg'>{withdraw?.iban}</td>
+                      {/* <td className='!text-lg'>{withdraw?.card}</td> */}
+                      <td className='!text-lg'>
+                      {withdraw?.status === 'created' && 'Создан'}
+                      {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
+                      {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
+                      </td>
+                      <td className='flex gap-2 items-center'>
+                        {/* {withdraw?.status === 'created' && (
+                          <>
+                            <BsCheckCircle 
+                              size={30} 
+                              color='green'
+                              onClick={() => confirmWithdrawConfirm(withdraw?.id)}
+                              className='cursor-pointer hover:fill-yellow-500'
+                            />
+                            <CiCircleRemove 
+                              size={35}
+                              color='red'
+                              onClick={() => removeWithdrawConfirm(withdraw)}
+                              className='cursor-pointer hover:fill-yellow-500'
+                            />
+                          </>
+                        )} */}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          <div className='flex justify-center'>
+            <Pagination
+              value={endedWithdraws?.page}
+              total={endedWithdraws?.totalPages}
+              onChange={e => handleWithdraws(e)}
+            />
+          </div>
+          </Tabs.Panel>
+        </Tabs>
+      </div>
+      <Modal 
+        opened={confirmModal}
+        onClose={() => setConfirmModal(false)}
+        centered
+        title='Подтвердите действие'
+      >
+        Вы действительно хотите отправить данную сумму?
+        <div className='flex justify-end gap-4'>
+          <Button>
+            Подтвердить
+          </Button>
+          <Button>
+            Отмена
+          </Button>
         </div>
-        </Tabs.Panel>
-      </Tabs>
-    </div>
+      </Modal>
+    </>
   )
 }

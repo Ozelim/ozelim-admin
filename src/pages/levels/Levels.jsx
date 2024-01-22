@@ -24,6 +24,7 @@ export const Levels = () => {
   const courses = ended?.filter(q => q?.new_level === '4.2')
   const five = ended?.filter(q => q?.new_level === '5')
   const six = ended?.filter(q => q?.new_level === '6')
+  const charity = ended?.filter(q => q?.new_level === '3')
 
   React.useEffect(() => {
     getUsers().then((res) => {
@@ -429,9 +430,12 @@ export const Levels = () => {
     await pb.collection('level').delete(id)
     .then(async () => {
       await pb.collection('users').update(userId, {
-        cock: false
+        cock: false,
+        'balance+': 5000
       })
-      setLoading(true)
+    })
+    .finally(() => {
+      setLoading(false)
     })
   }
 
@@ -462,6 +466,7 @@ export const Levels = () => {
             <Tabs.Tab value="2">Курсы</Tabs.Tab>
             <Tabs.Tab value="3">5 уровень</Tabs.Tab>
             <Tabs.Tab value="4">6 уровень</Tabs.Tab>
+            <Tabs.Tab value="6">Благотворительность</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="1">
             <Table className="mt-4">
@@ -687,9 +692,9 @@ export const Levels = () => {
                         </Button>
                       </td>
                       <td>
-                      {user?.level === '4.1' && '4.Путевка'}
-                      {user?.level === '4.2' && '4.Курс'}
-                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                        {user?.level === '4.1' && '4.Путевка'}
+                        {user?.level === '4.2' && '4.Курс'}
+                        {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
                       </td>
                       <td>
                         <Button
@@ -716,6 +721,79 @@ export const Levels = () => {
                           className='cursor-pointer hover:fill-yellow-500'
                         />
                       </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value="6">
+            <Table className="mt-4">
+              <thead>
+                <tr>
+                  <th>Дата подачи</th>
+                  <th>Бинар ID</th>
+                  <th>Завер. ур.</th>
+                  <th>Новый ур.</th>
+                  <th>Имя</th>
+                  <th>Фамилия</th>
+                  <th>Телефон</th>
+                  <th>Область</th>
+                  <th>Сумма</th>
+                  {/* <th>Действие</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                {charity.map((user, i) => {
+                  return (
+                    <tr
+                      key={i}
+                      // onClick={() => openChangeModal(user)}
+                    >
+                      <td>
+                        {dayjs(user?.created).format(`DD.MM.YY, HH:mm`)}
+                      </td>
+                      <td>
+                        <Button
+                          compact
+                          variant="outline"
+                          onClick={() => searchByValue(user?.expand?.user)}
+                        >
+                          {user?.user}
+                        </Button>
+                      </td>
+                      <td>
+                        {user?.level === '3' && '3'}
+                        {user?.level === '4.1' && '4.Путевка'}
+                        {user?.level === '4.2' && '4.Курс'}
+                        {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                      </td>
+                      <td>
+                        <Button
+                          compact
+                          variant="outline"
+                          // onClick={user?.new_level == 6 
+                          //   ? () => searchByValue(user?.expand?.user, user?.new_level, user?.id) 
+                          //   : () => confirmNewLevel(user?.expand?.user, user?.new_level, user?.id)}
+                        >
+                          {user?.new_level === '4.1' && '4.Путевка'}
+                          {user?.new_level === '4.2' && '4.Курс'}
+                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                        </Button>
+                      </td>
+                      <td>{user?.expand?.user?.name}</td>
+                      <td>{user?.expand?.user?.surname}</td>
+                      <td>{user?.expand?.user?.phone}</td>
+                      <td>{user?.expand?.user?.region}</td>
+                      <td>5000</td>
+                      {/* <td>
+                        <CiCircleRemove 
+                          size={35}
+                          color='red'
+                          onClick={() => removeWithdrawConfirm(user?.id, user?.user)}
+                          className='cursor-pointer hover:fill-yellow-500'
+                        />
+                      </td> */}
                     </tr>
                   );
                 })}
