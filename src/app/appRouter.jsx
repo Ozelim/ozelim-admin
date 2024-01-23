@@ -44,7 +44,7 @@ const appRouter = createBrowserRouter([
       { path: "/resort/:id", element: <Resort /> },
       { path: "/resorts", element: <Resorts /> },
       { path: "/courses", element: <Courses /> },
-      { path: "/about", element: <AboutTabs/> },
+      { path: "/about", element: <About/> },
       { path: "/login", element: <Login /> },
       { path: "/withdraws", element: <Withdraws /> },
       { path: "/users", element: <Users /> },
