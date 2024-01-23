@@ -25,6 +25,7 @@ import {
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { PartnersTest } from "pages/partners/PartnersTest";
+import { AboutTabs } from "pages/about/AboutTabs";
 
 const appRouter = createBrowserRouter([
   {
@@ -43,7 +44,7 @@ const appRouter = createBrowserRouter([
       { path: "/resort/:id", element: <Resort /> },
       { path: "/resorts", element: <Resorts /> },
       { path: "/courses", element: <Courses /> },
-      { path: "/about", element: <About /> },
+      { path: "/about", element: <AboutTabs/> },
       { path: "/login", element: <Login /> },
       { path: "/withdraws", element: <Withdraws /> },
       { path: "/users", element: <Users /> },
