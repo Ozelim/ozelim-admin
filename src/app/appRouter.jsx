@@ -22,17 +22,19 @@ import {
   Binary,
   Construct,
   Levels,
+  AboutKz,
+  CharityFundKz,
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { PartnersTest } from "pages/partners/PartnersTest";
-import { AboutTabs } from "pages/about/AboutTabs";
+import { SwitchLayout } from "shared/ui";
 
 const appRouter = createBrowserRouter([
   {
     element: baseLayout,
     children: [
       { path: "/", element: <Home /> },
-      { path: "/charity-fund", element: <CharityFund /> },
+      { path: "/charity-fund", element: <SwitchLayout ru={<CharityFund/>} kz={<CharityFundKz/>} /> },
       { path: "/profile", element: <Profile /> },
       { path: "/bids", element: <Bids /> },
       { path: "/health", element: <Health /> },
@@ -44,7 +46,7 @@ const appRouter = createBrowserRouter([
       { path: "/resort/:id", element: <Resort /> },
       { path: "/resorts", element: <Resorts /> },
       { path: "/courses", element: <Courses /> },
-      { path: "/about", element: <About/> },
+      { path: "/about", element: <SwitchLayout ru={<About/>} kz={<AboutKz/>} /> },
       { path: "/login", element: <Login /> },
       { path: "/withdraws", element: <Withdraws /> },
       { path: "/users", element: <Users /> },

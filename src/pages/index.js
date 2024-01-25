@@ -20,3 +20,12 @@ export { Home } from './home/Home'
 export { Login } from './login/Login'
 export { NotFound } from './not-found/NotFound'
 export { Levels } from './levels/Levels'
+
+
+export { CharityFundKz } from './charity-fund/CharityfundKz'
+export { AboutKz } from './about/AboutKz'
+export { ProgramKz } from './program/ProgramKz'
+// export { HealthKz } from './health/HealthKz'
+// export { HomeKz } from './home/HomeKz'
+
+
