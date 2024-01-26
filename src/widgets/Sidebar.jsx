@@ -2,28 +2,32 @@ import React from 'react'
 import { clsx } from '@mantine/core'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from 'shared/hooks'
+import { useLangContext } from 'app/langContext'
 
 
 export const Sidebar = () => {
 
+  const {lang} = useLangContext()
+
   const array = [
-    {path: '/construct', label: 'Конструктор туров', tur: true},
-    {path: '/about', label: 'О компании'},
-    {path: '/health', label: 'Твое здоровье'},
-    {path: '/courses', label: 'Курсы по туризму'},
-    {path: '/resorts', label: 'Санатории', tur: true},
-    {path: '/partners', label: 'Бизнес-Партнеры'},
-    {path: '/price', label: 'Прайс лист'},
-    {path: '/program', label: 'Партнерская программа'},
-    {path: '/our-team', label: 'Наша команда'},
-    {path: '/charity-fund', label: 'Доброе дело'},
-    {path: '/news', label: 'Новости компании'},
-    {path: '/users', label: 'Пользователи'},
-    {path: '/levels', label: 'Уровни'},
-    {path: '/binary', label: 'Бинар'},
-    {path: '/bids', label: 'Заявки'},
-    {path: '/money-flow', label: 'Движение средтв'},
-    {path: '/withdraws', label: 'Выводы', buhgalter: true},
+    {path: '/construct', labelru: 'Конструктор туров', tur: true},
+    {path: '/about', labelru: 'О компании', labelkz: 'Компания туралы'},
+    {path: '/health', labelru: 'Твое здоровье', labelkz: 'Сенің денсаулығың'},
+    {path: '/courses', labelru: 'Курсы по туризму', labelkz: 'Туристік курстар'},
+    {path: '/resorts', labelru: 'Санатории', tur: true, labelkz: 'Санаторийлер'},
+    {path: '/partners', labelru: 'Бизнес-Партнеры', labelkz: `Бизнес серіктестер`},
+    {path: '/price', labelru: 'Прайс лист'},
+    {path: '/program', labelru: 'Партнерская программа', labelkz: 'Агенттік бағдарлама'},
+    {path: '/our-team', labelru: 'Наша команда'},
+    {path: '/charity-fund', labelru: 'Доброе дело', labelkz: `Мейірімділік`},
+    {path: '/news', labelru: 'Новости компании', labelkz: `Жаңалықтар`},
+    {path: '/users', labelru: 'Пользователи'},
+    {path: '/levels', labelru: 'Уровни'},
+    {path: '/binary', labelru: 'Бинар'},
+    {path: '/bids', labelru: 'Заявки'},
+    {path: '/money-flow', labelru: 'Движение средтв'},
+    {path: '/withdraws', labelru: 'Выводы', buhgalter: true},
+    {path: '/services', labelru: 'Услуги', labelkz: 'Қызметтер'},
   ]
 
   const { pathname } = useLocation()
@@ -43,7 +47,10 @@ export const Sidebar = () => {
                 })}
               >
                   <span>
-                    {page.label}
+                    {lang === 'kz' 
+                      ? page.labelkz ?? page.labelru
+                      : page.labelru
+                    }
                   </span>
               </div>
             </Link>
@@ -59,7 +66,10 @@ export const Sidebar = () => {
                 })}
               >
                   <span>
-                    {page.label}
+                    {lang === 'kz' 
+                      ? page.labelkz ?? page.labelru
+                      : page.labelru
+                    }
                   </span>
               </div>
             </Link>
@@ -75,7 +85,10 @@ export const Sidebar = () => {
                 })}
               >
                   <span>
-                    {page.label}
+                    {lang === 'kz' 
+                      ? page.labelkz ?? page.labelru
+                      : page.labelru
+                    }
                   </span>
               </div>
             </Link>

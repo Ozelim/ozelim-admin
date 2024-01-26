@@ -53,16 +53,16 @@ export const CharityFundKz = () => {
     }
 
     await pb.collection("text").update(charity?.text?.id, {
-      headings: changedHeadings,
-      text: changedText,
+      headings_kz: changedHeadings,
+      text_kz: changedText,
     });
   }
 
   React.useEffect(() => {
     getData("charity").then((res) => {
       setCharity(res);
-      setHeadings(res?.text?.headings);
-      setText(res?.text?.text);
+      setHeadings(res?.text?.headings_kz);
+      setText(res?.text?.text_kz);
       setImages(res?.images);
     });
   }, []);

@@ -57,16 +57,16 @@ export const HealthKz = () => {
     }
 
     await pb.collection("text").update(health?.text?.id, {
-      headings: changedHeadings,
-      text: changedText,
+      headings_kz: changedHeadings,
+      text_kz: changedText,
     });
   }
 
   React.useEffect(() => {
     getData("health").then((res) => {
       setHealth(res);
-      setHeadings(res?.text?.headings);
-      setText(res?.text?.text);
+      setHeadings(res?.text?.headings_kz);
+      setText(res?.text?.text_kz);
       setImages(res?.images);
     });
   }, []);

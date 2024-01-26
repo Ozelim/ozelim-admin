@@ -52,16 +52,16 @@ export const AboutKz = () => {
       }
     }
     await pb.collection('text').update(about?.text?.id, {
-      headings: changedHeadings, 
-      text: changedText
+      headings_kz: changedHeadings, 
+      text_kz: changedText
     })
   }
 
   React.useEffect(() => {
     getData('about').then(res => {
       setAbout(res);
-      setHeadings(res?.text?.headings)
-      setText(res?.text?.text)
+      setHeadings(res?.text?.headings_kz)
+      setText(res?.text?.text_kz)
       setImages(res?.images)
     })
   }, [])

@@ -1,7 +1,8 @@
 import React from 'react'
-import { Button } from '@mantine/core'
+import { Button, Switch } from '@mantine/core'
 import { pb } from 'shared/api'
 import { Link } from 'react-router-dom'
+import { useLangContext } from 'app/langContext'
 
 export const Header = () => {
 
@@ -9,6 +10,8 @@ export const Header = () => {
     pb.authStore.clear()
     window.location.reload()
   }
+
+  const { lang, handleLang } = useLangContext()
 
   return (
     <div className='w-full py-4'>
@@ -19,7 +22,13 @@ export const Header = () => {
               OZELIM ADMIN PANEL
             </Link>
           </p>
-          <div className='ml-auto'>
+          <div className='ml-auto flex gap-4'>
+            <Switch
+              label='Казахский'
+              onChange={handleLang}
+              checked={lang === 'kz'}
+              // checked={lang === 'kz'}
+            />
             <Button
               compact
               variant={'subtle'}
