@@ -19,6 +19,7 @@ export { Home } from './home/Home'
 export { Login } from './login/Login'
 export { NotFound } from './not-found/NotFound'
 export { Levels } from './levels/Levels'
+export { Services } from './services/Services'
 
 
 export { CharityFundKz } from './charity-fund/CharityfundKz'

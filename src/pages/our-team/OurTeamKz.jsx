@@ -6,12 +6,15 @@ import { Image } from "shared/ui";
 import { MdDeleteForever } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { openConfirmModal } from "@mantine/modals";
+import { useLangContext } from "app/langContext";
 
 async function getOurTeam() {
-  return await pb.collection("members").getFullList();
+  return await pb.collection("members").getFullList({filter: `kz = true`});
 }
 
 export const OurTeamKz = () => {
+
+  const {kz} = useLangContext()
 
   const [ourTeam, setOurTeam] = React.useState([]);
 
@@ -54,6 +57,7 @@ export const OurTeamKz = () => {
     formData.append('name', member.name)
     formData.append('description', member.description)
     formData.append('link', member.link)
+    formData.append('kz', true)
     if (member?.image) {
       formData.append('image', member.image)
     }
@@ -133,16 +137,16 @@ export const OurTeamKz = () => {
       }
 
       await pb.collection("text").update(team?.text?.id, {
-        headings: changedHeadings,
-        text: changedText,
+        headings_kz: changedHeadings,
+        text_kz: changedText,
       });
     }
 
     React.useEffect(() => {
       getData("team").then((res) => {
         setTeam(res);
-        setHeadings(res?.text?.headings);
-        setText(res?.text?.text);
+        setHeadings(res?.text?.headings_kz);
+        setText(res?.text?.text_kz);
         setImages(res?.images);
       });
     }, []);

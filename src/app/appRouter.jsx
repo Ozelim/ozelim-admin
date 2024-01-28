@@ -32,6 +32,7 @@ import {
   PartnersKz,
   ProgramKz,
   HomeKz,
+  Services,
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -60,6 +61,7 @@ const appRouter = createBrowserRouter([
       { path: "/binary", element: <Binary /> },
       { path: "/construct", element: <SwitchLayout ru={<Construct/>} kz={<ConstructKz/>} /> },
       { path: "/Levels", element: <Levels /> },
+      { path: "/services", element: <Services /> },
       { path: "*", element: <NotFound /> },
     ],
   },

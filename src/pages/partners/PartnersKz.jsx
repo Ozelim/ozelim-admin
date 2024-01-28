@@ -14,7 +14,7 @@ import { getExtension, getImageUrl } from "shared/lib";
 
 
 async function getPartners () {
-  return await pb.collection('partners').getFullList()
+  return await pb.collection('partners').getFullList({filter: `kz = true`})
 }
 
 export const PartnersKz = () => {

@@ -7,7 +7,7 @@ import { openConfirmModal } from "@mantine/modals";
 import { MdDeleteForever } from "react-icons/md";
 
 async function getNews () {
-  return await pb.collection('news').getFullList()
+  return await pb.collection('news').getFullList({filter: `kz = false`})
 }
 
 export const News = () => {

@@ -8,7 +8,7 @@ import { FiEdit } from "react-icons/fi";
 import { openConfirmModal } from "@mantine/modals";
 
 async function getOurTeam() {
-  return await pb.collection("members").getFullList();
+  return await pb.collection("members").getFullList({filter: `kz = false`});
 }
 
 export const OurTeam = () => {

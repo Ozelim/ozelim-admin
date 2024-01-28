@@ -14,10 +14,10 @@ export const SwitchLayout = ({ru, kz}) => {
           Казахский
         </Tabs.Tab>
       </Tabs.List>
-      <Tabs.Panel value='ru'>
+      <Tabs.Panel value='ru' pt={20}>
         {ru}
       </Tabs.Panel>
-      <Tabs.Panel value='kz'>
+      <Tabs.Panel value='kz' pt={20}>
         {kz}
       </Tabs.Panel>
     </Tabs>
