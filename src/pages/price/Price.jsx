@@ -264,18 +264,6 @@ export const Price = () => {
           </div>
         )
       })}
-
-      <Button
-        onClick={async () => {
-          await pb.collection('prices').create()
-        }}
-        compact
-        variant='outline'
-        mt={50}
-      >
-        Добавить человека
-      </Button>
-
        <section>
         <TextInput
           label="Заголовок"

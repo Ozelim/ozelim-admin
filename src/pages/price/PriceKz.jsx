@@ -7,7 +7,7 @@ import { CiCircleRemove } from 'react-icons/ci';
 import { openConfirmModal } from '@mantine/modals';
 
 async function getPrices () {
-  return await pb.collection('prices').getFullList({expand: 'prices'})
+  return await pb.collection('prices').getFullList({expand: 'prices', filter: `kz = true`})
 }
 
 export const PriceKz = () => {
@@ -66,7 +66,6 @@ export const PriceKz = () => {
       text: changedText
     })
   }
-
   
   React.useEffect(() => {
     getData('price').then(res => {

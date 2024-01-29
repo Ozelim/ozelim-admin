@@ -744,27 +744,3 @@ export const Binary = () => {
     </>
   );
 }
-
-
-// <div className="h-[70vh] mt-4 border-2 border-primary-400 p-4 w-full">
-// <Tree 
-//   data={binary ?? {}}
-//   orientation="vertical" 
-//   pathFunc="elbow"
-//   nodeSvgShape={{
-//     shape: "circle",
-//     shapeProps: { r: 20, fill: "green " },
-//   }}
-//   // collapsible={false}
-//   // onLinkClick={e => console.log(e.id, 'zxczxc')}
-//   renderCustomNodeElement={(props) => (
-//     <CustomNode 
-//       {...props}
-//       onNodeClick={handleNodeClick}
-//       handleNodeAdd={handleNodeAdd}
-//       sponsor={mal}
-//       node={node}
-//     />
-//   )}
-// />
-// </div>

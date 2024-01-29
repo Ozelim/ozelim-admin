@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal, NumberInput, Tabs, TextInput, Textarea } from '@mantine/core'
+import { Button, Modal, NumberInput, Popover, Tabs, TextInput, Textarea } from '@mantine/core'
 import { pb } from 'shared/api'
 
 async function getServices () {
@@ -114,9 +114,17 @@ export const Services = () => {
                       <Button compact variant='outline' onClick={() => handleEdit(service)}>
                         Редактировать
                       </Button>
-                      <Button variant='subtle' color='red' compact onClick={() => deleteService(service.id)}>
-                        Удалить
-                      </Button>
+                      <Popover position="bottom" withArrow shadow="md">
+                        <Popover.Target>
+                          <Button variant='subtle' color='red'>Удалить</Button>
+                        </Popover.Target>
+                        <Popover.Dropdown>
+                          <Button variant='subtle' color='red' compact onClick={() => deleteService(service.id)}>
+                            Да
+                          </Button>
+                        </Popover.Dropdown>
+                      </Popover>
+                 
                     </div>
                   </div>
                 )
