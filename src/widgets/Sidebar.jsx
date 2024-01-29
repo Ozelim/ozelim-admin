@@ -27,7 +27,7 @@ export const Sidebar = () => {
     {path: '/bids', labelru: 'Заявки'},
     {path: '/money-flow', labelru: 'Движение средтв'},
     {path: '/withdraws', labelru: 'Выводы', buhgalter: true},
-    {path: '/services', labelru: 'Услуги', labelkz: 'Қызметтер'},
+    // {path: '/services', labelru: 'Услуги', labelkz: 'Қызметтер'},
   ]
 
   const { pathname } = useLocation()

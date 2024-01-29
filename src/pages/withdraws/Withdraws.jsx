@@ -188,14 +188,12 @@ export const Withdraws = () => {
 
   const sorted = withdraws?.sort(customSort)
 
-  const [confirmModal, setConfirmModal] = React.useState({
-    // id
-  })
+  const [confirmModal, setConfirmModal] = React.useState(false)
 
   return (
     <>
       <div className='w-full bg-white'>
-        <Tabs>
+        <Tabs defaultValue='created'>
           <Tabs.List>
             <Tabs.Tab value='created'>Созданные</Tabs.Tab>
             <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
