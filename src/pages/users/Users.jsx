@@ -183,63 +183,16 @@ export const Users = () => {
                   <td>{user.surname}</td>
                   <td>{user.bin ? "Да" : "Нет"}</td>
                   <td>
-                    {/* {user?.level === '4.1' && '4.Путевка'}
-                    {user?.level === '4.2' && '4.Курса'}
-                    {(user?.level != '4.1' && user?.level != '4.2') && user?.level} */}
-                    {user?.level 
+                  {(user.level === '0' || !user.level) && '1'}
+                  {(user.level === '1') && `2`}
+                  {(user.level === '2') && `3`}
+                  {(user.level === '3') && `4`}
+                  {(user.level === '4.1' || user.level === '4.2') && 5}
+                  {user.level === '5' && 6}
+                    {/* {user?.level 
                       ? (user?.level === '4.1' && '4.Путевка' || 
                         user?.level === '4.2' && '4.Курса' || user?.level)
-                      : !user?.level && 0}
-                    {/* {(user?.level && user?.level !== '2-3' && user?.level != '0' && user?.level != '' ) && (
-                      <Menu
-                        compact
-                      >
-                        <Menu.Target>
-                          <Button color="teal">
-                            {user?.level}
-                          </Button>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                        <Menu.Label>
-                            4 уровень
-                          </Menu.Label>
-                        <Menu.Item 
-                          value={4.1} 
-                          onClick={(e) => confirmLevel(user, e.currentTarget.value)}
-                        >
-                            4. Курс по туризму
-                        </Menu.Item>
-                        <Menu.Item 
-                          value={4.2} 
-                          onClick={(e) => confirmLevel(user, e.currentTarget.value)}
-                        >
-                            4. Оздоровлеие
-                        </Menu.Item>
-                        <Menu.Divider/>
-                        <Menu.Item 
-                          value={5} 
-                          onClick={(e) => confirmLevel(user, e.currentTarget.value)}
-                        >
-                            5. Вознаграждение 500 000 тг
-                        </Menu.Item>
-                        <Menu.Item 
-                          value={6} 
-                          onClick={(e) => confirmLevel(user, e.currentTarget.value)}
-                        >
-                            6. Вознаграждение 1 млн. тг
-                        </Menu.Item>
-                        </Menu.Dropdown>
-                      </Menu>
-                    )}
-                    
-                    {(!user?.level || user?.level == '0') && (
-                      <Button
-                        compact
-                        color="gray"
-                      >
-                        0
-                      </Button> 
-                    )} */}
+                      : !user?.level && 0} */}
                   </td>
                   <td>{user.balance}</td>
                   <td>{user.email}</td>

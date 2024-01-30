@@ -232,6 +232,8 @@ export const Binary = () => {
 
   const [selected, setSelected] = React.useState(null)
 
+  const [binaryNumber, setBinaryNumber] = React.useState(1)
+
   React.useEffect(() => {
     getWorthyUsers()
     .then(res => {
@@ -288,6 +290,7 @@ export const Binary = () => {
           ]
         })
         setSearchModal(true)
+        setBinaryNumber(1)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -314,6 +317,7 @@ export const Binary = () => {
           ]
         })
         setSearchModal(true)
+        setBinaryNumber(1)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -345,6 +349,7 @@ export const Binary = () => {
         })
         setAddBinary({...addBinary, ...obj})
         setShow(true)
+        setBinaryNumber(2)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -372,6 +377,7 @@ export const Binary = () => {
         })
         setAddBinary({...addBinary, ...obj})
         setShow(true)
+        setBinaryNumber(3)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -398,6 +404,7 @@ export const Binary = () => {
       })
       setAddBinary({...addBinary, ...obj})
       setShow(true)
+      setBinaryNumber(1)
     })
     .catch(err => {
       console.log(err, 'err');
@@ -546,6 +553,7 @@ export const Binary = () => {
             ]
           })
           setShow(true)
+          etBinaryNumber(2)
         })
         .catch(err => {
           console.log(err, 'err');
@@ -571,6 +579,7 @@ export const Binary = () => {
             ]
           })
           setShow(true)
+          setBinaryNumber(3)
         })
         .catch(err => {
           console.log(err, 'err');
@@ -595,6 +604,7 @@ export const Binary = () => {
           ]
         })
         setShow(true)
+        setBinaryNumber(1)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -670,6 +680,7 @@ export const Binary = () => {
         </div>
       </div>
       <Modal
+        title={`Бинар №${binaryNumber}`}
         opened={addModal}
         onClose={() => {
           setAddModal(false)
@@ -710,12 +721,16 @@ export const Binary = () => {
         </div>
       </Modal>
       <Modal
+        title={`Бинар № ${binaryNumber}`}
         opened={searchModal}
         centered
         fullScreen
         onClose={() => {
           setSearchModal(false)
           setBinary(null)
+        }}
+        classNames={{
+          title: '!font-bold !text-xl'
         }}
       >
         <div className="h-[70vh] mt-4 border-2 border-primary-400 p-4 w-full">

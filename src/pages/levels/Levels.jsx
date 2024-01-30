@@ -1,11 +1,16 @@
 import React from "react";
-import { Button, LoadingOverlay, Menu, Modal, Pagination, Table, Tabs, TextInput } from "@mantine/core";
+import { Button, LoadingOverlay, Menu, Modal, Pagination, Popover, Table, Tabs, TextInput } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import dayjs from "dayjs";
 import { CustomNode, findAndReplaceObjectById, getBinaryById, getBinaryById2, getBinaryById3 } from "pages/binary/Binary";
 import Tree from "react-d3-tree";
 import { pb } from "shared/api";
 import { CiCircleRemove } from "react-icons/ci";
+
+import clsx from 'clsx'
+
+import { FaCheck,   } from 'react-icons/fa'
+import { FaCircleXmark } from 'react-icons/fa6'
 
 async function getUsers() {
   return await pb.collection("level").getFullList({
@@ -25,6 +30,8 @@ export const Levels = () => {
   const five = ended?.filter(q => q?.new_level === '5')
   const six = ended?.filter(q => q?.new_level === '6')
   const charity = ended?.filter(q => q?.new_level === '3')
+
+  const [number, setNumber] = React.useState(1)
 
   React.useEffect(() => {
     getUsers().then((res) => {
@@ -76,6 +83,7 @@ export const Levels = () => {
             ]
           })
           setLoading(false)
+          setNumber(1)
         })
         .catch(err => {
           console.log(err, 'err');
@@ -100,6 +108,7 @@ export const Levels = () => {
           ]
         })
         setLoading(false)
+        setNumber(1)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -130,6 +139,7 @@ export const Levels = () => {
         setAddBinary({...addBinary, ...obj})
         setLoading(false)
         setShow(true)
+        setNumber(2)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -157,6 +167,7 @@ export const Levels = () => {
         setAddBinary({...addBinary, ...obj})
         setLoading(false)
         setShow(true)
+        setNumber(3)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -184,6 +195,7 @@ export const Levels = () => {
       setAddBinary({...addBinary, ...obj})
       setLoading(false)
       setShow(true)
+      setNumber(1)
     })
     .catch(err => {
       console.log(err, 'err');
@@ -278,7 +290,7 @@ export const Levels = () => {
     if (!user?.id) return
     setShow(false)
     setLoading(true)
-    if (newLevel == 6 && user?.binary == 0) {
+    if (newLevel == 7 && user?.binary == 0) {
       setB(2)
       getBinaryById2(user?.id)
       .then(async res => {
@@ -302,6 +314,7 @@ export const Levels = () => {
         setSearchModal(true)
         setShow(true)
         setLoading(false)
+        setNumber(2)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -309,7 +322,7 @@ export const Levels = () => {
       return
     } 
 
-    if (newLevel == 6 && user?.binary == 2) {
+    if (newLevel == 7 && user?.binary == 2) {
       setB(3)
       getBinaryById3(user?.id)
       .then(async res => {
@@ -333,6 +346,7 @@ export const Levels = () => {
         setSearchModal(true)
         setShow(true)
         setLoading(false)
+        setNumber(3)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -360,6 +374,7 @@ export const Levels = () => {
         setSearchModal(true)
         // setShow(true)
         setLoading(false)
+        setNumber(1)
       })
       .catch(err => {
         console.log(err, 'err');
@@ -417,10 +432,12 @@ export const Levels = () => {
     labels: {confirm: 'Подтвердить', cancel: 'Отмена'},
     children: (
       <>Действительно выдать вознаграждение и повысить уровень до {
-        newLevel === '4.1' && '4' || 
-        newLevel === '4.2' && '4' || 
-        newLevel
-      }?</>
+        newLevel === '4.1' && '5' || 
+        newLevel === '4.2' && '5' || 
+        newLevel === '3' && 4 ||
+        newLevel === '5' && 6 || 
+        newLevel === '6' && 6
+      }?</> 
     ),
     onConfirm: () => giveNewLevel(user, newLevel, id)
   })
@@ -431,7 +448,6 @@ export const Levels = () => {
     .then(async () => {
       await pb.collection('users').update(userId, {
         cock: false,
-        'balance+': 5000
       })
     })
     .finally(() => {
@@ -452,6 +468,13 @@ export const Levels = () => {
   const [show, setShow] = React.useState(true)
 
   const disabled = (!node) || node?.children?.length >= 2 
+
+  const confirm = (id, val) => openConfirmModal({
+    title: 'Изменить статус',
+    centered: true,
+    labels: { confirm: 'Изменить', cancel: 'Отмена' },
+    onConfirm: async () => pb.collection('level').update(id, {given: val}) 
+  })
 
   return (
     <>
@@ -480,6 +503,7 @@ export const Levels = () => {
                 <th>Фамилия</th>
                 <th>Телефон</th>
                 <th>Область</th>
+                <th>Статус</th>
               </tr>
             </thead>
             <tbody>
@@ -496,19 +520,29 @@ export const Levels = () => {
                         {user?.user}
                     </td>
                     <td>
-                      {user?.level === '4.1' && '4.Путевка'}
-                      {user?.level === '4.2' && '4.Курса'}
-                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                    {user.level === '2' && '3'}
+                        {user.level === '3' && '4'}
+                        {(user.level === '4.1' || user.level === '4.2') && '5'}
+                        {user.level === '5' && '6'}
                     </td>
                     <td>
-                          {user?.new_level === '4.1' && '4'}
-                          {user?.new_level === '4.2' && '4'}
-                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                    {user.new_level === '2' && '3'}
+                          {user.new_level === '3' && '4'}
+                          {(user.new_level === '4.1' && `5 и путевка`) || (user.new_level === '4.2' && '5 и курс')}
+                          {user.new_level === '5' && '6'} 
                     </td>
                     <td>{user?.expand?.user?.name}</td>
                     <td>{user?.expand?.user?.surname}</td>
                     <td>{user?.expand?.user?.phone}</td>
                     <td>{user?.expand?.user?.region}</td>
+                    <td>
+                      <div className="cursor-pointer relative">
+                        {user?.given 
+                          ? <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, false)} />
+                          : <FaCheck color="green"  size={20} onClick={() => confirm(user.id, true)} />
+                        }
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
@@ -527,6 +561,7 @@ export const Levels = () => {
                 <th>Фамилия</th>
                 <th>Телефон</th>
                 <th>Область</th>
+                <th>Статус</th>
               </tr>
             </thead>
             <tbody>
@@ -543,19 +578,29 @@ export const Levels = () => {
                         {user?.user}
                     </td>
                     <td>
-                    {user?.level === '4.1' && '4.Путевка'}
-                      {user?.level === '4.2' && '4.Курса'}
-                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                    {user.level === '2' && '3'}
+                        {user.level === '3' && '4'}
+                        {(user.level === '4.1' || user.level === '4.2') && '5'}
+                        {user.level === '5' && '6'}
                     </td>
                     <td>
-                          {user?.new_level === '4.1' && '4'}
-                          {user?.new_level === '4.2' && '4'}
-                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                    {user.new_level === '2' && '3'}
+                          {user.new_level === '3' && '4'}
+                          {(user.new_level === '4.1' && `5 и путевка`) || (user.new_level === '4.2' && '5 и курс')}
+                          {user.new_level === '5' && '6'} 
                     </td>
                     <td>{user?.expand?.user?.name}</td>
                     <td>{user?.expand?.user?.surname}</td>
                     <td>{user?.expand?.user?.phone}</td>
                     <td>{user?.expand?.user?.region}</td>
+                    <td>
+                      <div className="cursor-pointer relative">
+                        {user?.given 
+                          ? <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, false)} />
+                          : <FaCheck color="green"  size={20} onClick={() => confirm(user.id, true)} />
+                        }
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
@@ -574,6 +619,7 @@ export const Levels = () => {
                 <th>Фамилия</th>
                 <th>Телефон</th>
                 <th>Область</th>
+                <th>Статус</th>
               </tr>
             </thead>
             <tbody>
@@ -591,19 +637,29 @@ export const Levels = () => {
                         {user?.user}
                     </td>
                     <td>
-                      {user?.level === '4.1' && '4.Путевка'}
-                      {user?.level === '4.2' && '4.Курса'}
-                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                    {user.level === '2' && '3'}
+                        {user.level === '3' && '4'}
+                        {(user.level === '4.1' || user.level === '4.2') && '5'}
+                        {user.level === '5' && '6'}
                     </td>
                     <td>
-                      {user?.new_level === '4.1' && '4'}
-                      {user?.new_level === '4.2' && '4'}
-                      {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                    {user.new_level === '2' && '3'}
+                          {user.new_level === '3' && '4'}
+                          {(user.new_level === '4.1' && `5 и путевка`) || (user.new_level === '4.2' && '5 и курс')}
+                          {user.new_level === '5' && '6'} 
                     </td>
                     <td>{user?.expand?.user?.name}</td>
                     <td>{user?.expand?.user?.surname}</td>
                     <td>{user?.expand?.user?.phone}</td>
                     <td>{user?.expand?.user?.region}</td>
+                    <td>
+                      <div className="cursor-pointer relative">
+                        {user?.given 
+                          ? <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, false)} />
+                          : <FaCheck color="green"  size={20} onClick={() => confirm(user.id, true)} />
+                        }
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
@@ -622,6 +678,7 @@ export const Levels = () => {
                   <th>Фамилия</th>
                   <th>Телефон</th>
                   <th>Область</th>
+                  <th>Статус</th>
                 </tr>
               </thead>
             <tbody>
@@ -638,19 +695,29 @@ export const Levels = () => {
                       {user?.user}
                     </td>
                     <td>
-                    {user?.level === '4.1' && '4.Путевка'}
-                      {user?.level === '4.2' && '4.Курса'}
-                      {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                      {user.level === '2' && '3'}
+                        {user.level === '3' && '4'}
+                        {(user.level === '4.1' || user.level === '4.2') && '5'}
+                        {user.level === '5' && '6'}
                     </td>
-                    <td>
-                          {user?.new_level === '4.1' && '4'}
-                          {user?.new_level === '4.2' && '4'}
-                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                    <td> 
+                    {user.new_level === '2' && '3'}
+                          {user.new_level === '3' && '4'}
+                          {(user.new_level === '4.1' && `5 и путевка`) || (user.new_level === '4.2' && '5 и курс')}
+                          {user.new_level === '5' && '6'} 
                     </td>
                     <td>{user?.expand?.user?.name}</td>
                     <td>{user?.expand?.user?.surname}</td>
                     <td>{user?.expand?.user?.phone}</td>
                     <td>{user?.expand?.user?.region}</td>
+                    <td>
+                    <div className="cursor-pointer relative">
+                        {user?.given 
+                          ? <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, false)} />
+                          : <FaCheck color="green"  size={20} onClick={() => confirm(user.id, true)} />
+                        }
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
@@ -692,21 +759,24 @@ export const Levels = () => {
                         </Button>
                       </td>
                       <td>
-                        {user?.level === '4.1' && '4.Путевка'}
-                        {user?.level === '4.2' && '4.Курс'}
-                        {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                        {user.level === '2' && '3'}
+                        {user.level === '3' && '4'}
+                        {(user.level === '4.1' || user.level === '4.2') && '5'}
+                        {user.level === '5' && '6'}
                       </td>
                       <td>
                         <Button
                           compact
                           variant="outline"
-                          onClick={user?.new_level == 6 
+                          onClick={user?.new_level == 7 
                             ? () => searchByValue(user?.expand?.user, user?.new_level, user?.id) 
                             : () => confirmNewLevel(user?.expand?.user, user?.new_level, user?.id)}
                         >
-                          {user?.new_level === '4.1' && '4.Путевка'}
-                          {user?.new_level === '4.2' && '4.Курс'}
-                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                          {user.new_level === '2' && '3'}
+                          {user.new_level === '3' && '4'}
+                          {(user.new_level === '4.1' && `5 и путевка`) || (user.new_level === '4.2' && '5 и курс')}
+                          {user.new_level === '5' && '6'} 
+                          {user.new_level === '7' && 'реинвест и вознагражлдение'} 
                         </Button>
                       </td>
                       <td>{user?.expand?.user?.name}</td>
@@ -734,7 +804,7 @@ export const Levels = () => {
                   <th>Дата подачи</th>
                   <th>Бинар ID</th>
                   <th>Завер. ур.</th>
-                  <th>Новый ур.</th>
+                  <th>Переход на</th>
                   <th>Имя</th>
                   <th>Фамилия</th>
                   <th>Телефон</th>
@@ -763,10 +833,10 @@ export const Levels = () => {
                         </Button>
                       </td>
                       <td>
-                        {user?.level === '3' && '3'}
-                        {user?.level === '4.1' && '4.Путевка'}
-                        {user?.level === '4.2' && '4.Курс'}
-                        {(user?.level != '4.1' && user?.level != '4.2') && user?.level}
+                        {user.level === '2' && '3'}
+                        {user.level === '3' && '4'}
+                        {(user.level === '4.1' || user.level === '4.2') && '5'}
+                        {user.level === '5' && '6'}
                       </td>
                       <td>
                         <Button
@@ -776,9 +846,10 @@ export const Levels = () => {
                           //   ? () => searchByValue(user?.expand?.user, user?.new_level, user?.id) 
                           //   : () => confirmNewLevel(user?.expand?.user, user?.new_level, user?.id)}
                         >
-                          {user?.new_level === '4.1' && '4.Путевка'}
-                          {user?.new_level === '4.2' && '4.Курс'}
-                          {(user?.new_level != '4.1' && user?.new_level != '4.2') && user?.new_level}
+                          {user.new_level === '2' && '3'}
+                          {user.new_level === '3' && '4'}
+                          {(user.new_level === '4.1' && `5 и путевка`) || (user.new_level === '4.2' && '5 и курс')}
+                          {user.new_level === '5' && '6'} 
                         </Button>
                       </td>
                       <td>{user?.expand?.user?.name}</td>
@@ -809,6 +880,10 @@ export const Levels = () => {
         onClose={() => {
           setSearchModal(false)
           // setBinary(null)
+        }}
+        title={`Бинар № ${number}`}
+        classNames={{
+          title: '!font-bold !text-xl'
         }}
       >
         <div className="h-[70vh] mt-4 border-2 border-primary-400 p-4 w-full">
