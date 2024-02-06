@@ -20,6 +20,7 @@ export { Login } from './login/Login'
 export { NotFound } from './not-found/NotFound'
 export { Levels } from './levels/Levels'
 export { Services } from './services/Services'
+export { Replenish } from './replenish/Replenish'
 
 
 export { CharityFundKz } from './charity-fund/CharityfundKz'

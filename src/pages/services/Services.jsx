@@ -1,16 +1,20 @@
 import React from 'react'
-import { Button, Modal, NumberInput, Popover, Table, Tabs, TextInput, Textarea } from '@mantine/core'
+import { Button, Modal, NumberInput, Popover, Switch, Table, Tabs, TextInput, Textarea } from '@mantine/core'
 import { pb } from 'shared/api'
 import { BsCheckCircle } from 'react-icons/bs'
 import { CiCircleRemove } from 'react-icons/ci'
 import { openConfirmModal } from '@mantine/modals'
+import { FaCircleXmark } from 'react-icons/fa6'
+import { FaCheck } from 'react-icons/fa'
+import { getImageUrl } from 'shared/lib'
+import dayjs from 'dayjs'
 
 async function getServices () {
   return await pb.collection('services').getFullList() 
 }
 
 async function getServiceBids () {
-  return await pb.collection('service_bids').getFullList() 
+  return await pb.collection('service_bids').getFullList({expand: 'user'}) 
 }
 
 export const Services = () => {
@@ -56,25 +60,32 @@ export const Services = () => {
   }
   
   async function deleteBid (bid) {
-    await pb.collection('withdraws').update(bid?.id, {
+    await pb.collection('service_bids').update(bid?.id, {
       status: 'rejected'
     })
     .then(async () => {
-      await pb.collection('users').update(bid?.user, {
-        'balance+': bid?.total_cost
-      })
+      if (rejectModal.payback) {
+        await pb.collection('users').update(bid?.user, {
+          'balance+': bid?.total_cost
+        })
+        .then(res => {
+          window.location.reload()
+        })
+      } else if (rejectModal.payback && !bid?.pay) {
+        await pb.collection('users').update(bid?.user, {
+          'balance+': bid?.total_cost
+        })
+        .then(res => {
+          window.location.reload()
+        })
+      }
     })
   }
 
-
-  const removeBid = (bid) => openConfirmModal({
-    title: 'Подтвердите действие',
-    centered: true,
-    labels: { confirm: 'Подтвердить', cancel: 'Отмена'},
-    children: (
-      <>Вы действительно хотите отклонить данную заявку?</>
-    ),
-    onConfirm: () => deleteBid(bid)
+  const [rejectModal, setRejectModal] = React.useState({
+    modal: false,
+    payback: false,
+    bid: null,
   })
 
   const handleServices = async () => {
@@ -112,14 +123,24 @@ export const Services = () => {
 
   async function createService () {
     await pb.collection('services').create(service)
+    .then(() => {
+      setService({
+        title: '',
+        description: '',
+        cost: ''
+      })
+    })
   }
 
   async function updateService () {
     await pb.collection('services').update(editService.id, editService)
+    .then(() => {
+      handleEditModalClose()
+    })
   }
 
   async function deleteService (id) {
-    await pb.collection('services').delete(id)
+    return await pb.collection('services').delete(id)
   }
 
   const [editService, setEditService] = React.useState({})
@@ -138,6 +159,19 @@ export const Services = () => {
   function handleEditServiceChange (val, name) {
     setEditService({...editService, [name]: val})
   }
+
+  const confirm = (id, val) => openConfirmModal({
+    title: 'Изменить статус', 
+    centered: true,
+    labels: { confirm: 'Изменить', cancel: 'Отмена' },
+    onConfirm: async () => pb.collection('service_bids').update(id, {given: val}) 
+  })
+
+  const [userData, setUserData] = React.useState({
+    modal: false,
+    data: null
+  })
+
 
   return (
     <>
@@ -166,12 +200,15 @@ export const Services = () => {
                 label='Стоимость'
                 value={service.cost}
                 onChange={val => handleServiceChange(val, 'cost')}
+                hideControls
               />
-              <Button 
-                onClick={createService}
-              >
-                Создать
-              </Button>
+              <div className='mt-5 flex justify-center'>
+                <Button 
+                  onClick={createService}
+                >
+                  Создать
+                </Button>
+              </div>
             </form>
             <div className='mt-5 grid grid-cols-3 gap-4'>
               {services.map((service, i) => {
@@ -183,7 +220,7 @@ export const Services = () => {
                     <div className='space-y-2'>
                       <p className='text-lg'>{service.title}</p>
                       <p>{service.description}</p>
-                      <p className='text-primary-500'>{service.cost}</p>
+                      <p className='text-primary-500 text-lg font-bold'>{service.cost}</p>
                     </div>
                     <div className='space-x-4 mt-4'>
                       <Button compact variant='outline' onClick={() => handleEdit(service)}>
@@ -211,9 +248,10 @@ export const Services = () => {
               <thead>
                 <tr>
                   <th>Пользователь</th>
-                  <th>Стоимость</th>
                   <th>ФИО</th>
+                  <th>Стоимость</th>
                   <th>Услуга</th>
+                  <th>Тип</th>
                   <th></th>
                 </tr>
               </thead>
@@ -221,7 +259,14 @@ export const Services = () => {
               {createdServices.map((q, i) => {
                 return (
                   <tr key={i}>
-                    <td>{q.user}</td>
+                    <td 
+                      className='cursor-pointer' 
+                      onClick={() => setUserData({modal: true, data: q?.expand?.user})}
+                    >
+                      <Button compact variant='outline'>
+                        {q?.user}
+                      </Button>
+                    </td>
                     <td>{q.name}</td>
                     <td>{q.total_cost}</td>
                     <td>
@@ -233,6 +278,7 @@ export const Services = () => {
                         Услуги
                       </Button>
                     </td>
+                    <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
                     <td>
                       <div className='flex gap-4'>
                         <BsCheckCircle
@@ -244,7 +290,7 @@ export const Services = () => {
                         <CiCircleRemove 
                           size={35}
                           color='red'
-                          onClick={() => removeBid(q)}
+                          onClick={() => setRejectModal({...rejectModal, modal: true, bid: q})}
                           className='cursor-pointer hover:fill-yellow-500'
                         />
                       </div>
@@ -263,6 +309,8 @@ export const Services = () => {
                   <th>Стоимость</th>
                   <th>ФИО</th>
                   <th>Услуга</th>
+                  <th>Тип</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -281,6 +329,15 @@ export const Services = () => {
                         Услуги
                       </Button>
                     </td>
+                    <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
+                    <td>
+                      <div className="cursor-pointer relative">
+                        {q?.given 
+                          ? <FaCheck color="green"  size={20} onClick={() => confirm(q.id, false)} />
+                          : <FaCircleXmark color="red" size={20} onClick={() => confirm(q.id, true)} />
+                        }
+                      </div>
+                    </td>
                   </tr>
                 )
               })}
@@ -295,6 +352,7 @@ export const Services = () => {
                   <th>Стоимость</th>
                   <th>ФИО</th>
                   <th>Услуга</th>
+                  <th>Тип</th>
                 </tr>
               </thead>
               <tbody>
@@ -313,6 +371,7 @@ export const Services = () => {
                         Услуги
                       </Button>
                     </td>
+                    <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
                   </tr>
                 )
               })}
@@ -375,6 +434,86 @@ export const Services = () => {
             </div>
           )
         })}
+      </Modal>
+      <Modal
+        opened={rejectModal.modal}
+        onClose={() => setRejectModal({modal: false, payback: false})}
+        centered
+      >
+        <>
+          Вы действительно хотите отклонить данную заявку?
+          {rejectModal.bid?.pay && (
+            <Switch 
+              label='Вернуть сумму на баланс?'
+              checked={rejectModal.payback}
+              onChange={(e) => {
+                setRejectModal(q => ({...rejectModal, payback: !q.payback}))
+              }}
+              className='mt-4'
+            />
+          )}
+        </>
+        <div className='flex justify-center mt-4 gap-4'>
+          <Button onClick={() => setRejectModal({...rejectModal, modal: false})}>
+            Отмена
+          </Button>
+          <Button 
+            onClick={() => deleteBid(rejectModal.bid)} 
+            color='red' 
+            variant='outline'
+          >
+            Отклонить
+          </Button>
+        </div>
+      </Modal>
+      <Modal
+        opened={userData.modal}
+        onClose={() => setUserData({data: null, modal: false})}
+        centered
+      >
+        <img 
+          src={getImageUrl(userData?.data, userData.data?.avatar)} 
+          alt="" 
+          className='w-[150px] h-[150px] object-cover rounded-full mx-auto mb-5'
+        />
+        <ul className='space-y-2'>
+          <li className='grid grid-cols-2'>
+            <p>ID:</p>
+            <p>{userData?.data?.id}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Имя:</p>
+            <p>{userData?.data?.name}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Фамилия:</p>
+            <p>{userData?.data?.surname}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Телефон:</p>
+            <p>{userData?.data?.phone}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Область:</p>
+            <p>{userData?.data?.region}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Партнеры:</p>
+            <p>{userData?.data?.referals?.length}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Бинар:</p>
+            <p>{userData?.data?.bin ? 'Да' : 'Нет'}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Уровень:</p>
+            <p>{userData?.data?.level}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Дата рег:</p>
+            <p>{dayjs (userData?.data?.created).format('DD.MM.YY')}</p>
+          </li>
+        </ul>
       </Modal>
     </>
   )

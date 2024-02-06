@@ -538,8 +538,8 @@ export const Levels = () => {
                     <td>
                       <div className="cursor-pointer relative">
                         {user?.given 
-                          ? <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, false)} />
-                          : <FaCheck color="green"  size={20} onClick={() => confirm(user.id, true)} />
+                          ? <FaCheck color="green"  size={20} onClick={() => confirm(user.id, false)} />
+                          : <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, true)} />
                         }
                       </div>
                     </td>
@@ -595,9 +595,9 @@ export const Levels = () => {
                     <td>{user?.expand?.user?.region}</td>
                     <td>
                       <div className="cursor-pointer relative">
-                        {user?.given 
-                          ? <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, false)} />
-                          : <FaCheck color="green"  size={20} onClick={() => confirm(user.id, true)} />
+                       {user?.given 
+                          ? <FaCheck color="green"  size={20} onClick={() => confirm(user.id, false)} />
+                          : <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, true)} />
                         }
                       </div>
                     </td>
@@ -655,8 +655,8 @@ export const Levels = () => {
                     <td>
                       <div className="cursor-pointer relative">
                         {user?.given 
-                          ? <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, false)} />
-                          : <FaCheck color="green"  size={20} onClick={() => confirm(user.id, true)} />
+                          ? <FaCheck color="green"  size={20} onClick={() => confirm(user.id, false)} />
+                          : <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, true)} />
                         }
                       </div>
                     </td>
@@ -713,8 +713,8 @@ export const Levels = () => {
                     <td>
                     <div className="cursor-pointer relative">
                         {user?.given 
-                          ? <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, false)} />
-                          : <FaCheck color="green"  size={20} onClick={() => confirm(user.id, true)} />
+                          ? <FaCheck color="green"  size={20} onClick={() => confirm(user.id, false)} />
+                          : <FaCircleXmark color="red" size={20} onClick={() => confirm(user.id, true)} />
                         }
                       </div>
                     </td>

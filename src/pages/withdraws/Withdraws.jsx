@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Modal, Pagination, Table, Tabs } from '@mantine/core'
 import { pb } from 'shared/api'
-import { formatNumber } from 'shared/lib'
+import { formatNumber, getImageUrl } from 'shared/lib'
 
 import { BsCheckCircle } from 'react-icons/bs'
 import { CiCircleRemove } from 'react-icons/ci'
@@ -190,6 +190,11 @@ export const Withdraws = () => {
 
   const [confirmModal, setConfirmModal] = React.useState(false)
 
+  const [userData, setUserData] = React.useState({
+    modal: false,
+    data: null
+  })
+
   return (
     <>
       <div className='w-full bg-white'>
@@ -226,16 +231,19 @@ export const Withdraws = () => {
                       key={i}
                     >
                       <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
-                      <td className='!text-lg'>{withdraw?.user}</td>
+                      <td 
+                        className='!text-lg'
+                        onClick={() => setUserData({modal: true, data: withdraw?.expand?.user})}
+                      >
+                        <Button compact variant='outline'>
+                          {withdraw?.user}
+                        </Button>
+                      </td>
                       <td className='!text-lg'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
                       <td className='!text-lg '>
                         <span className='text-lg mr-2'>
                           {withdraw.expand.user?.level}
                         </span>
-                        {withdraw?.expand.user?.charity 
-                          ? <LuHeartHandshake color='teal' size={20} className='inline' />
-                          : <LuHeartHandshake color='teal' size={20} className='inline' />
-                        }
                       </td>
                       <td className='!text-lg'>{withdraw?.bank}</td>
                       <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
@@ -359,6 +367,55 @@ export const Withdraws = () => {
             Отмена
           </Button>
         </div>
+      </Modal>
+      <Modal
+        opened={userData.modal}
+        onClose={() => setUserData({data: null, modal: false})}
+        centered
+      >
+        <img 
+          src={getImageUrl(userData?.data, userData.data?.avatar)} 
+          alt="" 
+          className='w-[150px] h-[150px] object-cover rounded-full mx-auto mb-5'
+        />
+        <ul className='space-y-2'>
+          <li className='grid grid-cols-2'>
+            <p>ID:</p>
+            <p>{userData?.data?.id}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Имя:</p>
+            <p>{userData?.data?.name}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Фамилия:</p>
+            <p>{userData?.data?.surname}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Телефон:</p>
+            <p>{userData?.data?.phone}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Область:</p>
+            <p>{userData?.data?.region}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Партнеры:</p>
+            <p>{userData?.data?.referals?.length}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Бинар:</p>
+            <p>{userData?.data?.bin ? 'Да' : 'Нет'}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Уровень:</p>
+            <p>{userData?.data?.level}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Дата рег:</p>
+            <p>{dayjs(userData?.data?.created).format('DD.MM.YY')}</p>
+          </li>
+        </ul>
       </Modal>
     </>
   )
