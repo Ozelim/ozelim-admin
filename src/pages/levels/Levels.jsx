@@ -776,7 +776,7 @@ export const Levels = () => {
                           {user.new_level === '3' && '4'}
                           {(user.new_level === '4.1' && `5 и путевка`) || (user.new_level === '4.2' && '5 и курс')}
                           {user.new_level === '5' && '6'} 
-                          {user.new_level === '6' && 'реинвест и вознагражлдение'} 
+                          {user.new_level === '6' && 'реинвест и вознаграждение'} 
                         </Button>
                       </td>
                       <td>{user?.expand?.user?.name}</td>

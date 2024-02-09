@@ -31,7 +31,7 @@ export const Services = () => {
   const createdServices = bids.filter(q => q.status === 'created')
   const succServices = bids.filter(q => q.status === 'succ')
   const rejectedServeces = bids.filter(q => q.status === 'rejected')
-  const cancelledServices = bids.filter(q => q.status === 'cancelled')
+  const cancelledServices = bids.filter(q => q.status === 'cancelled' && q?.pay)
 
   const [viewModal, setViewModal] = React.useState({
     modal: false,
@@ -65,21 +65,21 @@ export const Services = () => {
       status: 'rejected'
     })
     .then(async () => {
-      if (rejectModal.payback) {
+      if (!bid?.pay) {
         await pb.collection('users').update(bid?.user, {
           'balance+': bid?.total_cost
         })
         .then(res => {
-          window.location.reload()
+          setRejectModal({...rejectModal, modal: false})
         })
-      } else if (rejectModal.payback && !bid?.pay) {
-        await pb.collection('users').update(bid?.user, {
-          'balance+': bid?.total_cost
-        })
-        .then(res => {
-          window.location.reload()
-        })
-      }
+      } else if (rejectModal.payback) {
+          await pb.collection('users').update(bid?.user, {
+            'balance+': bid?.total_cost
+          })
+          .then(res => {
+            window.location.reload()
+          })
+        }
     })
   }
 
@@ -187,9 +187,9 @@ export const Services = () => {
           <Tabs.List>
             <Tabs.Tab value='services'>Услуги</Tabs.Tab>
             <Tabs.Tab value='created'>Созданые</Tabs.Tab>
+            <Tabs.Tab value='cancelled'>Отмененные</Tabs.Tab>
             <Tabs.Tab value='succ'>Подтвержденные</Tabs.Tab>
             <Tabs.Tab value='rejected'>Отклоненные</Tabs.Tab>
-            <Tabs.Tab value='cancelled'>Отмененные</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value='services'>
             <form className='max-w-md'>
@@ -205,7 +205,7 @@ export const Services = () => {
                 autosize
               />
               <NumberInput
-                label='Стоимость'
+                label='Стоимость (тг)'
                 value={service.cost}
                 onChange={val => handleServiceChange(val, 'cost')}
                 hideControls
@@ -228,7 +228,7 @@ export const Services = () => {
                     <div className='space-y-2'>
                       <p className='text-lg'>{service.title}</p>
                       <p>{service.description}</p>
-                      <p className='text-primary-500 text-lg font-bold'>{service.cost}</p>
+                      <p className='text-primary-500 text-lg font-bold'>{service.cost} тг</p>
                     </div>
                     <div className='space-x-4 mt-4'>
                       <Button compact variant='outline' onClick={() => handleEdit(service)}>
@@ -258,7 +258,7 @@ export const Services = () => {
                   <th>Дата</th>
                   <th>Пользователь</th>
                   <th>ФИО</th>
-                  <th>Стоимость</th>
+                  <th>Стоимость (тг)</th>
                   <th>Услуга</th>
                   <th>Тип</th>
                   <th></th>
@@ -297,12 +297,14 @@ export const Services = () => {
                           onClick={() => handleConfirmBid(q.id)}
                           className='cursor-pointer hover:fill-yellow-500'
                         />
-                        <CiCircleRemove 
-                          size={35}
-                          color='red'
-                          onClick={() => setRejectModal({...rejectModal, modal: true, bid: q})}
-                          className='cursor-pointer hover:fill-yellow-500'
-                        />
+                        {!q?.pay && (
+                          <CiCircleRemove 
+                            size={35}
+                            color='red'
+                            onClick={() => setRejectModal({...rejectModal, modal: true, bid: q})}
+                            className='cursor-pointer hover:fill-yellow-500'
+                          />
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -362,10 +364,11 @@ export const Services = () => {
                 <tr>
                   <th>Дата</th>
                   <th>Пользователь</th>
-                  <th>Стоимость</th>
                   <th>ФИО</th>
+                  <th>Стоимость</th>
                   <th>Услуга</th>
                   <th>Тип</th>
+                  <th>Возвращенная сумма</th>
                 </tr>
               </thead>
               <tbody>
@@ -375,7 +378,7 @@ export const Services = () => {
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
                     <td>{q.user}</td>
                     <td>{q.name}</td>
-                    <td>{q.total_cost}</td>
+                    <td>{q.total_cost} тг</td>
                     <td>
                       <Button
                         variant='outline'
@@ -386,6 +389,7 @@ export const Services = () => {
                       </Button>
                     </td>
                     <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
+                    <td>{q?.refunded_sum}</td>
                   </tr>
                 )
               })}
@@ -398,9 +402,9 @@ export const Services = () => {
                 <tr>
                   <th>Дата</th>
                   <th>Пользователь</th>
-                  <th>Стоимость</th>
                   <th>ФИО</th>
                   <th>Услуга</th>
+                  <th>Стоимость</th>
                   <th>Тип</th>
                   <th>Действие</th>
                   <th></th>
@@ -413,7 +417,6 @@ export const Services = () => {
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
                     <td>{q.user}</td>
                     <td>{q.name}</td>
-                    <td>{q.total_cost}</td>
                     <td>
                       <Button
                         variant='outline'
@@ -423,6 +426,7 @@ export const Services = () => {
                         Услуги
                       </Button>
                     </td>
+                    <td>{q.total_cost}</td>
                     <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
                     <td>
                       <Button onClick={() => setRefund({modal: true, bid: q})} disabled={q?.refunded}>
@@ -519,15 +523,12 @@ export const Services = () => {
           )}
         </>
         <div className='flex justify-center mt-4 gap-4'>
-          <Button onClick={() => setRejectModal({...rejectModal, modal: false})}>
-            Отмена
-          </Button>
           <Button 
             onClick={() => deleteBid(rejectModal.bid)} 
             color='red' 
             variant='outline'
           >
-            Отклонить
+            Подтвердить
           </Button>
         </div>
       </Modal>
@@ -548,10 +549,6 @@ export const Services = () => {
           className='mt-4'
         />
         <div className='flex justify-center gap-4 mt-5'>
-          <Button>
-            Отмена
-          </Button>
-  
           <Popover position="top" shadow="md" classNames={{
             dropdown: `!p-0`
           }}>
@@ -566,6 +563,8 @@ export const Services = () => {
               <Button onClick={async () => {
                 await pb.collection('service_bids').update(refund?.bid?.id, {
                   refunded: true,
+                  status: 'rejected',
+                  refunded_sum: refundSum
                 })
                 .then(() => {
                   window.location.reload()
