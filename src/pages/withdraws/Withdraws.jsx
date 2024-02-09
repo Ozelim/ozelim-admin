@@ -239,18 +239,18 @@ export const Withdraws = () => {
                           {withdraw?.user}
                         </Button>
                       </td>
-                      <td className='!text-lg'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
-                      <td className='!text-lg '>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
+                      <td className='!text-lg whitespace-nowrap'>
                         <span className='text-lg mr-2'>
                           {withdraw.expand.user?.level}
                         </span>
                       </td>
-                      <td className='!text-lg'>{withdraw?.bank}</td>
-                      <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
-                      <td className='!text-lg'>{withdraw?.owner}</td>
-                      <td className='!text-lg'>{withdraw?.iin}</td>
-                      <td className='!text-lg'>{withdraw?.iban}</td>
-                      <td className='!text-lg'>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.bank}</td>
+                      <td className='!text-lg whitespace-nowrap'>{formatNumber(withdraw?.sum)}</td>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.owner}</td>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.iin}</td>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.iban}</td>
+                      <td className='!text-lg whitespace-nowrap'>
                       {withdraw?.status === 'created' && 'Создан'}
                       {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
                       {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
@@ -305,16 +305,16 @@ export const Withdraws = () => {
                     <tr 
                       key={i}
                     >
-                      <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
-                      <td className='!text-lg'>{withdraw?.user}</td>
-                      <td className='!text-lg'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
-                      <td className='!text-lg'>{withdraw?.bank}</td>
-                      <td className='!text-lg'>{formatNumber(withdraw?.sum)}</td>
-                      <td className='!text-lg'>{withdraw?.owner}</td>
-                      <td className='!text-lg'>{withdraw?.iin}</td>
-                      <td className='!text-lg'>{withdraw?.iban}</td>
+                      <td className='!text-lg whitespace-nowrap'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.user}</td>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.bank}</td>
+                      <td className='!text-lg whitespace-nowrap'>{formatNumber(withdraw?.sum)}</td>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.owner}</td>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.iin}</td>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.iban}</td>
                       {/* <td className='!text-lg'>{withdraw?.card}</td> */}
-                      <td className='!text-lg'>
+                      <td className='!text-lg whitespace-nowrap'>
                       {withdraw?.status === 'created' && 'Создан'}
                       {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
                       {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}

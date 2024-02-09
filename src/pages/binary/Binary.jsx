@@ -270,8 +270,9 @@ export const Binary = () => {
   const [search, setSearch] = React.useState('')
   const [searchModal, setSearchModal] = React.useState(false)
 
-  async function searchByValue(id) {
-    if (id) {
+  async function searchByValue(id, binar) {
+    if (!id) return 
+    if (!binar) {
       getBinaryById(id)
       .then(async res => {
         const slot = await pb.collection('binary').getOne(id, {expand: 'sponsor, children'}) 
@@ -295,9 +296,66 @@ export const Binary = () => {
       .catch(err => {
         console.log(err, 'err');
       }) 
-      // handleUsers(1);
-      return;
+      return
     }
+  
+    if (binar == 2) {
+      console.log('2');
+      getBinaryById2(id)
+      .then(async res => {
+        const slot = await pb.collection('binary2').getOne(id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        setAddBinary({...addBinary, 
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        setSearchModal(true)
+        setBinaryNumber(2)
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
+      return
+    }
+
+    if (binar == 3) {
+      console.log('3');
+      getBinaryById3(id)
+      .then(async res => {
+        const slot = await pb.collection('binary3').getOne(id, {expand: 'sponsor, children'}) 
+        setNode(slot)
+        setAddBinary({...addBinary, 
+          value: res?.expand?.sponsor,
+          children: [
+            {
+              value: res?.expand?.children?.[0],
+              children: []
+            },
+            {
+              value: res?.expand?.children?.[1],
+              children: []
+            },
+          ]
+        })
+        setSearchModal(true)
+        setBinaryNumber(3)
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      }) 
+      return
+    }
+
+
     if (!search) return
       getBinaryById(search)
       .then(async res => {
@@ -329,61 +387,65 @@ export const Binary = () => {
   const [node, setNode] = React.useState(null)
 
   async function handleNodeClick (data) {
-    if (mal?.expand?.sponsor?.binary === 2) {
-      getBinaryById2(data?.value?.id)
-      .then(async res => {
-        const slot = await pb.collection('binary2').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
-        setNode(slot)
-        const obj = findAndReplaceObjectById(addBinary, data?.value?.id, {
-          value: res?.expand?.sponsor,
-          children: [
-            {
-              value: res?.expand?.children?.[0],
-              children: []
-            },
-            {
-              value: res?.expand?.children?.[1],
-              children: []
-            },
-          ]
+    // if (mal?.expand?.sponsor?.binary === 2) {
+      if (binaryNumber == 2) {
+        getBinaryById2(data?.value?.id)
+        .then(async res => {
+          const slot = await pb.collection('binary2').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
+          setNode(slot)
+          const obj = findAndReplaceObjectById(addBinary, data?.value?.id, {
+            value: res?.expand?.sponsor,
+            children: [
+              {
+                value: res?.expand?.children?.[0],
+                children: []
+              },
+              {
+                value: res?.expand?.children?.[1],
+                children: []
+              },
+            ]
+          })
+          setAddBinary({...addBinary, ...obj})
+          setShow(true)
+          setBinaryNumber(2)
         })
-        setAddBinary({...addBinary, ...obj})
-        setShow(true)
-        setBinaryNumber(2)
-      })
-      .catch(err => {
-        console.log(err, 'err');
-      }) 
-      return
-    }
+        .catch(err => {
+          console.log(err, 'err');
+        }) 
+        return
+      }
+    // }
 
-    if (mal?.expand?.sponsor?.binary === 3) {
-      getBinaryById3(data?.value?.id)
-      .then(async res => {
-        const slot = await pb.collection('binary3').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
-        setNode(slot)
-        const obj = findAndReplaceObjectById(addBinary, data?.value?.id, {
-          value: res?.expand?.sponsor,
-          children: [
-            {
-              value: res?.expand?.children?.[0],
-              children: []
-            },
-            {
-              value: res?.expand?.children?.[1],
-              children: []
-            },
-          ]
+    // if (mal?.expand?.sponsor?.binary === 3) {
+      if (binaryNumber == 3) {
+        getBinaryById3(data?.value?.id)
+        .then(async res => {
+          const slot = await pb.collection('binary3').getOne(data?.value?.id, {expand: 'sponsor, children'}) 
+          setNode(slot)
+          const obj = findAndReplaceObjectById(addBinary, data?.value?.id, {
+            value: res?.expand?.sponsor,
+            children: [
+              {
+                value: res?.expand?.children?.[0],
+                children: []
+              },
+              {
+                value: res?.expand?.children?.[1],
+                children: []
+              },
+            ]
+          })
+          setAddBinary({...addBinary, ...obj})
+          setShow(true)
+          setBinaryNumber(3)
         })
-        setAddBinary({...addBinary, ...obj})
-        setShow(true)
-        setBinaryNumber(3)
-      })
-      .catch(err => {
-        console.log(err, 'err');
-      }) 
-      return
-    }
+        .catch(err => {
+          console.log(err, 'err');
+        }) 
+        return
+      }
+    // }
 
     getBinaryById(data?.value?.id)
     .then(async res => {
@@ -641,6 +703,22 @@ export const Binary = () => {
           >
             Открыть бинарку
           </Button>
+          <Button
+            onClick={() => searchByValue('111111111111111', 2)}
+            compact
+            variant='subtle'
+            className='ml-8'
+          >
+            Открыть бинарку 2
+          </Button>
+          <Button
+            onClick={() => searchByValue('111111111111111', 3)}
+            compact
+            variant='subtle'
+            className='ml-8'
+          >
+            Открыть бинарку 3
+          </Button> 
         </div>
         <div className='mt-5 gap-4'>
           <Table>

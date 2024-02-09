@@ -14,7 +14,7 @@ async function getServices () {
 }
 
 async function getServiceBids () {
-  return await pb.collection('service_bids').getFullList({expand: 'user'}) 
+  return await pb.collection('service_bids').getFullList({expand: 'user', sort: `-created`}) 
 }
 
 export const Services = () => {
@@ -31,6 +31,7 @@ export const Services = () => {
   const createdServices = bids.filter(q => q.status === 'created')
   const succServices = bids.filter(q => q.status === 'succ')
   const rejectedServeces = bids.filter(q => q.status === 'rejected')
+  const cancelledServices = bids.filter(q => q.status === 'cancelled')
 
   const [viewModal, setViewModal] = React.useState({
     modal: false,
@@ -172,6 +173,12 @@ export const Services = () => {
     data: null
   })
 
+  const [refund, setRefund] = React.useState({
+    modal: false,
+    bid: {}
+  })
+
+  const [refundSum, setRefundSum] = React.useState('')
 
   return (
     <>
@@ -182,6 +189,7 @@ export const Services = () => {
             <Tabs.Tab value='created'>Созданые</Tabs.Tab>
             <Tabs.Tab value='succ'>Подтвержденные</Tabs.Tab>
             <Tabs.Tab value='rejected'>Отклоненные</Tabs.Tab>
+            <Tabs.Tab value='cancelled'>Отмененные</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value='services'>
             <form className='max-w-md'>
@@ -247,6 +255,7 @@ export const Services = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>Дата</th>
                   <th>Пользователь</th>
                   <th>ФИО</th>
                   <th>Стоимость</th>
@@ -259,6 +268,7 @@ export const Services = () => {
               {createdServices.map((q, i) => {
                 return (
                   <tr key={i}>
+                    <th>{dayjs(q?.created).format(`DD.MM.YY`)}</th>
                     <td 
                       className='cursor-pointer' 
                       onClick={() => setUserData({modal: true, data: q?.expand?.user})}
@@ -305,6 +315,7 @@ export const Services = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>Дата</th>
                   <th>Пользователь</th>
                   <th>Стоимость</th>
                   <th>ФИО</th>
@@ -317,6 +328,7 @@ export const Services = () => {
               {succServices.map((q, i) => {
                 return (
                   <tr key={i}>
+                    <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
                     <td>{q.user}</td>
                     <td>{q.name}</td>
                     <td>{q.total_cost}</td>
@@ -348,6 +360,7 @@ export const Services = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>Дата</th>
                   <th>Пользователь</th>
                   <th>Стоимость</th>
                   <th>ФИО</th>
@@ -359,6 +372,7 @@ export const Services = () => {
               {rejectedServeces.map((q, i) => {
                 return (
                   <tr key={i}>
+                    <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
                     <td>{q.user}</td>
                     <td>{q.name}</td>
                     <td>{q.total_cost}</td>
@@ -372,6 +386,57 @@ export const Services = () => {
                       </Button>
                     </td>
                     <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
+                  </tr>
+                )
+              })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value='cancelled'>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Пользователь</th>
+                  <th>Стоимость</th>
+                  <th>ФИО</th>
+                  <th>Услуга</th>
+                  <th>Тип</th>
+                  <th>Действие</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+              {cancelledServices.map((q, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
+                    <td>{q.user}</td>
+                    <td>{q.name}</td>
+                    <td>{q.total_cost}</td>
+                    <td>
+                      <Button
+                        variant='outline'
+                        compact
+                        onClick={() => viewServices(q.serv1ce)}
+                      >
+                        Услуги
+                      </Button>
+                    </td>
+                    <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
+                    <td>
+                      <Button onClick={() => setRefund({modal: true, bid: q})} disabled={q?.refunded}>
+                        Вернуть средства
+                      </Button>
+                    </td>
+                    <td>
+                      <div className="cursor-pointer relative">
+                        {q?.given 
+                          ? <FaCheck color="green"  size={20} onClick={() => confirm(q.id, false)} />
+                          : <FaCircleXmark color="red" size={20} onClick={() => confirm(q.id, true)} />
+                        }
+                      </div>
+                    </td>
                   </tr>
                 )
               })}
@@ -464,6 +529,52 @@ export const Services = () => {
           >
             Отклонить
           </Button>
+        </div>
+      </Modal>
+      <Modal
+        opened={refund.modal}
+        onClose={() => setRefund({modal: false, bid: {}})}
+        centered
+        title='Подтвердите действие'
+      >
+        <p>Сумма: {refund?.bid?.total_cost}</p>
+        <p>Сумма 5%: {refund?.bid?.total_cost2}</p>
+        <p>Карта: {refund?.bid?.card}</p>
+        <NumberInput
+          label='Возвращаемая сумма'
+          hideControls
+          value={refundSum}
+          onChange={e => setRefundSum(e)}
+          className='mt-4'
+        />
+        <div className='flex justify-center gap-4 mt-5'>
+          <Button>
+            Отмена
+          </Button>
+  
+          <Popover position="top" shadow="md" classNames={{
+            dropdown: `!p-0`
+          }}>
+            <Popover.Target>
+              <Button
+                disabled={refundSum < 100}
+              >
+                Вернуть
+              </Button>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <Button onClick={async () => {
+                await pb.collection('service_bids').update(refund?.bid?.id, {
+                  refunded: true,
+                })
+                .then(() => {
+                  window.location.reload()
+                })
+              }}>
+                Да
+              </Button>
+            </Popover.Dropdown>
+          </Popover>
         </div>
       </Modal>
       <Modal

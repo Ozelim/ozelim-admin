@@ -233,7 +233,7 @@ export const Levels = () => {
 
       await pb.collection('users').update(mal, {
         bin: true,
-        balance: u?.balance + 1000000,
+        'balance+': 1000000,
         level: '',
         cock: false,
         binary: b,
@@ -290,7 +290,7 @@ export const Levels = () => {
     if (!user?.id) return
     setShow(false)
     setLoading(true)
-    if (newLevel == 7 && user?.binary == 0) {
+    if (newLevel == 6 && user?.binary == 0) {
       setB(2)
       getBinaryById2(user?.id)
       .then(async res => {
@@ -322,7 +322,7 @@ export const Levels = () => {
       return
     } 
 
-    if (newLevel == 7 && user?.binary == 2) {
+    if (newLevel == 6 && user?.binary == 2) {
       setB(3)
       getBinaryById3(user?.id)
       .then(async res => {
@@ -402,7 +402,7 @@ export const Levels = () => {
     if (newLevel == 6) {
       const u = await pb.collection('users').getOne(user?.id)
       return await pb.collection('users').update(user?.id, {
-        balance: u?.balance + 1000000,
+        'balance+': 1000000,
         level: newLevel,
         cock: false
       })
@@ -482,13 +482,13 @@ export const Levels = () => {
         <LoadingOverlay
           visible={loading}
         />
-        <Tabs>
+        <Tabs defaultValue="5">
           <Tabs.List>
-            <Tabs.Tab value="5">Активные</Tabs.Tab>
+            <Tabs.Tab value="created">Активные</Tabs.Tab>
             <Tabs.Tab value="1">Путевки</Tabs.Tab>
             <Tabs.Tab value="2">Курсы</Tabs.Tab>
-            <Tabs.Tab value="3">5 уровень</Tabs.Tab>
-            <Tabs.Tab value="4">6 уровень</Tabs.Tab>
+            <Tabs.Tab value="3">Завер. 5 ур.</Tabs.Tab>
+            <Tabs.Tab value="4">Завер. 6 ур.</Tabs.Tab>
             <Tabs.Tab value="6">Благотворительность</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="1">
@@ -520,16 +520,16 @@ export const Levels = () => {
                         {user?.user}
                     </td>
                     <td>
-                    {user.level === '2' && '3'}
-                        {user.level === '3' && '4'}
-                        {(user.level === '4.1' || user.level === '4.2') && '5'}
-                        {user.level === '5' && '6'}
+                      {user.level === '2' && '3'}
+                      {user.level === '3' && '4'}
+                      {(user.level === '4.1' || user.level === '4.2') && '5'}
+                      {user.level === '5' && '6'}
                     </td>
                     <td>
-                    {user.new_level === '2' && '3'}
-                          {user.new_level === '3' && '4'}
-                          {(user.new_level === '4.1' && `5 и путевка`) || (user.new_level === '4.2' && '5 и курс')}
-                          {user.new_level === '5' && '6'} 
+                      {user.new_level === '2' && '3'}
+                      {user.new_level === '3' && '4'}
+                      {(user.new_level === '4.1' && `5 и путевка`) || (user.new_level === '4.2' && '5 и курс')}
+                      {user.new_level === '5' && '6'} 
                     </td>
                     <td>{user?.expand?.user?.name}</td>
                     <td>{user?.expand?.user?.surname}</td>
@@ -724,7 +724,7 @@ export const Levels = () => {
             </tbody>
             </Table>
           </Tabs.Panel>
-          <Tabs.Panel value="5">
+          <Tabs.Panel value="created">
             <Table className="mt-4">
               <thead>
                 <tr>
@@ -768,7 +768,7 @@ export const Levels = () => {
                         <Button
                           compact
                           variant="outline"
-                          onClick={user?.new_level == 7 
+                          onClick={user?.new_level == 6 
                             ? () => searchByValue(user?.expand?.user, user?.new_level, user?.id) 
                             : () => confirmNewLevel(user?.expand?.user, user?.new_level, user?.id)}
                         >
@@ -776,7 +776,7 @@ export const Levels = () => {
                           {user.new_level === '3' && '4'}
                           {(user.new_level === '4.1' && `5 и путевка`) || (user.new_level === '4.2' && '5 и курс')}
                           {user.new_level === '5' && '6'} 
-                          {user.new_level === '7' && 'реинвест и вознагражлдение'} 
+                          {user.new_level === '6' && 'реинвест и вознагражлдение'} 
                         </Button>
                       </td>
                       <td>{user?.expand?.user?.name}</td>

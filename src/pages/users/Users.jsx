@@ -183,12 +183,16 @@ export const Users = () => {
                   <td>{user.surname}</td>
                   <td>{user.bin ? "Да" : "Нет"}</td>
                   <td>
-                  {(user.level === '0' || !user.level) && '1'}
-                  {(user.level === '1') && `2`}
-                  {(user.level === '2') && `3`}
-                  {(user.level === '3') && `4`}
-                  {(user.level === '4.1' || user.level === '4.2') && 5}
-                  {user.level === '5' && 6}
+                    {user?.bin 
+                        ? (user.level === '0' || !user.level) && '1' ||
+                        (user.level === '1') && `2` ||
+                        (user.level === '2') && `3` ||
+                        (user.level === '3') && `4` ||
+                        (user.level === '4.1' || user.level === '4.2') && 5 ||
+                        (user.level === '5' && 6)
+                      : '0'
+                    }
+ 
                     {/* {user?.level 
                       ? (user?.level === '4.1' && '4.Путевка' || 
                         user?.level === '4.2' && '4.Курса' || user?.level)
