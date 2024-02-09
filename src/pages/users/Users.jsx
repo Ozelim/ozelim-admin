@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { pb } from "shared/api";
 
 import { AiFillCheckCircle, AiFillLock } from "react-icons/ai";
+import { showNotification } from "@mantine/notifications";
 
 async function getUsers() {
   return await pb.collection("users").getFullList({
@@ -37,6 +38,11 @@ export const Users = () => {
 
     if (foundUsers.length !== 0) {
       setUsers(foundUsers);
+      showNotification({
+        title: 'Поиск',
+        message: 'Не найдено',
+        color: 'teal'
+      })
     }
   }
 
