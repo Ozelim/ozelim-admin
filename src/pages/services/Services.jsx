@@ -540,7 +540,9 @@ export const Services = () => {
       >
         <p>Сумма: {refund?.bid?.total_cost}</p>
         <p>Сумма 5%: {refund?.bid?.total_cost2}</p>
-        <p>Карта: {refund?.bid?.card}</p>
+        <p>IBAN: {refund?.bid?.iban}</p>
+        <p>ФИО: {refund?.bid?.fio}</p>
+        <p>ИИН: {refund?.bid?.iin}</p>
         <NumberInput
           label='Возвращаемая сумма'
           hideControls
