@@ -7,7 +7,7 @@ import { CiCircleRemove } from 'react-icons/ci';
 import { openConfirmModal } from '@mantine/modals';
 
 async function getPrices () {
-  return await pb.collection('prices').getFullList({expand: 'prices'})
+  return await pb.collection('prices').getFullList({expand: 'prices', filter: `kz = false`})
 }
 
 export const Price = () => {
@@ -36,15 +36,6 @@ export const Price = () => {
 
     setChangedText({...changedText, [name]: value})
     return 
-  }
-
-  
-  function handleImagesChange (val, index) {
-    setChangedImages({...changedImages, [`${index}`]: val})
-  }
-
-  function handleImageDelete (index) {
-    setChangedImages({...changedImages, [index]: ''})
   }
 
   async function saveAbout () {
@@ -109,6 +100,9 @@ export const Price = () => {
       await pb.collection('prices').update(price?.id, {
         prices: [...price?.prices, res?.id]
       })
+      .then(() => {
+        setP({})
+      })
     })
   }
 
@@ -125,18 +119,18 @@ export const Price = () => {
     await pb.collection('prices').update(price?.id, formData)
   }
 
-  const removePriceConfrim = (priceId, type) =>
+  const removePriceConfrim = (priceId) =>
     openConfirmModal({
       title: "Подтвердите действие",
       centered: true,
       labels: { confirm: "Подтвердить", cancel: "Отмена" },
       children: <>Вы действительно хотите отклонить данную отправку?</>,
-      onConfirm: () => deletePrice(priceId, type),
+      onConfirm: () => deletePrice(priceId),
     });
 
-  async function deletePrice(priceId, type) {
+  async function deletePrice(priceId) {
     await pb
-      .collection(type ? 'price_duplicate' : 'price')
+      .collection('price')
       .delete(priceId)
   }
 

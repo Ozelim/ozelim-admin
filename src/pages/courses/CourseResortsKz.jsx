@@ -55,8 +55,8 @@ export const CoursesResortsKz = () => {
     }
 
     await pb.collection("text").update(course?.text?.id, {
-      headings: changedHeadings,
-      text: changedText,
+      headings_kz: changedHeadings,
+      text_kz: changedText,
     });
   }
 

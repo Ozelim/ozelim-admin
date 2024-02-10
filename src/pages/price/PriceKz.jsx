@@ -38,15 +38,6 @@ export const PriceKz = () => {
     return 
   }
 
-  
-  function handleImagesChange (val, index) {
-    setChangedImages({...changedImages, [`${index}`]: val})
-  }
-
-  function handleImageDelete (index) {
-    setChangedImages({...changedImages, [index]: ''})
-  }
-
   async function saveAbout () {
 
     for (const index in changedImages) {
@@ -62,16 +53,16 @@ export const PriceKz = () => {
       }
     }
     await pb.collection('text').update(about?.text?.id, {
-      headings: changedHeadings, 
-      text: changedText
+      headings_kz: changedHeadings, 
+      text_kz: changedText
     })
   }
   
   React.useEffect(() => {
     getData('price').then(res => {
       setAbout(res);
-      setHeadings(res?.text?.headings)
-      setText(res?.text?.text)
+      setHeadings(res?.text?.headings_kz)
+      setText(res?.text?.text_kz)
       setImages(res?.images)
     })
   }, [])
@@ -103,10 +94,14 @@ export const PriceKz = () => {
     await pb.collection('price').create({
       title: p?.[`${price?.id}_d`],
       cost: p?.[`${price?.id}_c`],
+      kz: true,
     })
     .then(async (res) => {
       await pb.collection('prices').update(price?.id, {
         prices: [...price?.prices, res?.id]
+      })
+      .then(() => {
+        setP({})
       })
     })
   }
@@ -233,12 +228,12 @@ export const PriceKz = () => {
             </section>
             <section className="mt-10">
               <TextInput
-                value={p?.[`${price?.id}_d`]}
+                value={p?.[`${price?.id}_d`] ?? ''}
                 onChange={e => setP({...p, [`${price?.id}_d`]: e.currentTarget.value})}
                 label="Описание"
               />
               <TextInput
-                value={p?.[`${price?.id}_c`]}
+                value={p?.[`${price?.id}_c`] ?? ''}
                 onChange={e => setP({...p, [`${price?.id}_c`]: e.currentTarget.value})}
                 label="Цена"
               />
@@ -266,7 +261,9 @@ export const PriceKz = () => {
 
       <Button
         onClick={async () => {
-          await pb.collection('prices').create()
+          await pb.collection('prices').create({
+            kz: true
+          })
         }}
         compact
         variant='outline'
