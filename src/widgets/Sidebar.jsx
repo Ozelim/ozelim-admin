@@ -16,7 +16,7 @@ export const Sidebar = () => {
     {path: '/courses', labelru: 'Курсы по туризму', labelkz: 'Туристік курстар'},
     {path: '/resorts', labelru: 'Санатории', tur: true, labelkz: 'Санаторийлер'},
     {path: '/partners', labelru: 'Бизнес-Партнеры', labelkz: `Бизнес серіктестер`},
-    {path: '/price', labelru: 'Прайс лист'},
+    {path: '/price', labelru: 'Усоуги (страница)'},
     {path: '/program', labelru: 'Партнерская программа', labelkz: 'Агенттік бағдарлама'},
     {path: '/our-team', labelru: 'Наша команда'},
     {path: '/charity-fund', labelru: 'Доброе дело', labelkz: `Мейірімділік`},

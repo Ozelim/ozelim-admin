@@ -1,11 +1,30 @@
 import React from 'react'
 import { AiOutlineInstagram, AiOutlinePhone } from 'react-icons/ai'
-import { Button } from '@mantine/core'
+import { Button, Switch } from '@mantine/core'
+import { openConfirmModal } from '@mantine/modals'
+import { pb } from 'shared/api'
 
 export const BomjPlaza = ({resort}) => {
 
+  const confirmSign = () => openConfirmModal({
+    title: 'Подтвердить дейтсвие',
+    centered: true, 
+    labels: {confirm: 'Подтвердить', cancel: 'Отмена'},
+    onConfirm: async () => {
+      await pb.collection('resorts').update(resort.id, {
+        signed: !resort.signed
+      })
+    } 
+  })
+
   return (
-    <div className="flex justify-between items-center max-w-2xl shadow-md border p-4 rounded-primary w-full bg-white" >
+    <div className="relative max-w-2xl shadow-md border p-6 rounded-primary w-full bg-white" >
+      <div className='absolute flex justify-end top-1 right-1'>
+        <Switch
+          checked={resort?.signed}
+          onChange={confirmSign}
+        />
+      </div>
       <div className='flex flex-col'>
         <div className="hover:border-green-500 hover:text-green-500 transition-all border-solid rounded-md font-bold text-2xl font-head">
           {resort?.title} 
@@ -67,19 +86,19 @@ export const BomjPlaza = ({resort}) => {
               {resort?.info}
             </span>
           </p>
+          <div className='flex gap-4 text-primary-500'>
+            {resort?.inst && (
+              <Button variant='outline' p={8} radius={9999}>
+                <AiOutlineInstagram className='text-2xl' />
+              </Button>
+            )}
+            {resort?.whats && (
+              <Button variant='outline' p={8} radius={9999}>
+                <AiOutlinePhone className='text-2xl' />
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
-      <div className='flex gap-4 text-primary-500'>
-        {resort?.inst && (
-          <Button variant='outline' p={8} radius={9999}>
-            <AiOutlineInstagram className='text-2xl' />
-          </Button>
-        )}
-        {resort?.whats && (
-          <Button variant='outline' p={8} radius={9999}>
-            <AiOutlinePhone className='text-2xl' />
-          </Button>
-        )}
       </div>
     </div>
   )

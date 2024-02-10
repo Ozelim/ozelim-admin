@@ -27,6 +27,7 @@ import { red } from "tailwindcss/colors";
 import { useUtils } from "shared/hooks";
 import { BomjPlaza } from "widgets/BomjPlaza";
 import { CoursesResorts, CoursesResortsKz } from "pages";
+import { showNotification } from "@mantine/notifications";
 
 async function getResorts(page, list) {
   return await pb.collection("resorts").getList(page, 12, {
@@ -52,6 +53,7 @@ export const Resorts = () => {
 
   React.useEffect(() => {
     handleResorts(1);
+    
     pb.collection("resorts").subscribe("*", () =>
       handleResorts(resorts?.page ?? 1)
     );
@@ -202,29 +204,69 @@ export const Resorts = () => {
     setModal(true)
   }
 
+  const [searchValue, setSearchValue] = React.useState('')
+
+  async function searchByValue () {
+    await pb.collection('resorts').getFullList({
+      filter: `title ?~ '${searchValue}'`
+    })
+    .then(res => {
+      if (res.length === 0) {
+        showNotification({
+          title: 'Поиск',
+          message: 'Не найдено санаторий',
+          color: 'teal'
+        })
+        return
+      }
+
+      if (res.length !== 0) {
+        setResorts({
+          items: res
+        })
+      }
+    })
+  }
+
   return (
     <>
       <div className="w-full">
-        <div className="space-x-4">
-          <Button onClick={() => setShitModal(true)}>
-            Новая запись курорта
-          </Button>
-          <Button onClick={() => setModal(true)}>
-            Создать карточку курорта
-          </Button>
-        </div>
+
         <Tabs>
           <Tabs.List>
             <Tabs.Tab value="resorts">Курорты</Tabs.Tab>
             <Tabs.Tab value="info">Информация</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="resorts">
+            <div className="space-x-4 mt-5">
+              <Button onClick={() => setShitModal(true)}>
+                Новая запись курорта
+              </Button>
+              <Button onClick={() => setModal(true)}>
+                Создать карточку курорта
+              </Button>
+            </div>
             <Tabs className="mt-4" value={tab} onTabChange={setTab}>
             <Tabs.List grow>
               <Tabs.Tab value="list">Записи курортов</Tabs.Tab>
               <Tabs.Tab value="resorts">Карточки курортов</Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="list" p={"md"}>
+              <search>
+                <div className="flex w-full">
+                  <TextInput 
+                    className="w-96"
+                    value={searchValue}
+                    onChange={e => setSearchValue(e.currentTarget.value)}
+                  />
+                  <Button
+                    disabled={!searchValue}
+                    onClick={searchByValue}
+                  >
+                    Поиск
+                  </Button>
+                </div>
+              </search>
               {/* <div className="flex items-center justify-end gap-2">
                 <Select data={regions} label="По областям" />
                 <Select data={diseases} label="По патологиям" />

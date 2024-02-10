@@ -31,7 +31,8 @@ export const Services = () => {
   const createdServices = bids.filter(q => q.status === 'created')
   const succServices = bids.filter(q => q.status === 'succ')
   const rejectedServeces = bids.filter(q => q.status === 'rejected')
-  const cancelledServices = bids.filter(q => q.status === 'cancelled' && q?.pay)
+  const cancelledServices = bids.filter(q => q.status === 'cancelled')
+  const refundedServices = bids.filter(q => q.status === 'refunded')
 
   const [viewModal, setViewModal] = React.useState({
     modal: false,
@@ -187,9 +188,10 @@ export const Services = () => {
           <Tabs.List>
             <Tabs.Tab value='services'>Услуги</Tabs.Tab>
             <Tabs.Tab value='created'>Созданые</Tabs.Tab>
-            <Tabs.Tab value='cancelled'>Отмененные</Tabs.Tab>
+            <Tabs.Tab value='refunded'>Возврат</Tabs.Tab>
             <Tabs.Tab value='succ'>Подтвержденные</Tabs.Tab>
             <Tabs.Tab value='rejected'>Отклоненные</Tabs.Tab>
+            <Tabs.Tab value='cancelled'>Отмененные</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value='services'>
             <form className='max-w-md'>
@@ -396,7 +398,7 @@ export const Services = () => {
               </tbody>
             </Table>
           </Tabs.Panel>
-          <Tabs.Panel value='cancelled'>
+          <Tabs.Panel value='refunded'>
             <Table>
               <thead>
                 <tr>
@@ -407,11 +409,10 @@ export const Services = () => {
                   <th>Стоимость</th>
                   <th>Тип</th>
                   <th>Действие</th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
-              {cancelledServices.map((q, i) => {
+              {refundedServices.map((q, i) => {
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
@@ -433,14 +434,44 @@ export const Services = () => {
                         Вернуть средства
                       </Button>
                     </td>
+                  </tr>
+                )
+              })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value='cancelled'>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Пользователь</th>
+                  <th>ФИО</th>
+                  <th>Услуга</th>
+                  <th>Стоимость</th>
+                  <th>Тип</th>
+                  <th>Возвращено</th>
+                </tr>
+              </thead>
+              <tbody>
+              {cancelledServices.map((q, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
+                    <td>{q.user}</td>
+                    <td>{q.name}</td>
                     <td>
-                      <div className="cursor-pointer relative">
-                        {q?.given 
-                          ? <FaCheck color="green"  size={20} onClick={() => confirm(q.id, false)} />
-                          : <FaCircleXmark color="red" size={20} onClick={() => confirm(q.id, true)} />
-                        }
-                      </div>
+                      <Button
+                        variant='outline'
+                        compact
+                        onClick={() => viewServices(q.serv1ce)}
+                      >
+                        Услуги
+                      </Button>
                     </td>
+                    <td>{q.total_cost}</td>
+                    <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
+                    <td>{q?.refunded_sum}</td>
                   </tr>
                 )
               })}
@@ -565,7 +596,7 @@ export const Services = () => {
               <Button onClick={async () => {
                 await pb.collection('service_bids').update(refund?.bid?.id, {
                   refunded: true,
-                  status: 'rejected',
+                  status: 'cancelled',
                   refunded_sum: refundSum
                 })
                 .then(() => {
