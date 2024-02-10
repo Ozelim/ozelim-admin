@@ -7,6 +7,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 export const HealthKz = () => {
+
   const [health, setHealth] = React.useState({});
 
   const [images, setImages] = React.useState({});

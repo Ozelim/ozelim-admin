@@ -14,7 +14,7 @@ import {
   Textarea,
 } from "@mantine/core";
 import { pb } from "shared/api";
-import { Image } from "shared/ui";
+import { Image, SwitchLayout } from "shared/ui";
 import { BomjCard, ResortCard } from "widgets";
 import { ResortSlider } from "pages/resort/ui/mainSection/ResortSlider";
 // import { useSearchParams } from 'react-router-dom'
@@ -26,6 +26,7 @@ import { MdDelete } from "react-icons/md";
 import { red } from "tailwindcss/colors";
 import { useUtils } from "shared/hooks";
 import { BomjPlaza } from "widgets/BomjPlaza";
+import { CoursesResorts, CoursesResortsKz } from "pages";
 
 async function getResorts(page, list) {
   return await pb.collection("resorts").getList(page, 12, {
@@ -212,71 +213,82 @@ export const Resorts = () => {
             Создать карточку курорта
           </Button>
         </div>
-        <Tabs className="mt-4" value={tab} onTabChange={setTab}>
-          <Tabs.List grow>
-            <Tabs.Tab value="list">Записи курортов</Tabs.Tab>
-            <Tabs.Tab value="resorts">Карточки курортов</Tabs.Tab>
+        <Tabs>
+          <Tabs.List>
+            <Tabs.Tab value="resorts">Курорты</Tabs.Tab>
+            <Tabs.Tab value="info">Информация</Tabs.Tab>
           </Tabs.List>
-          <Tabs.Panel value="list" p={"md"}>
-            {/* <div className="flex items-center justify-end gap-2">
-              <Select data={regions} label="По областям" />
-              <Select data={diseases} label="По патологиям" />
-            </div> */}
-            <div className="space-y-4 flex flex-col items-center mt-4">
-              {resorts?.items?.map((resort, i) => {
-                return (
-                  <div key={i} className="flex gap-2 w-full">
-                    <BomjPlaza resort={resort} key={i} />
-                    <ActionIcon
-                      color="red"
-                      size="md"
-                      onClick={() => deleteConfirm(resort?.id)}
-                    >
-                      <MdDelete />
-                    </ActionIcon>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="mt-5 flex justify-center">
-              <Pagination
-                value={resorts?.page}
-                onChange={(e) => handleResorts(e)}
-                total={resorts?.totalPages}
-              />
-            </div>
-          </Tabs.Panel>
-          <Tabs.Panel value="resorts" p={"md"}>
-            <div className="grid grid-cols-3">
-              {resorts?.items?.map((resort, i) => {
-                return (
-                  <ResortCard
-                    resort={resort}
-                    key={i}
-                    editBtn={
-                      <Button onClick={() => openEditModal(resort)}>
-                        Редактировать
-                      </Button>
-                    }
-                    deleteBtn={
-                      <Button
-                        fill={red}
-                        onClick={() => deleteConfirm(resort.id)}
+          <Tabs.Panel value="resorts">
+            <Tabs className="mt-4" value={tab} onTabChange={setTab}>
+            <Tabs.List grow>
+              <Tabs.Tab value="list">Записи курортов</Tabs.Tab>
+              <Tabs.Tab value="resorts">Карточки курортов</Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="list" p={"md"}>
+              {/* <div className="flex items-center justify-end gap-2">
+                <Select data={regions} label="По областям" />
+                <Select data={diseases} label="По патологиям" />
+              </div> */}
+              <div className="space-y-4 flex flex-col items-center mt-4">
+                {resorts?.items?.map((resort, i) => {
+                  return (
+                    <div key={i} className="flex gap-2 w-full">
+                      <BomjPlaza resort={resort} key={i} />
+                      <ActionIcon
+                        color="red"
+                        size="md"
+                        onClick={() => deleteConfirm(resort?.id)}
                       >
-                        Удалить
-                      </Button>
-                    }
-                  />
-                );
-              })}
-            </div>
-            <div className="mt-5 flex justify-center">
-              <Pagination
-                value={resorts?.page}
-                onChange={(e) => handleResorts(e)}
-                total={resorts?.totalPages}
-              />
-            </div>
+                        <MdDelete />
+                      </ActionIcon>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-5 flex justify-center">
+                <Pagination
+                  value={resorts?.page}
+                  onChange={(e) => handleResorts(e)}
+                  total={resorts?.totalPages}
+                />
+              </div>
+            </Tabs.Panel>
+            <Tabs.Panel value="resorts" p={"md"}>
+              <div className="grid grid-cols-3">
+                {resorts?.items?.map((resort, i) => {
+                  return (
+                    <ResortCard
+                      resort={resort}
+                      key={i}
+                      editBtn={
+                        <Button onClick={() => openEditModal(resort)}>
+                          Редактировать
+                        </Button>
+                      }
+                      deleteBtn={
+                        <Button
+                          fill={red}
+                          onClick={() => deleteConfirm(resort.id)}
+                        >
+                          Удалить
+                        </Button>
+                      }
+                    />
+                  );
+                })}
+              </div>
+              <div className="mt-5 flex justify-center">
+                <Pagination
+                  value={resorts?.page}
+                  onChange={(e) => handleResorts(e)}
+                  total={resorts?.totalPages}
+                />
+              </div>
+            </Tabs.Panel>
+            </Tabs>
+          </Tabs.Panel>
+          <Tabs.Panel value="info">
+            <SwitchLayout ru={<CoursesResorts/>} kz={<CoursesResortsKz/>} />
           </Tabs.Panel>
         </Tabs>
       </div>
