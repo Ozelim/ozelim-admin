@@ -1,16 +1,16 @@
 /// <reference path="../pb_data/types.d.ts" />
 migrate((db) => {
   const collection = new Collection({
-    "id": "g66y0dzxf5hfitk",
-    "created": "2024-02-04 17:33:01.067Z",
-    "updated": "2024-02-04 17:33:01.067Z",
+    "id": "hvk5gew9vvnracu",
+    "created": "2024-02-12 10:36:13.904Z",
+    "updated": "2024-02-12 10:36:13.904Z",
     "name": "replenish",
     "type": "base",
     "system": false,
     "schema": [
       {
         "system": false,
-        "id": "pdgwprmc",
+        "id": "ohxtxhcg",
         "name": "user",
         "type": "relation",
         "required": false,
@@ -26,7 +26,7 @@ migrate((db) => {
       },
       {
         "system": false,
-        "id": "yfcd1u7p",
+        "id": "nfmcisyz",
         "name": "sum",
         "type": "number",
         "required": false,
@@ -37,21 +37,47 @@ migrate((db) => {
           "max": null,
           "noDecimal": false
         }
+      },
+      {
+        "system": false,
+        "id": "yn94saph",
+        "name": "status",
+        "type": "select",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "values": [
+            "created",
+            "paid"
+          ]
+        }
+      },
+      {
+        "system": false,
+        "id": "k11siw5y",
+        "name": "pay",
+        "type": "json",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {}
       }
     ],
     "indexes": [],
-    "listRule": null,
-    "viewRule": null,
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
     "options": {}
   });
 
   return Dao(db).saveCollection(collection);
 }, (db) => {
   const dao = new Dao(db);
-  const collection = dao.findCollectionByNameOrId("g66y0dzxf5hfitk");
+  const collection = dao.findCollectionByNameOrId("hvk5gew9vvnracu");
 
   return dao.deleteCollection(collection);
 })

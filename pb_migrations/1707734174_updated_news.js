@@ -1,31 +1,27 @@
 /// <reference path="../pb_data/types.d.ts" />
 migrate((db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("va5ascyo33rqm05")
+  const collection = dao.findCollectionByNameOrId("bfu89j20g87db7m")
 
   // add
   collection.schema.addField(new SchemaField({
     "system": false,
-    "id": "hrnponkt",
-    "name": "refunded_sum",
-    "type": "number",
+    "id": "n4vfqkuz",
+    "name": "kz",
+    "type": "bool",
     "required": false,
     "presentable": false,
     "unique": false,
-    "options": {
-      "min": null,
-      "max": null,
-      "noDecimal": false
-    }
+    "options": {}
   }))
 
   return dao.saveCollection(collection)
 }, (db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("va5ascyo33rqm05")
+  const collection = dao.findCollectionByNameOrId("bfu89j20g87db7m")
 
   // remove
-  collection.schema.removeField("hrnponkt")
+  collection.schema.removeField("n4vfqkuz")
 
   return dao.saveCollection(collection)
 })

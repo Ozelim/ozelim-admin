@@ -1,12 +1,12 @@
 /// <reference path="../pb_data/types.d.ts" />
 migrate((db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("kisvcdvr1a2ke35")
+  const collection = dao.findCollectionByNameOrId("r16j5jh3f6ukxpm")
 
   // add
   collection.schema.addField(new SchemaField({
     "system": false,
-    "id": "ol9azxmn",
+    "id": "k5ozxt2g",
     "name": "kz",
     "type": "bool",
     "required": false,
@@ -18,10 +18,10 @@ migrate((db) => {
   return dao.saveCollection(collection)
 }, (db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("kisvcdvr1a2ke35")
+  const collection = dao.findCollectionByNameOrId("r16j5jh3f6ukxpm")
 
   // remove
-  collection.schema.removeField("ol9azxmn")
+  collection.schema.removeField("k5ozxt2g")
 
   return dao.saveCollection(collection)
 })
