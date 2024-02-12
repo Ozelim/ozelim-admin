@@ -43,7 +43,6 @@ export const CoursesResortsKz = () => {
     console.log(course);
     for (const index in changedImages) {
       if (!isNaN(index)) {
-        if (changedImages?.[index] instanceof File) {
           const formData = new FormData();
           formData.append([`${index}`], changedImages?.[index]);
           await pb
@@ -52,7 +51,6 @@ export const CoursesResortsKz = () => {
             .then((res) => {
               console.log(res);
             });
-        }
       }
     }
 
@@ -162,6 +160,33 @@ export const CoursesResortsKz = () => {
             <Textarea
               label="Ссылка на видео"
               value={changedText?.link ?? ""}
+              onChange={(e) => handleCourseChange(e, "text")}
+              name="link"
+              autosize
+            />
+          </div>
+          <div>
+            <Textarea
+              label="Ссылка на видео 2"
+              value={changedText?.link2 ?? ""}
+              onChange={(e) => handleCourseChange(e, "text")}
+              name="link"
+              autosize
+            />
+          </div>
+          <div>
+            <Textarea
+              label="Ссылка на видео 3"
+              value={changedText?.link3 ?? ""}
+              onChange={(e) => handleCourseChange(e, "text")}
+              name="link"
+              autosize
+            />
+          </div>
+          <div>
+            <Textarea
+              label="Ссылка на видео 4"
+              value={changedText?.link4 ?? ""}
               onChange={(e) => handleCourseChange(e, "text")}
               name="link"
               autosize

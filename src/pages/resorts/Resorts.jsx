@@ -231,8 +231,7 @@ export const Resorts = () => {
   return (
     <>
       <div className="w-full">
-
-        <Tabs>
+        <Tabs defaultValue="resorts">
           <Tabs.List>
             <Tabs.Tab value="resorts">Курорты</Tabs.Tab>
             <Tabs.Tab value="info">Информация</Tabs.Tab>

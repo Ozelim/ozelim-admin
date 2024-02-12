@@ -42,14 +42,12 @@ export const PriceKz = () => {
 
     for (const index in changedImages) {
       if (!isNaN(index)) {
-        if (changedImages?.[index] instanceof File) {
           const formData = new FormData()
           formData.append([`${index}`], changedImages?.[index])
           await pb.collection('images').update(about?.images?.id, formData)
           .then(res => {
             console.log(res);
           })
-        }
       }
     }
     await pb.collection('text').update(about?.text?.id, {

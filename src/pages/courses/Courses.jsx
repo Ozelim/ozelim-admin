@@ -41,7 +41,6 @@ export const Courses = () => {
     console.log(course);
     for (const index in changedImages) {
       if (!isNaN(index)) {
-        if (changedImages?.[index] instanceof File) {
           const formData = new FormData();
           formData.append([`${index}`], changedImages?.[index]);
           await pb
@@ -50,7 +49,6 @@ export const Courses = () => {
             .then((res) => {
               console.log(res);
             });
-        }
       }
     }
 

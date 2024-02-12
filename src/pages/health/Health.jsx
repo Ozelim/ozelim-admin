@@ -44,7 +44,6 @@ export const Health = () => {
     console.log(health);
     for (const index in changedImages) {
       if (!isNaN(index)) {
-        if (changedImages?.[index] instanceof File) {
           const formData = new FormData();
           formData.append([`${index}`], changedImages?.[index]);
           await pb
@@ -53,7 +52,6 @@ export const Health = () => {
             .then((res) => {
               console.log(res);
             });
-        }
       }
     }
 
