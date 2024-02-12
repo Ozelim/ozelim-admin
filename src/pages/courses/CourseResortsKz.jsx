@@ -37,6 +37,8 @@ export const CoursesResortsKz = () => {
     setChangedImages({ ...changedImages, [index]: "" });
   }
 
+  console.log(changedImages, 'changed images');
+
   async function saveCourses() {
     console.log(course);
     for (const index in changedImages) {

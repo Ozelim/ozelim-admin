@@ -48,7 +48,7 @@ export const CoursesResorts = () => {
             .collection("images")
             .update(course?.images?.id, formData)
             .then((res) => {
-              console.log(res);
+              console.log(res, 'photoes changeed');
             });
         }
       }
