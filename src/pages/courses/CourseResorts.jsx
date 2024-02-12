@@ -318,7 +318,7 @@ export const CoursesResorts = () => {
           onChange={handleImagesChange}
           record={course?.images}
           image={changedImages?.["2"]}
-          onDelete={handleImageDelete}
+          onDelete={() => handleImageDelete(2)}
           index={2}
         />
         <Image
@@ -327,7 +327,7 @@ export const CoursesResorts = () => {
           onChange={handleImagesChange}
           record={course?.images}
           image={changedImages?.["3"]}
-          onDelete={handleImageDelete}
+          onDelete={() => handleImageDelete(3)}
           index={3}
         />
         <Image
@@ -336,7 +336,7 @@ export const CoursesResorts = () => {
           onChange={handleImagesChange}
           record={course?.images}
           image={changedImages?.["4"]}
-          onDelete={handleImageDelete}npm run 
+          onDelete={() => handleImageDelete(4)}
           index={4}
         />
       </section>
