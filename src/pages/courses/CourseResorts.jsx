@@ -168,7 +168,7 @@ export const CoursesResorts = () => {
               label="Ссылка на видео 2"
               value={changedText?.link2 ?? ""}
               onChange={(e) => handleCourseChange(e, "text")}
-              name="link"
+              name="link2"
               autosize
             />
           </div>
@@ -177,7 +177,7 @@ export const CoursesResorts = () => {
               label="Ссылка на видео 3"
               value={changedText?.link3 ?? ""}
               onChange={(e) => handleCourseChange(e, "text")}
-              name="link"
+              name="link3"
               autosize
             />
           </div>
@@ -186,7 +186,7 @@ export const CoursesResorts = () => {
               label="Ссылка на видео 4"
               value={changedText?.link4 ?? ""}
               onChange={(e) => handleCourseChange(e, "text")}
-              name="link"
+              name="link4"
               autosize
             />
           </div>
