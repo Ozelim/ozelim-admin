@@ -426,43 +426,7 @@ export const CoursesResorts = () => {
           autosize
         />
       </div>
-
-      <div>
-        <div className="grid grid-cols-3 gap-4 mt-20">
-          {Array(3).fill(1).map((_, i) => {
-            const index = i + 1
-            return (
-              <div className="space-y-2">
-                <TextInput
-                  label="Заголовок"
-                  value={changedText?.[`label${index}`] ?? ""}
-                  name={`label${index}`}
-                  onChange={(e) =>
-                    handleCourseChange(e, "text")
-                  }
-                />
-                <TextInput
-                  label="Цена"
-                  value={changedText?.[`cost${index}`] ?? ""}
-                  name={`cost${index}`}
-                  onChange={(e) =>
-                    handleCourseChange(e, "text")
-                  }
-                />
-                <ReactQuill
-                  value={changedText?.[`editor${index}`] ?? ""}
-                  onChange={(e) => {
-                    setChangedText({ ...changedText, [`editor${index}`]: e});
-                  }}
-                  className="h-full"
-                  name={`editor${index}`}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <div className="flex justify-center mt-60">
+      <div className="flex justify-center mt-10">
         <Button onClick={saveCourses}>
           Сохранить
         </Button>
