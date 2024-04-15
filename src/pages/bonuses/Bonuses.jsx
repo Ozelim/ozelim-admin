@@ -5,7 +5,7 @@ import { pb } from 'shared/api'
 
 async function getUsers () {
   return await pb.collection('users').getFullList({
-    filter: `level > '3'`
+    filter: `level >= '3'`
   })
 }
 
