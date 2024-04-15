@@ -22,6 +22,7 @@ export { Levels } from './levels/Levels'
 export { Services } from './services/Services'
 export { Replenish } from './replenish/Replenish'
 export { CoursesResorts } from './courses/CourseResorts'
+export { Bonuses } from './bonuses/Bonuses'
 
 export { CharityFundKz } from './charity-fund/CharityfundKz'
 export { AboutKz } from './about/AboutKz'

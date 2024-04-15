@@ -66,7 +66,7 @@ export const Services = () => {
       status: 'rejected'
     })
     .then(async () => {
-      if (!bid?.pay) {
+      if (!bid?.pay && !bid?.bonuses) {
         await pb.collection('users').update(bid?.user, {
           'balance+': bid?.total_cost
         })
@@ -81,6 +81,14 @@ export const Services = () => {
             window.location.reload()
           })
         }
+      else if (bid?.bonuses) {
+        await pb.collection('users').update(bid?.user, {
+          'bonuses+': bid?.total_cost
+        })
+        .then(res => {
+          setRejectModal({...rejectModal, modal: false})
+        })
+      }
     })
   }
 
@@ -263,6 +271,7 @@ export const Services = () => {
                   <th>Стоимость (тг)</th>
                   <th>Услуга</th>
                   <th>Тип</th>
+                  <th>Комментарий</th>
                   <th></th>
                 </tr>
               </thead>
@@ -290,7 +299,12 @@ export const Services = () => {
                         Услуги
                       </Button>
                     </td>
-                    <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
+                    <td>
+                      {q?.pay && `Карта`}
+                      {q?.bonuses && `Бонусы`}
+                      {(!q?.pay && !q?.bonuses)  && `Баланс`}
+                    </td>
+                    <td>{q?.comment}</td>
                     <td>
                       <div className='flex gap-4'>
                         <BsCheckCircle
@@ -325,6 +339,7 @@ export const Services = () => {
                   <th>ФИО</th>
                   <th>Услуга</th>
                   <th>Тип</th>
+                  <th>Комментарий</th>
                   <th></th>
                 </tr>
               </thead>
@@ -345,7 +360,13 @@ export const Services = () => {
                         Услуги
                       </Button>
                     </td>
-                    <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
+                    <td>
+                      {q?.pay && `Карта`}
+                      {q?.bonuses && `Бонусы`}
+                      {(!q?.pay && !q?.bonuses)  && `Баланс`}
+                    </td>
+              
+                    <td>{q?.comment}</td>
                     <td>
                       <div className="cursor-pointer relative">
                         {q?.given 
@@ -370,6 +391,7 @@ export const Services = () => {
                   <th>Стоимость</th>
                   <th>Услуга</th>
                   <th>Тип</th>
+                  <th>Комментарий</th>
                   <th>Возвращенная сумма</th>
                 </tr>
               </thead>
@@ -390,8 +412,13 @@ export const Services = () => {
                         Услуги
                       </Button>
                     </td>
-                    <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
-                    <td>{q?.refunded_sum}</td>
+                    <td>
+                      {q?.pay && `Карта`}
+                      {q?.bonuses && `Бонусы`}
+                      {(!q?.pay && !q?.bonuses)  && `Баланс`}
+                    </td>
+                    <td>{q?.comment}</td>
+                    <td>{q?.refunded_sum === 0 ? q.total_cost : q?.refunded_sum}</td>
                   </tr>
                 )
               })}
@@ -428,7 +455,11 @@ export const Services = () => {
                       </Button>
                     </td>
                     <td>{q.total_cost}</td>
-                    <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
+                    <td>
+                      {q?.pay && `Карта`}
+                      {q?.bonuses && `Бонусы`}
+                      {(!q?.pay && !q?.bonuses)  && `Баланс`}
+                    </td>
                     <td>
                       <Button onClick={() => setRefund({modal: true, bid: q})} disabled={q?.refunded}>
                         Вернуть средства
@@ -470,7 +501,11 @@ export const Services = () => {
                       </Button>
                     </td>
                     <td>{q.total_cost}</td>
-                    <td>{q?.pay ? 'Карта' : 'Баланс'}</td>
+                    <td>
+                      {q?.pay && `Карта`}
+                      {q?.bonuses && `Бонусы`}
+                      {(!q?.pay && !q?.bonuses)  && `Баланс`}
+                    </td>
                     <td>{q?.refunded_sum}</td>
                   </tr>
                 )
