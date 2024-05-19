@@ -8,6 +8,7 @@ import { FaCircleXmark } from 'react-icons/fa6'
 import { FaCheck } from 'react-icons/fa'
 import { getImageUrl } from 'shared/lib'
 import dayjs from 'dayjs'
+import { useAuth } from 'shared/hooks'
 
 async function getServices () {
   return await pb.collection('services').getFullList() 
@@ -18,6 +19,8 @@ async function getServiceBids () {
 }
 
 export const Services = () => {
+
+  const {user} = useAuth()
 
   const [service, setService] = React.useState({
     title: '',
@@ -194,7 +197,7 @@ export const Services = () => {
       <div>
         <Tabs defaultValue='services'>
           <Tabs.List>
-            <Tabs.Tab value='services'>Услуги</Tabs.Tab>
+            <Tabs.Tab value='services' disabled={user?.email === "ozelim-tur@mail.ru"}>Услуги</Tabs.Tab>
             <Tabs.Tab value='created'>Созданые</Tabs.Tab>
             <Tabs.Tab value='refunded'>Возврат</Tabs.Tab>
             <Tabs.Tab value='succ'>Подтвержденные</Tabs.Tab>
