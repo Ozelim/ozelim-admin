@@ -27,7 +27,7 @@ export const Sidebar = () => {
     {path: '/bids', labelru: 'Заявки'},
     {path: '/money-flow', labelru: 'Движение средтв'},
     {path: '/withdraws', labelru: 'Выводы', buhgalter: true},
-    {path: '/services', labelru: 'Услуги', labelkz: 'Қызметтер'},
+    {path: '/services', labelru: 'Услуги', labelkz: 'Қызметтер', tur: true},
     {path: '/replenish', labelru: 'Пополнения', labelkz: 'Пополнения'},
     {path: '/bonuses', labelru: 'Бонусы', labelkz: 'Бонусы'},
   ]
