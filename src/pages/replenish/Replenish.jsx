@@ -96,7 +96,7 @@ export const Replenish = () => {
             <p>{userData?.data?.referals?.length}</p>
           </li>
           <li className='grid grid-cols-2'>
-            <p>Бинар:</p>
+          <p>Бинар:</p>
             <p>{userData?.data?.bin ? 'Да' : 'Нет'}</p>
           </li>
           <li className='grid grid-cols-2'>
