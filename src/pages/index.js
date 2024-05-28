@@ -36,4 +36,4 @@ export { NewsKz } from './news/NewsKz'
 export { CoursesKz } from './courses/CoursesKz'
 export { PartnersKz } from './partners/PartnersKz'
 export { CoursesResortsKz } from './courses/CourseResortsKz'
-
+export { Tester } from './tester/Tester'

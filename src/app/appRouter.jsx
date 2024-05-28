@@ -34,7 +34,8 @@ import {
   HomeKz,
   Services,
   Replenish,
-  Bonuses
+  Bonuses,
+  Tester
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -66,6 +67,7 @@ const appRouter = createBrowserRouter([
       { path: "/services", element: <Services /> },
       { path: "/replenish", element: <Replenish /> },
       { path: "/bonuses", element: <Bonuses /> },
+      { path: "/tester", element: <Tester /> },
       { path: "*", element: <NotFound /> },
     ],
   },
