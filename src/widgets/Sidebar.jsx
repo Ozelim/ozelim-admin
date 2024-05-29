@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from 'shared/hooks'
 import { useLangContext } from 'app/langContext'
 
-
 export const Sidebar = () => {
 
   const {lang} = useLangContext()
@@ -30,7 +29,7 @@ export const Sidebar = () => {
     {path: '/services', labelru: 'Услуги', labelkz: 'Қызметтер', tur: true},
     {path: '/replenish', labelru: 'Пополнения', labelkz: 'Пополнения'},
     {path: '/bonuses', labelru: 'Бонусы', labelkz: 'Бонусы'},
-    {path: '/tester', labelru: 'Тестирования', labelkz: 'Тестирования'},
+    {path: '/tester', labelru: 'Тестирования', labelkz: 'Тестирования', mng: true},
   ]
 
   const { pathname } = useLocation()
@@ -78,7 +77,27 @@ export const Sidebar = () => {
             </Link>
           )
         }
-        if (!(user?.email === 'ozelim-buhgalter@mail.ru') && !(user?.email === 'ozelim-tur@mail.ru')) {
+        if ((page?.mng) && user?.email === 'ozelim-mng@mail.ru') {
+          return (
+            <Link key={i} to={page.path}>
+              <div 
+                key={i} 
+                className={clsx('p-4 text-sm', {
+                  'bg-teal-600 text-white': pathname === page.path,
+                })}
+              >
+                  <span>
+                    {lang === 'kz' 
+                      ? page.labelkz ?? page.labelru
+                      : page.labelru
+                    }
+                  </span>
+              </div>
+            </Link>
+          )
+        }
+
+        if (!(user?.email === 'ozelim-buhgalter@mail.ru') && !(user?.email === 'ozelim-tur@mail.ru') && !(user?.email === 'ozelim-mng@mail.ru')) {
           return (
             <Link key={i} to={page.path}>
               <div 

@@ -48,7 +48,8 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
 
   return user &&
     (user?.email === "ozelim.pv@gmail.com" ||
-      user?.email === "ozelim-buhgalter@mail.ru" ||
+      user?.email === "ozelim-buhgalter@ma il.ru" ||
+      user?.email === "ozelim-mng@mail.ru" ||
       user?.email === "ozelim-tur@mail.ru") ? (
     <div className="grid grid-rows-[auto_1fr_auto] min-h-screen pb-10">
       <div className="w-full h-full border-b">{headerSlot}</div>
