@@ -298,7 +298,9 @@ export const Tester = () => {
             <thead>
               <tr>
                 <th>ФИО</th>
-                <th>Номер</th>
+                <th>Город</th>
+                <th>Организации</th>
+                <th>Название теста</th>
                 <th>Результаты</th>
                 <th>Действие</th>
               </tr>
@@ -308,7 +310,9 @@ export const Tester = () => {
                 return (
                   <tr key={i}>
                     <td>{r?.name}</td>
-                    <td>{r?.phone}</td>
+                    <td>{r?.city}</td>
+                    <td>{r?.company}</td>
+                    <td>{r?.results?.name}</td>
                     <td>
                       <Button
                         variant='subtle'
