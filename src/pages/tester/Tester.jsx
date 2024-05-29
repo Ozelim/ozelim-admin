@@ -1,6 +1,7 @@
 import React from 'react'
-import { Button, NumberInput, Table, Tabs, TextInput, Textarea } from '@mantine/core'
+import { Button, Modal, NumberInput, Table, Tabs, TextInput, Textarea } from '@mantine/core'
 import { pb } from 'shared/api'
+import { openConfirmModal } from '@mantine/modals'
 
 async function getTester (name) {
   return await pb.collection('tester').getFirstListItem(`index = "${name}"`)
@@ -29,6 +30,15 @@ export const Tester = () => {
 
   React.useEffect(() => {
     handleTester()
+  }, [])
+
+  React.useEffect(() => {
+    pb.collection('tester_results').subscribe('*', () => {
+      getTesterResults()
+      .then(res => {
+        setTesterResults(res)
+      })
+    })
   }, [])
 
   async function handleTab (name) {
@@ -111,8 +121,11 @@ export const Tester = () => {
     })
   }
 
+  const [modal, setModal] = React.useState(false)
+  const [results, setResults] = React.useState({})
+
   return (
-    <div>
+    <>
       <Tabs
         value={`${tab}`}
         onTabChange={handleTab}
@@ -287,6 +300,7 @@ export const Tester = () => {
                 <th>ФИО</th>
                 <th>Номер</th>
                 <th>Результаты</th>
+                <th>Действие</th>
               </tr>
             </thead>
             <tbody>
@@ -298,8 +312,29 @@ export const Tester = () => {
                     <td>
                       <Button
                         variant='subtle'
+                        onClick={() => {
+                          setModal(true)
+                          setResults(r?.results)
+                        }}
                       >
                         Результаты
+                      </Button>
+                    </td>
+                    <td>
+                      <Button 
+                        compact
+                        color='red'
+                        variant='subtle'
+                        onClick={() => {
+                          openConfirmModal({
+                            title: 'Удалить данные результаты',
+                            centered: true, 
+                            labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                            onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
+                          })
+                        }}
+                      >
+                        Удалить
                       </Button>
                     </td>
                   </tr>
@@ -308,7 +343,64 @@ export const Tester = () => {
             </tbody>
           </Table>
         </Tabs.Panel>
-      </Tabs>      
-    </div>
+      </Tabs>   
+      <Modal
+        centered
+        opened={modal}
+        onClose={() => setModal(false)}
+        size={'70%'}
+      >
+        Правильный ответов: {results?.questions?.filter(q => q?.selected === q?.answer)?.length}
+        <div className='space-y-4'>
+          {results?.questions?.map((q, i) => {
+            return (
+              <div key={i} className='border p-4 bg-white'>
+                <div className=' gap-4'>
+                  <Textarea
+                    label='Вопрос'
+                    value={q?.question ?? ''}
+                    readOnly
+                    variant='filled'
+                  />
+        
+                </div>
+                <div className='grid grid-cols-2 gap-2'>
+                  {Array(4).fill(1).map((_, i) => {
+                    console.log(q, 'q');
+                    return (
+                      <Button
+                        label={`Ответ ${i + 1}`}
+                        key={i}
+                        readOnly
+                        variant={i === q?.selected ? 'filled' : 'outline'}
+                      >
+                        {q?.answers?.[i]}
+                      </Button>
+                    )
+                  })}
+                </div>
+                <div className='mt-4 flex items-center gap-4'>
+                  <p>Правильный ответ:</p>
+                  <div className='flex gap-2'>
+                    {Array(4).fill(1).map((_, i) => {
+                      return (
+                        <Button 
+                          key={i}
+                          // onClick={() => handleAnswer(q?.id, i)}
+                          compact
+                          color={q?.answer === i ? 'green' : 'gray'}
+                        >
+                          {i + 1}
+                        </Button>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </Modal>  
+    </>
   )
 }
