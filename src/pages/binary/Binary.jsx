@@ -691,7 +691,7 @@ export const Binary = () => {
             onChange={e => setSearch(e.target.value)}
           />
           <Button
-            onClick={() => searchByValue()}
+            onClick={() => searchByValue(search, 1)}
           >
             Поиск
           </Button>          
