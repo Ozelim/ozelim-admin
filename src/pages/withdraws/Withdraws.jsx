@@ -45,7 +45,6 @@ export const Withdraws = () => {
   }
 
   async function confirmWithdraw (withdraw) {
-    console.log(withdraw, 'withdraw');
     await pb.collection('withdraws').update(withdraw?.id, {
       status: 'paid',
     })
