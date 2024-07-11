@@ -2,6 +2,8 @@ import { pb } from "./pocketbase"
 
 export async function createBonusRecord (variant, {...data}) {
 
+  console.log(data, 'data');
+
   await pb.collection('user_bonuses').getOne(data?.to)
   .then(async res => {
     await pb.collection('user_bonuses').update(res?.id, {
