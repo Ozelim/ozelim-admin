@@ -8,7 +8,7 @@ export async function createBonusRecord (variant, {...data}) {
   .then(async res => {
     await pb.collection('user_bonuses').update(res?.id, {
       [variant]: [
-        ...res?.withdraws,
+        ...res?.[variant],
         {
           id: crypto.randomUUID(),
           created: new Date(),
