@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button, Modal, Pagination, Table, Tabs } from '@mantine/core'
-import { pb } from 'shared/api'
+import { Button, Modal, Pagination, Table, Tabs, TextInput } from '@mantine/core'
+import { createBonusRecord, pb } from 'shared/api'
 import { formatNumber, getImageUrl } from 'shared/lib'
 
 import { BsCheckCircle } from 'react-icons/bs'
@@ -13,6 +13,7 @@ import { LuHeartHandshake } from "react-icons/lu";
 import dayjs from 'dayjs'
 
 import * as XLSX from 'xlsx';
+import { showNotification } from '@mantine/notifications'
 
 async function getWithdraws () {
   return await pb.collection('withdraws').getFullList({
@@ -43,9 +44,17 @@ export const Withdraws = () => {
     })
   }
 
-  async function confirmWithdraw (withdrawId) {
-    await pb.collection('withdraws').update(withdrawId, {
+  async function confirmWithdraw (withdraw) {
+    console.log(withdraw, 'withdraw');
+    await pb.collection('withdraws').update(withdraw?.id, {
       status: 'paid',
+    })
+    .then(async res => {
+      await createBonusRecord('withdraws', {
+        to: withdraw?.expand?.user?.id, 
+        who: withdraw?.expand?.user?.id, 
+        sum: withdraw?.sum
+      })
     })
   }
 
@@ -62,7 +71,7 @@ export const Withdraws = () => {
     })
   }
 
-  const confirmWithdrawConfirm = (withdrawId) => openConfirmModal({
+  const confirmWithdrawConfirm = (withdraw) => openConfirmModal({
     title: 'Подтвердите действие',
     centered: true,
     labels: { confirm: 'Подтвердить', cancel: 'Отмена'},
@@ -71,7 +80,7 @@ export const Withdraws = () => {
         Вы действительно хотите отправить данную сумму?
       </>
     ),
-    onConfirm: () => confirmWithdraw(withdrawId)
+    onConfirm: () => confirmWithdraw(withdraw)
   })
   
   const removeWithdrawConfirm = (withdraw) => openConfirmModal({
@@ -195,6 +204,31 @@ export const Withdraws = () => {
     data: null
   })
 
+  const [search, setSearch] = React.useState("");
+
+  async function searchByValue() {
+    if (!search) {
+      return;
+    }
+    const foundUsers = await pb.collection("withdraws").getFullList({
+      filter: `
+        user.id = '${search}' ||
+        user.name ?~ '${search}'
+      `,
+    });
+
+    if (foundUsers.length !== 0) {
+      setEndedWithdraws({
+        items: [...foundUsers]
+      })
+      // showNotification({
+      //   title: 'Поиск',
+      //   message: 'Не найдено',
+      //   color: 'teal'
+      // })
+    }
+  }
+
   return (
     <>
       <div className='w-full bg-white'>
@@ -261,7 +295,7 @@ export const Withdraws = () => {
                             <BsCheckCircle 
                               size={30} 
                               color='green'
-                              onClick={() => confirmWithdrawConfirm(withdraw?.id)}
+                              onClick={() => confirmWithdrawConfirm(withdraw)}
                               className='cursor-pointer hover:fill-yellow-500'
                             />
                             <CiCircleRemove 
@@ -281,6 +315,19 @@ export const Withdraws = () => {
 
           </Tabs.Panel>
           <Tabs.Panel value='ended'>
+            <div className="flex items-end">
+              <TextInput
+                label="Поиск"
+                value={search}
+                onChange={(e) => setSearch(e.currentTarget.value)}
+                className='w-96'
+              />
+              <Button
+                onClick={() => searchByValue()}
+              >
+                Поиск
+              </Button>
+            </div>
             <Table
               striped
               className='mt-4'

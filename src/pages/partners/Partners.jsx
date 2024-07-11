@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Modal, TextInput, Textarea, FileInput, ActionIcon } from "@mantine/core";
+import { Button, Modal, TextInput, Textarea, FileInput } from "@mantine/core";
 import { pb } from "shared/api";
 import { PartnersCard } from "shared/ui/PartnersCard";
 
@@ -8,8 +8,6 @@ import { FiEdit } from 'react-icons/fi'
 import { MdDeleteForever } from 'react-icons/md'
 import { openConfirmModal } from "@mantine/modals";
 import { Image } from "shared/ui";
-import { AiOutlineDelete } from "react-icons/ai";
-import { useModals } from "shared/hooks";
 import { getExtension, getImageUrl } from "shared/lib";
 
 

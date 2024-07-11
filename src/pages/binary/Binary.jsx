@@ -473,7 +473,7 @@ export const Binary = () => {
     }) 
   } 
 
-  async function addNode () {
+  async function  addNode () {
     if (mal?.expand?.sponsor?.binary === 2) {
       await pb.collection('binary2').update(node?.id, {
         children: [...node?.children, mal?.id]
