@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Modal, NumberInput, Popover, Switch, Table, Tabs, TextInput, Textarea } from '@mantine/core'
-import { pb } from 'shared/api'
+import { createBonusRecord, pb } from 'shared/api'
 import { BsCheckCircle } from 'react-icons/bs'
 import { CiCircleRemove } from 'react-icons/ci'
 import { openConfirmModal } from '@mantine/modals'
@@ -46,7 +46,7 @@ export const Services = () => {
     setViewModal({modal: true, services: services})
   }
 
-  const handleConfirmBid = (id) => openConfirmModal({
+  const handleConfirmBid = (bid) => openConfirmModal({
     title: 'Подтвердите действие',
     centered: true,
     labels: { confirm: 'Подтвердить', cancel: 'Отмена'},
@@ -55,12 +55,21 @@ export const Services = () => {
         Вы действительно хотите одобрить данную заявку?
       </>
     ),
-    onConfirm: () => confirmBid(id)
+    onConfirm: () => confirmBid(bid)
   })
 
-  async function confirmBid (id) {
-    await pb.collection('service_bids').update(id, {
+  async function confirmBid (bid) {
+    await pb.collection('service_bids').update(bid?.id, {
       status: 'succ'
+    })
+    .then(async (res) => {
+      if (!bid?.pay && !bid?.bonuses) {
+        await createBonusRecord('services', {
+          to: bid?.user,
+          who: bid?.user,
+          sum: bid?.total_cost
+        })
+      }
     })
   }
   
@@ -313,7 +322,7 @@ export const Services = () => {
                         <BsCheckCircle
                           size={30} 
                           color='green'
-                          onClick={() => handleConfirmBid(q.id)}
+                          onClick={() => handleConfirmBid(q)}
                           className='cursor-pointer hover:fill-yellow-500'
                         />
                         {!q?.pay && (
