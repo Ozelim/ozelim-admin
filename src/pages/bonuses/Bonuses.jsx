@@ -38,7 +38,21 @@ export const Bonuses = () => {
     onConfirm: async () => pb.collection('users').update(id, {
       'bonuses+': bonuses?.[id]
     })
-    .then(() => {
+    .then(async () => {
+      await pb.collection('user_bonuses').getOne(id)
+      .then(async (res) => {
+        await pb.collection('user_bonuses').update(id, {
+          bonuses: [
+            ...res?.bonuses ?? [],
+            {
+              id: crypto.randomUUID(),
+              created: new Date(),
+              referal: id, 
+              sum: bonuses?.[id],
+            }
+          ]
+        })
+      })
       setBonuses({...bonuses, [id]: ''})
     })
   }) 

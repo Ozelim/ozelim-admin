@@ -1,11 +1,12 @@
 import React from "react";
-import { Button, LoadingOverlay, Menu, Pagination, Table, TextInput } from "@mantine/core";
+import { Button, LoadingOverlay, Menu, Modal, Pagination, Table, TextInput } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import dayjs from "dayjs";
 import { pb } from "shared/api";
 
 import { AiFillCheckCircle, AiFillLock } from "react-icons/ai";
 import { showNotification } from "@mantine/notifications";
+import { formatNumber } from "shared/lib";
 
 async function getUsers() {
   return await pb.collection("users").getFullList({
@@ -126,6 +127,11 @@ export const Users = () => {
     })
   }
 
+  const [modal, setModal] = React.useState({
+    show: false,
+    bonuses: {}
+  })
+
   return (
     <>
       <div className="w-full">
@@ -204,7 +210,19 @@ export const Users = () => {
                         user?.level === '4.2' && '4.Курса' || user?.level)
                       : !user?.level && 0} */}
                   </td>
-                  <td>{user.balance}</td>
+                  <td>
+                    <Button 
+                      size="xs"
+                      onClick={async () => {
+                        await pb.collection('user_bonuses').getOne(user?.id)
+                        .then(res => {
+                          setModal({...modal, show: true, bonuses: res})
+                        })
+                      }}
+                    >
+                      {user.balance}
+                    </Button>
+                  </td>
                   <td>{user.email}</td>
                   <td>{user.phone}</td>
                   <td>{user.region}</td>
@@ -217,6 +235,99 @@ export const Users = () => {
           </tbody>
         </Table>
       </div>
+      <Modal
+        opened={modal?.show}
+        centered
+        onClose={() => setModal({...modal, show: false})}
+        size={'70%'}
+      >
+        <div className="mt-12 overflow-scroll">
+          <h2 className="text-center text-xl font-head">История</h2>
+          <Table className="border mt-4">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Тип</th>
+                <th>ID</th>
+                <th>Сумма</th>
+              </tr>
+            </thead>
+            <tbody>
+              {modal?.bonuses?.referals?.map((q, i) => {
+                return (
+                  <tr key={i} className="text">
+                    <td className='whitespace-nowrap'>
+                      {dayjs(q?.created).format(
+                        'YY-MM-DD, hh:mm'
+                      )}
+                    </td>
+                    <td className="text-black">Система</td>
+                    <td>{q?.referal}</td>
+                    <td className='text-green-500'>+ {formatNumber(q?.sum)}</td>
+                  </tr>
+                )
+              })}
+              {modal?.bonuses?.bonuses?.map((q, i) => {
+                return (
+                  <tr key={i} className="text">
+                    <td className='whitespace-nowrap'>
+                      {dayjs(q?.created).format(
+                        'YY-MM-DD, hh:mm'
+                      )}
+                    </td>
+                    <td className="text-black">Бонус</td>
+                    <td>-</td>
+                    <td className='text-green-500'>+ {formatNumber(q?.sum)}</td>
+                  </tr>
+                )
+              })}
+              {modal?.bonuses?.replenish?.map((q, i) => {
+                return (
+                  <tr key={i} className="text">
+                    <td className='whitespace-nowrap'>
+                      {dayjs(q?.created).format(
+                        'YY-MM-DD, hh:mm'
+                      )}
+                    </td>
+                    <td className="text-black">Пополнение</td>
+                    <td>-</td>
+                    <td className='text-green-500'>+ {formatNumber(q?.sum)}</td>
+                  </tr>
+                )
+              })}
+              {modal?.bonuses?.withdraws?.map((q, i) => {
+                return (
+                  <tr key={i} className="text">
+                    <td className='whitespace-nowrap'>
+                      {dayjs(q?.created).format(
+                        'YY-MM-DD, hh:mm'
+                      )}
+                    </td>
+                    <td className="text-black">Вывод</td>
+                    <td>-</td>
+                    <td className='text-red-500'>- {formatNumber(q?.sum)}</td>
+                  </tr>
+                )
+              })}
+              {modal?.bonuses?.services?.map((q, i) => {
+                return (
+                  <tr key={i} className="text">
+                    <td className='whitespace-nowrap'>
+                      {dayjs(q?.created).format(
+                        'YY-MM-DD, hh:mm'
+                      )}
+                    </td>
+                    <td className="text-black">Услуга</td>
+                    <td>-</td>
+                    <td className='text-red-500'>- {formatNumber(q?.sum)}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        </div>
+
+      </Modal>
     </>
   );
 };
