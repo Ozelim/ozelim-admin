@@ -20,16 +20,16 @@ export async function createBonusRecord (variant, {...data}) {
   })
   .catch(async err => {
     console.log('catch code');
-    await pb.collection('user_bonuses').create({
-        id: data?.to,
-        user: data?.to,
-        [variant]: [{
-          id: crypto.randomUUID(),
-          created: new Date(),
-          referal: data?.who,
-          sum: data?.sum,
-        }
-      ]
-    })
+    if (err?.status === 404) await pb.collection('user_bonuses').create({
+          id: data?.to,
+          user: data?.to,
+          [variant]: [{
+            id: crypto.randomUUID(),
+            created: new Date(),
+            referal: data?.who,
+            sum: data?.sum,
+          }
+        ]
+      })
   })
 }
