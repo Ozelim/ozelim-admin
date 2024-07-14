@@ -23,6 +23,7 @@ export async function createBonusRecord (variant, {...data}) {
     if (err?.status === 404) await pb.collection('user_bonuses').create({
           id: data?.to,
           user: data?.to,
+          q: 'admin creation',
           [variant]: [{
             id: crypto.randomUUID(),
             created: new Date(),
