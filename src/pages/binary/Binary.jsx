@@ -550,8 +550,10 @@ export const Binary = () => {
         id: mal?.id,
         sponsor: mal?.id, 
       })
-      await pb.collection('users').update(mal?.id, {
-        bin: true
+      .then(async () => {
+        await pb.collection('users').update(mal?.id, {
+          bin: true
+        })
       })
       await getBinaryById(node?.id)
       .then(res => {
