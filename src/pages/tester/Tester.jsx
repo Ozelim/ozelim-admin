@@ -354,7 +354,7 @@ export const Tester = () => {
         onClose={() => setModal(false)}
         size={'70%'}
       >
-        Правильный ответов: {results?.questions?.filter(q => q?.selected === q?.answer)?.length}
+        Правильных ответов: {results?.questions?.filter(q => q?.selected === q?.answer)?.length}
         <div className='space-y-4'>
           {results?.questions?.map((q, i) => {
             return (
