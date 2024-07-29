@@ -35,7 +35,8 @@ import {
   Services,
   Replenish,
   Bonuses,
-  Tester
+  Tester,
+  ProfileCourses
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -45,7 +46,7 @@ const appRouter = createBrowserRouter([
     element: baseLayout,
     children: [
       { path: "/", element: <SwitchLayout ru={<Home/>} kz={<HomeKz/>} /> },
-      { path: "/charity-fund", element: <SwitchLayout ru={<CharityFund/>} kz={<CharityFundKz/>} /> },
+      { path: "/insurance", element: <SwitchLayout ru={<CharityFund/>} kz={<CharityFundKz/>} /> },
       { path: "/bids", element: <Bids /> },
       { path: "/health", element: <SwitchLayout ru={<Health/>} kz={<HealthKz/>} /> },
       { path: "/our-team", element: <SwitchLayout ru={<OurTeam/>} kz={<OurTeamKz/>} /> },
@@ -68,6 +69,7 @@ const appRouter = createBrowserRouter([
       { path: "/replenish", element: <Replenish /> },
       { path: "/bonuses", element: <Bonuses /> },
       { path: "/tester", element: <Tester /> },
+      { path: "/profile-courses", element: <ProfileCourses /> },
       { path: "*", element: <NotFound /> },
     ],
   },

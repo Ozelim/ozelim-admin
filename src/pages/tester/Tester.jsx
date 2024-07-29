@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Modal, NumberInput, Table, Tabs, TextInput, Textarea } from '@mantine/core'
 import { pb } from 'shared/api'
 import { openConfirmModal } from '@mantine/modals'
+import { useSearchParams } from 'react-router-dom'
 
 async function getTester (name) {
   return await pb.collection('tester').getFirstListItem(`index = "${name}"`)
@@ -164,13 +165,11 @@ export const Tester = () => {
                   return (
                     edit?.id === q?.id ? (
                       <div key={ind} className='bg-white border p-4'>
-                        <div className=''>
-                          <Textarea
-                            label='Вопрос'
-                            value={edit?.question ?? ''}
-                            onChange={e => handleEditQuestionChange(e)}
-                          />
-                        </div>
+                        <Textarea
+                          label='Вопрос'
+                          value={edit?.question ?? ''}
+                          onChange={e => handleEditQuestionChange(e)}
+                        />
                         <div className='grid grid-cols-2 gap-x-4'>
                           {Array(4).fill(1).map((_, i) => {
                             return (

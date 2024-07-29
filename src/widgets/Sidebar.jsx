@@ -18,7 +18,7 @@ export const Sidebar = () => {
     {path: '/price', labelru: 'Услуги (страница)'},
     {path: '/program', labelru: 'Партнерская программа', labelkz: 'Агенттік бағдарлама'},
     {path: '/our-team', labelru: 'Наша команда'},
-    {path: '/charity-fund', labelru: 'Доброе дело', labelkz: `Мейірімділік`},
+    {path: '/insurance', labelru: 'Страхование', labelkz: `Сақтандыру`},
     {path: '/news', labelru: 'Новости компании', labelkz: `Жаңалықтар`},
     {path: '/users', labelru: 'Пользователи'},
     {path: '/levels', labelru: 'Уровни'},
@@ -30,6 +30,7 @@ export const Sidebar = () => {
     {path: '/replenish', labelru: 'Пополнения', labelkz: 'Пополнения'},
     {path: '/bonuses', labelru: 'Бонусы', labelkz: 'Бонусы'},
     {path: '/tester', labelru: 'Тестирования', labelkz: 'Тестирования', mng: true},
+    // {path: '/profile-courses', labelru: 'Курсы', labelkz: 'Курсы', mng: true},
   ]
 
   const { pathname } = useLocation()
