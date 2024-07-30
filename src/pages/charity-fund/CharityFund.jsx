@@ -57,7 +57,7 @@ export const CharityFund = () => {
   }
 
   React.useEffect(() => {
-    getData("charity").then((res) => {
+    getData("insurance").then((res) => {
       setCharity(res);
       setHeadings(res?.text?.headings);
       setText(res?.text?.text);
