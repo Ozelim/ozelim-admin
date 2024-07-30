@@ -2,6 +2,8 @@ import React from 'react'
 import { Button, FileButton, Tabs, TextInput, Textarea } from '@mantine/core'
 import { pb } from 'shared/api'
 import { getImageUrl } from 'shared/lib'
+import { openConfirmModal } from '@mantine/modals'
+import { showNotification } from '@mantine/notifications'
 
 async function getCourses () {
   return await pb.collection('profile_courses').getFullList()
@@ -221,6 +223,28 @@ export const ProfileCourses = () => {
                     )
                   })}
                 </div>
+                <Button
+                  color='red'
+                  compact
+                  variant='subtle'
+                  mt={8}
+                  onClick={() => {
+                    openConfirmModal({
+                      centered: true,
+                      labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                      onConfirm: async () => {
+                        await pb.collection('profile_courses').delete(c?.id)
+                        showNotification({
+                          message: 'Курс успешно удален',
+                          color: 'red',
+                          title: 'Курс'
+                        })
+                      }
+                    })
+                  }}
+                >
+                  Удалить курс
+                </Button>
               </div>
             </div>
             <div className='grid grid-cols-3 mt-8 gap-4'>
