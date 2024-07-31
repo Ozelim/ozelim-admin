@@ -133,7 +133,6 @@ export const ProfileCourses = () => {
             </p>
             <p className='text-lg'>
               {createdCourse.description}
-              
             </p>
           </div>
         </div>
@@ -141,13 +140,13 @@ export const ProfileCourses = () => {
       {courses.map((c) => {
         return (
           <Tabs.Panel value={c?.id} key={c?.id}>
-            <div className='grid grid-cols-[30%_auto] mt-8'>
-              <div className='max-w-[278px] space-y-4'>
+            <div className='mt-8'>
+              <div className='max-w-xl space-y-4'>
                 {editCourse?.id === c?.id ?
                   <>
                     <img 
                       src={editCourse?.img instanceof File ? URL.createObjectURL(editCourse?.img) : ''} alt="" 
-                      className='aspect-square object-cover'
+                      className='aspect-square object-cover max-w-[278px]'
                     />
                     <FileButton onChange={e => setEditCourse({...editCourse, img: e})} accept="image/png,image/jpeg">
                       {(props) => <Button compact {...props}>Загрузить изображение</Button>}
@@ -162,16 +161,24 @@ export const ProfileCourses = () => {
                       value={editCourse?.description ?? ''}
                       onChange={e => setEditCourse({...editCourse, description: e?.currentTarget?.value})}
                     />
+                    <Textarea
+                      label='Завершение'
+                      value={editCourse?.ending ?? ''}
+                      onChange={e => setEditCourse({...editCourse, ending: e?.currentTarget?.value})}
+                      autosize
+                    />
                       <Button 
                         compact
                         onClick={async () => {
                           const formData = new FormData()
                           formData.append('name', editCourse?.name)
                           formData.append('description', editCourse?.description)
+                          formData.append('ending', editCourse?.ending)
                           formData.append('img', editCourse?.img)
                           await pb.collection('profile_courses').update(c?.id, formData)
                           .then(() => setEditCourse(null))
                         }} 
+                        className='mr-4'
                       >
                         Сохранить
                       </Button>
@@ -185,10 +192,11 @@ export const ProfileCourses = () => {
                   : <>
                     <img 
                       src={getImageUrl(c, c?.img)} alt="" 
-                      className='aspect-square object-cover'
+                      className='aspect-square object-cover max-w-[278px]'
                     />
-                    <p>{c?.name}</p>
-                    <p>{c?.description}</p>
+                    <p>Название: {c?.name}</p>
+                    <p>Описание: {c?.description}</p>
+                    <p>Завершение: {c?.ending}</p>
                     <Button
                       compact
                       onClick={() => {
@@ -201,28 +209,30 @@ export const ProfileCourses = () => {
                     </Button>
                   </>
                 }
-                
               </div>
-              <div>
-                <span className='mb-4'>
-                  Выбрать тест:
+              <div className='my-4'>
+                <span>
+                  Выбрать тест после прохождения курса:
                 </span>
-                <div className='flex gap-4'>
+                <div className='flex flex-wrap gap-4'>
                   {tests.map(t => {
                     return (
                       <Button 
-                        variant={c?.test_id === t?.id ? 'gradient' : 'outline'}
+                        variant={c?.test?.id === t?.id ? 'gradient' : 'outline'}
                         onClick={async () => {
                           await pb.collection('profile_courses').update(c?.id, {
-                            test_id: t?.id
+                            test: {
+                              ...t
+                            }
                           })
                         }}
                       >
-                        Тест {t?.index}
+                        {t?.name}
                       </Button>
                     )
                   })}
                 </div>
+    
                 <Button
                   color='red'
                   compact
@@ -253,7 +263,7 @@ export const ProfileCourses = () => {
                   edit?.id === l?.id ? (
                     <div className='bg-white border p-4 space-y-3' key={i}>
                       <TextInput
-                        label='Заголвок'
+                        label='Заголовок'
                         value={edit?.name}
                         name='name'
                         onChange={e => handleLessonChange(e)}
@@ -281,7 +291,7 @@ export const ProfileCourses = () => {
                   ) : (
                     <div className='bg-white border-2 p-4 space-y-3' key={i}>
                       <TextInput
-                        label='Заголвок'
+                        label='Заголовок'
                         value={l?.name}
                         readOnly
                       />
@@ -306,7 +316,7 @@ export const ProfileCourses = () => {
 
             <div className='bg-white border p-4 max-w-md mt-4'>
               <TextInput
-                label='Заголвок'
+                label='Заголовок'
                 value={createdLesson.name}
                 onChange={e => setCreatedLesson({...createdLesson, name: e.currentTarget.value})}
               />
