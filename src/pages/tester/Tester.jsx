@@ -144,45 +144,6 @@ export const Tester = () => {
     setFolders(Array.from(groupedByIndexMap.values()))
   }, [testerResults])
 
-  const [above50, setAbove50] = React.useState([]);
-  const [below50, setBelow50] = React.useState([]);
-
-  React.useEffect(() => {
-    // Step 1: Calculate the total number of questions
-    const allQuestions = testerResults.flatMap(item => item?.results?.questions);
-    const totalQuestions = allQuestions.length;
-
-    // Step 2: Create a Map to count occurrences of each (selected, answer) pair
-    const countMap = new Map();
-
-    allQuestions.forEach(question => {
-      const key = `${question?.selected}-${question?.answer}`;
-      if (!countMap.has(key)) {
-        countMap.set(key, 0);
-      }
-      countMap.set(key, countMap.get(key) + 1);
-    });
-
-    // Step 3: Separate the counts into above and below 50%
-    const threshold = totalQuestions * 0.5;
-    const above50 = [];
-    const below50 = [];
-
-    countMap.forEach((count, key) => {
-      if (count > threshold) {
-        above50.push({ key, count });
-      } else {
-        below50.push({ key, count });
-      }
-    });
-
-    setAbove50(Array.from(above50.values()));
-    setBelow50(Array.from(below50.values()));
-  }, [testerResults]);
-
-  console.log(above50, 'above');
-  console.log(below50, 'below');
-
   return (
     <>
       <Tabs
@@ -197,12 +158,12 @@ export const Tester = () => {
             )
           })}
         <Tabs.Tab value={`results`}>Результаты</Tabs.Tab>
-        {/* <Tabs.Tab value={`sdali`}>сдали</Tabs.Tab> */}
-        {/* <Tabs.Tab value={`nesdali`}>Не сдали</Tabs.Tab> */}
+        <Tabs.Tab value={`sdali`}>Cдали</Tabs.Tab>
+        <Tabs.Tab value={`nesdali`}>Не сдали</Tabs.Tab>
           
         </Tabs.List>
         <Tabs.Panel value={tab} pt={20}>
-          {tab !== 'results' && (
+          {(tab !== 'results' && tab !== 'sdali' && tab !== 'nesdali') && (
             <>
               <div>
                 <TextInput
@@ -426,12 +387,99 @@ export const Tester = () => {
         </Tabs.Panel>
 
         <Tabs.Panel value='sdali'>
-
+          <Table>
+            <thead>
+              <tr>
+                <th>ФИО</th>
+                <th>Город</th>
+                <th>Организации</th>
+                <th>Название теста</th>
+                <th>Результаты</th>
+                <th>Действие</th>
+              </tr>
+            </thead>
+            <tbody>
+              {testerResults?.map((r, i) => {
+                if (r?.passed) return (
+                  <tr key={i}>
+                    <td>{r?.name}</td>
+                    <td>{r?.city}</td>
+                    <td>{r?.company}</td>
+                    <td>{r?.results?.name}</td>
+                    <td>
+                      <Button
+                        variant='subtle'
+                        onClick={() => {
+                          setModal(true)
+                          setResults(r?.results)
+                        }}
+                      >
+                        Результаты
+                      </Button>
+                    </td>
+                    <td>
+                      <Button 
+                        compact
+                        color='red'
+                        variant='subtle'
+                        onClick={() => {
+                          openConfirmModal({
+                            title: 'Удалить данные результаты',
+                            centered: true, 
+                            labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                            onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
+                          })
+                        }}
+                      >
+                        Удалить
+                      </Button>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
         </Tabs.Panel>
         <Tabs.Panel value='nesdali'>
-
+        {testerResults?.map((r, i) => {
+          if (!r?.passed) return (
+            <tr key={i}>
+              <td>{r?.name}</td>
+              <td>{r?.city}</td>
+              <td>{r?.company}</td>
+              <td>{r?.results?.name}</td>
+              <td>
+                <Button
+                  variant='subtle'
+                  onClick={() => {
+                    setModal(true)
+                    setResults(r?.results)
+                  }}
+                >
+                  Результаты
+                </Button>
+              </td>
+              <td>
+                <Button 
+                  compact
+                  color='red'
+                  variant='subtle'
+                  onClick={() => {
+                    openConfirmModal({
+                      title: 'Удалить данные результаты',
+                      centered: true, 
+                      labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                      onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
+                    })
+                  }}
+                >
+                  Удалить
+                </Button>
+              </td>
+            </tr>
+          )
+        })}
         </Tabs.Panel>
-
       </Tabs>   
       <Modal
         centered
@@ -439,7 +487,7 @@ export const Tester = () => {
         onClose={() => setModal(false)}
         size={'70%'}
       >
-        Правильных ответов: {results?.questions?.filter(q => q?.selected === q?.answer)?.length}\{results?.questions?.length}
+        Правильных ответов: {results?.rightAnswers?.length}\{results?.totalQuestions}
         <div className='space-y-4'>
           {results?.questions?.map((q, i) => {
             return (
