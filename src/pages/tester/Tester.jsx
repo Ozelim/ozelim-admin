@@ -1,43 +1,50 @@
 import React from 'react'
-import { Button, Modal, NumberInput, Table, Tabs, TextInput, Textarea } from '@mantine/core'
+import { Button, Modal, NumberInput, Table, Tabs, Text, TextInput, Textarea } from '@mantine/core'
 import { pb } from 'shared/api'
 import { openConfirmModal } from '@mantine/modals'
 import { useSearchParams } from 'react-router-dom'
 
-async function getTester (name) {
-  return await pb.collection('tester').getFirstListItem(`index = "${name}"`)
+async function getTests () {
+  return await pb.collection('tester').getFullList()
 }
 
-async function getTesterResults () {
+async function getTestsResults () {
   return await pb.collection('tester_results').getFullList()
 }
 
 export const Tester = () => {
 
-  const [tab, setTab] = React.useState('1')
+  const [tab, setTab] = React.useState('create')
 
-  const [tester, setTester] = React.useState({})
-  const [changedTester, setChangedTester] = React.useState({})
+  const [tests, setTests] = React.useState([])
 
-  const [testerResults, setTesterResults] = React.useState([])
+  const [createTestData, setCreateTestData] = React.useState({})
+  const [changeTestData, setChangeTestData] = React.useState({})
 
-  async function handleTester (index) {
-    return await getTester(index ?? '1')
+  const [questionData, setQuestionData] = React.useState({})
+
+  const [testsResults, setTestsResults] = React.useState([])
+
+  async function handleTests () {
+    return await getTests()
     .then(res => {
-      setChangedTester(res)
-      setTester(res)
+      setTests(res)
     })
   }
 
   React.useEffect(() => {
-    handleTester()
+    handleTests()
+    pb.collection('tester').subscribe('*', async () => {
+      await handleTests()
+    })
   }, [])
 
   React.useEffect(() => {
+    
     pb.collection('tester_results').subscribe('*', () => {
-      getTesterResults()
+      getTestsResults()
       .then(res => {
-        setTesterResults(res)
+        setTestsResults(res)
       })
     })
   }, [])
@@ -45,47 +52,43 @@ export const Tester = () => {
   async function handleTab (name) {
     setTab(name)
     if (name === 'results') {
-      getTesterResults()
+      getTestsResults()
       .then(res => {
-        setTesterResults(res)
+        setTestsResults(res)
       })
     } else {
-      getTester(name)
+      getTests(name)
       .then(res => {
-        setTester(res)
-        setChangedTester(res)
+        setTests(res)
+        // setChangedTester(res)
       })
     }
   }
 
-  function addQuestion () {
-    setChangedTester({
-      ...changedTester,
-      questions: [
-        ...changedTester?.questions ?? [], 
-        {
-          question: '', 
-          id: crypto.randomUUID(), 
-          answer: null,
-          answers: ['', '', '', '']
-        }
-      ]
+  async function addQuestion (t) {
+    await pb.collection('tester').update(t?.id, {
+      questions: [...t?.questions ?? [], {
+        question: '', 
+        id: crypto.randomUUID(), 
+        answer: null,
+        answers: ['', '', '', '']
+      }]
     })
   }
 
   const [edit, setEdit] = React.useState({})
 
-  async function saveTest () {
-    const newQuestions = changedTester?.questions?.map(q => {
+  async function saveQuestion (t) {
+    const newQuestions = t?.questions?.map(q => {
       return q?.id === edit?.id ? edit : q
     })
 
-    await pb.collection('tester').update(changedTester?.id, {
-      ...changedTester,
+    await pb.collection('tester').update(t?.id, {
+      ...t,
       questions: newQuestions
     })
     .then(async res => {
-      await handleTester(tab)
+      await handleTests(tab)
       setEdit(null)
     })
   }
@@ -108,17 +111,17 @@ export const Tester = () => {
     setEdit({...edit, question: e?.target?.value});
   }
 
-  async function deleteQuestion ({id}) {
-    const newQuestions = changedTester?.questions?.filter(q => {
-      return q?.id !== id
+  async function deleteQuestion (t, q) {
+    const newQuestions = t?.questions?.filter(w => {
+      return w?.id !== q?.id
     })
 
-    await pb.collection('tester').update(changedTester?.id, {
-      ...changedTester,
+    await pb.collection('tester').update(t?.id, {
+      ...t,
       questions: newQuestions
     })
     .then(async res => {
-      await handleTester(tab)
+      await handleTests()
     })
   }
 
@@ -131,7 +134,7 @@ export const Tester = () => {
 
   React.useEffect(() => {
 
-    const q = testerResults.sort((a, b) => a?.results?.index - b?.results?.index);
+    const q = testsResults.sort((a, b) => a?.results?.index - b?.results?.index);
 
     q?.forEach(item => {
       const index = item?.results?.index;
@@ -142,7 +145,14 @@ export const Tester = () => {
     });
     
     setFolders(Array.from(groupedByIndexMap.values()))
-  }, [testerResults])
+  }, [testsResults])
+
+  async function createTest () {
+    await pb.collection('tester').create({
+      ...createTestData,
+      index: tests?.length + 1,
+    })
+  }
 
   return (
     <>
@@ -151,170 +161,230 @@ export const Tester = () => {
         onTabChange={handleTab}
       >
         <Tabs.List grow>
-          {Array(7).fill(1).map((_, i) => {
-            const index = i + 1
+          <Tabs.Tab value='create'>
+            Создать тест
+          </Tabs.Tab>
+          {tests?.map((t, i) => {
             return (
-              <Tabs.Tab value={`${index}`} key={i}>{index}</Tabs.Tab>
+              <Tabs.Tab value={t?.id} key={i}>
+                <Text lineClamp={1}>
+                  {t?.index}
+                </Text>
+              </Tabs.Tab>
             )
           })}
-        <Tabs.Tab value={`results`}>Результаты</Tabs.Tab>
-        <Tabs.Tab value={`sdali`}>Cдали</Tabs.Tab>
-        <Tabs.Tab value={`nesdali`}>Не сдали</Tabs.Tab>
-          
+          <Tabs.Tab value={`results`}>Результаты</Tabs.Tab>
         </Tabs.List>
-        <Tabs.Panel value={tab} pt={20}>
-          {(tab !== 'results' && tab !== 'sdali' && tab !== 'nesdali') && (
-            <>
-              <div>
-                <TextInput
-                  label='Название теста'
-                  value={changedTester?.name ?? ''}
-                  onChange={e => setChangedTester({...changedTester, name: e?.target?.value})}
-                />
-                <div className='flex gap-4 items-center mt-2'>
-                  <p>Длительность теста в минутах:</p>
-                  <NumberInput
-                    className='w-16'
-                    hideControls
-                    value={changedTester?.duration ?? ''}
-                    onChange={e => setChangedTester({...changedTester, duration: e})}
+        <Tabs.Panel value='create'>
+          <TextInput
+            label='Название теста'
+            value={createTestData?.name ?? ''}
+            onChange={e => setCreateTestData({...createTestData, name: e?.target?.value})}
+            className='max-w-2xl'
+          />
+          <div className='flex gap-4 items-center mt-2'>
+            <p>Длительность теста в минутах:</p>
+            <NumberInput
+              className='w-16'
+              hideControls
+              value={createTestData?.duration ?? 30}
+              onChange={e => setCreateTestData({...createTestData, duration: e})}
+            />
+          </div>
+          <Button
+            onClick={createTest}
+            disabled={!createTestData?.name && !createTestData?.duration}
+          >
+            Создать тест
+          </Button>
+        </Tabs.Panel>
+        {tests?.map(t => {
+          return (
+            <Tabs.Panel value={t?.id} key={t?.id}>
+              {changeTestData?.id === t?.id ? (
+                <>
+                  <TextInput
+                    label='Название теста'
+                    value={changeTestData?.name ?? ''}
+                    onChange={e => setChangeTestData({...changeTestData, name: e?.target?.value})}
                   />
-                </div>
-              </div>
-              <div className='grid grid-cols-2 gap-4 mt-4'>
-                {changedTester?.questions?.map((q, ind) => {
-                  return (
-                    edit?.id === q?.id ? (
-                      <div key={ind} className='bg-white border p-4'>
-                        <Textarea
-                          label='Вопрос'
-                          value={edit?.question ?? ''}
-                          onChange={e => handleEditQuestionChange(e)}
-                        />
-                        <div className='grid grid-cols-2 gap-x-4'>
-                          {Array(4).fill(1).map((_, i) => {
-                            return (
-                              <TextInput
-                                label={`Ответ ${i + 1}`}
-                                key={i}
-                                value={edit?.answers?.[i] ?? ''}
-                                onChange={(e) => handleEditAnswersChange(i, e)}
-                                // onChange={(e) => handleAnswersChange(q?.id, i, e)}
-                              />
-                            )
-                          })}
-                        </div>
-                        <div className='flex gap-4 mt-4'>
-                          <p>Правильный ответ:</p>
-                          <div className='flex gap-2'>
-                            {Array(4).fill(1).map((_, i) => {
-                              return (
-                                <Button 
-                                  key={i}
-                                  onClick={() => handleEditAnswer(i)}
-                                  color={edit?.answer === i ? 'green' : 'gray'}
-                                  compact
-                                >
-                                  {i + 1}
-                                </Button>
-                              )
-                            })}
-                          </div>
-                        </div>
-                        <Button 
-                          onClick={saveTest}
-                          variant='subtle'
-                          className='mt-2'
-                        >
-                          Сохранить
-                        </Button>
-                        <Button
-                          variant='subtle'
-                          onClick={() => deleteQuestion(q)}
-                          color='red'
-                        >
-                          Удалить вопрос
-                        </Button>
-                      </div>
-                    ) : (
-                      <div key={ind} className='border p-4 bg-white'>
-                        <div className=' gap-4'>
+                  <div className='flex gap-4 items-center mt-2'>
+                    <p>Длительность теста в минутах:</p>
+                    <NumberInput
+                      className='w-16'
+                      hideControls
+                      value={changeTestData?.duration ?? ''}
+                      onChange={e => setChangeTestData({...changeTestData, duration: e})}
+                    />
+                  </div>
+                  <div className='space-x-4 mt-4'>
+                    <Button onClick={async () => {
+                      await pb.collection('tester').update(t?.id, {
+                        ...t,
+                        ...changeTestData,
+                      })
+                      .then(() => {
+                        setChangeTestData(null)
+                      })
+                    }}>
+                      Сохранить
+                    </Button>
+                    <Button color='gray' onClick={() => setChangeTestData(null)}>
+                      Отмена
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <TextInput
+                    label='Название теста'
+                    value={t?.name ?? ''}
+                    readOnly
+                    variant='filled'
+                  />
+                  <div className='flex gap-4 items-center mt-2'>
+                    <p>Длительность теста в минутах:</p>
+                    <NumberInput
+                      className='w-16'
+                      hideControls
+                      value={t?.duration ?? ''}
+                      readOnly
+                      variant='filled'
+                    />
+                  </div>
+                  <Button onClick={() => setChangeTestData(t)}>
+                    Редактировать
+                  </Button>
+                </>
+              )}
+                <div className='grid grid-cols-2 gap-4 mt-4'>
+                  {t?.questions?.map((q, ind) => {
+                    return (
+                      edit?.id === q?.id ? (
+                        <div key={ind} className='bg-white border p-4'>
                           <Textarea
                             label='Вопрос'
-                            value={q?.question ?? ''}
-                            readOnly
-                            variant='filled'
+                            value={edit?.question ?? ''}
+                            onChange={e => handleEditQuestionChange(e)}
                           />
-                
-                        </div>
-                        <div className='grid grid-cols-2 gap-x-4'>
-                          {Array(4).fill(1).map((_, i) => {
-                            return (
-                              <TextInput
-                                label={`Ответ ${i + 1}`}
-                                key={i}
-                                value={q?.answers?.[i] ?? ''}
-                                readOnly
-                                variant='filled'
-                                // onChange={(e) => handleAnswersChange(q?.id, i, e)}
-                              />
-                            )
-                          })}
-                        </div>
-                        <div className='mt-4 flex items-center gap-4'>
-                          <p>Правильный ответ:</p>
-                          <div className='flex gap-2'>
+                          <div className='grid grid-cols-2 gap-x-4'>
                             {Array(4).fill(1).map((_, i) => {
                               return (
-                                <Button 
+                                <TextInput
+                                  label={`Ответ ${i + 1}`}
                                   key={i}
-                                  // onClick={() => handleAnswer(q?.id, i)}
-                                  compact
-                                  color={q?.answer === i ? 'green' : 'gray'}
-                                >
-                                  {i + 1}
-                                </Button>
+                                  value={edit?.answers?.[i] ?? ''}
+                                  onChange={(e) => handleEditAnswersChange(i, e)}
+                                  // onChange={(e) => handleAnswersChange(q?.id, i, e)}
+                                />
                               )
                             })}
                           </div>
-                        </div>
-                        <div className='mt-2'>
-                          <Button
+                          <div className='flex gap-4 mt-4'>
+                            <p>Правильный ответ:</p>
+                            <div className='flex gap-2'>
+                              {Array(4).fill(1).map((_, i) => {
+                                return (
+                                  <Button 
+                                    key={i}
+                                    onClick={() => handleEditAnswer(i)}
+                                    color={edit?.answer === i ? 'green' : 'gray'}
+                                    compact
+                                  >
+                                    {i + 1}
+                                  </Button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                          <Button 
+                            onClick={() => saveQuestion(t)}
                             variant='subtle'
-                            onClick={() => handleEdit(q)}
+                            className='mt-2'
                           >
-                            Редактировать
+                            Сохранить
                           </Button>
                           <Button
                             variant='subtle'
-                            onClick={() => deleteQuestion(q)}
+                            onClick={() => deleteQuestion(t, q)}
                             color='red'
                           >
                             Удалить вопрос
                           </Button>
                         </div>
-                      </div>
+                      ) : (
+                        <div key={ind} className='border p-4 bg-white'>
+                          <div className=' gap-4'>
+                            <Textarea
+                              label='Вопрос'
+                              value={q?.question ?? ''}
+                              readOnly
+                              variant='filled'
+                            />
+                  
+                          </div>
+                          <div className='grid grid-cols-2 gap-x-4'>
+                            {Array(4).fill(1).map((_, i) => {
+                              return (
+                                <TextInput
+                                  label={`Ответ ${i + 1}`}
+                                  key={i}
+                                  value={q?.answers?.[i] ?? ''}
+                                  readOnly
+                                  variant='filled'
+                                  // onChange={(e) => handleAnswersChange(q?.id, i, e)}
+                                />
+                              )
+                            })}
+                          </div>
+                          <div className='mt-4 flex items-center gap-4'>
+                            <p>Правильный ответ:</p>
+                            <div className='flex gap-2'>
+                              {Array(4).fill(1).map((_, i) => {
+                                return (
+                                  <Button 
+                                    key={i}
+                                    // onClick={() => handleAnswer(q?.id, i)}
+                                    compact
+                                    color={q?.answer === i ? 'green' : 'gray'}
+                                  >
+                                    {i + 1}
+                                  </Button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                          <div className='mt-2'>
+                            <Button
+                              variant='subtle'
+                              onClick={() => handleEdit(q)}
+                            >
+                              Редактировать
+                            </Button>
+                            <Button
+                              variant='subtle'
+                              onClick={() => deleteQuestion(t, q)}
+                              color='red'
+                            >
+                              Удалить вопрос
+                            </Button>
+                          </div>
+                        </div>
+                      )
                     )
-                  )
-                })}
-              </div>
-              <div className='flex justify-center gap-4 mt-5'>
-                <Button 
-                  onClick={addQuestion}
+                  })}
+                </div>
+                <Button
+                  mt={8}
+                  onClick={() => addQuestion(t)}
                 >
                   Добавить вопрос
                 </Button>
-                <Button 
-                  onClick={saveTest}
-                >
-                  Сохранить
-                </Button>
-              </div>
-            </>
-          )}
-        </Tabs.Panel>
-        <Tabs.Panel value='results'>
-          <Tabs>
+            </Tabs.Panel>
+          )
+        })}
+        <Tabs.Panel value='results'> 
+          <Tabs variant='pills' mt={16}>
             <Tabs.List>
             {folders?.map((f, i) => {
               return (
@@ -323,162 +393,129 @@ export const Tester = () => {
                 </Tabs.Tab>
               )})}
             </Tabs.List>
-
             {folders?.map((f, i) => {
               return (
                 <Tabs.Panel value={String(i)}>
-                  <Table>
-                    <thead>
-                      <tr>
-                        <th>ФИО</th>
-                        <th>Город</th>
-                        <th>Организации</th>
-                        <th>Название теста</th>
-                        <th>Результаты</th>
-                        <th>Действие</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {f?.map((r, i) => {
-                        return (
-                          <tr key={i}>
-                            <td>{r?.name}</td>
-                            <td>{r?.city}</td>
-                            <td>{r?.company}</td>
-                            <td>{r?.results?.name}</td>
-                            <td>
-                              <Button
-                                variant='subtle'
-                                onClick={() => {
-                                  setModal(true)
-                                  setResults(r?.results)
-                                }}
-                              >
-                                Результаты
-                              </Button>
-                            </td>
-                            <td>
-                              <Button 
-                                compact
-                                color='red'
-                                variant='subtle'
-                                onClick={() => {
-                                  openConfirmModal({
-                                    title: 'Удалить данные результаты',
-                                    centered: true, 
-                                    labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                                    onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
-                                  })
-                                }}
-                              >
-                                Удалить
-                              </Button>
-                            </td>
+                  <Tabs mt={16}>
+                    <Tabs.List>
+                      <Tabs.Tab value='sdali'>Сдали</Tabs.Tab>
+                      <Tabs.Tab value='nesdali'>Не сдали</Tabs.Tab>
+                    </Tabs.List>
+                    <Tabs.Panel value='sdali'>
+                      <p className='my-3'>Сдали: {f?.filter(q => q?.passed)?.length}</p>
+                      <Table>
+                        <thead>
+                          <tr>
+                            <th>ФИО</th>
+                            <th>Город</th>
+                            <th>Организации</th>
+                            <th>Название теста</th>
+                            <th>Результаты</th>
+                            <th>Действие</th>
                           </tr>
-                        )
-                      })}
-                    </tbody>
-                  </Table>
+                        </thead>
+                        <tbody>
+                          {f?.map((r, i) => {
+                            if (r?.passed) return (
+                              <tr key={i}>
+                                <td>{r?.name}</td>
+                                <td>{r?.city}</td>
+                                <td>{r?.company}</td>
+                                <td>{r?.results?.name}</td>
+                                <td>
+                                  <Button
+                                    variant='subtle'
+                                    onClick={() => {
+                                      setModal(true)
+                                      setResults(r?.results)
+                                    }}
+                                  >
+                                    Результаты
+                                  </Button>
+                                </td>
+                                <td>
+                                  <Button 
+                                    compact
+                                    color='red'
+                                    variant='subtle'
+                                    onClick={() => {
+                                      openConfirmModal({
+                                        title: 'Удалить данные результаты',
+                                        centered: true, 
+                                        labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                                        onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
+                                      })
+                                    }}
+                                  >
+                                    Удалить
+                                  </Button>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </Table>
+                    </Tabs.Panel>
+                    <Tabs.Panel value='nesdali'>
+                      <Table>
+                        <thead>
+                          <tr>
+                            <th>ФИО</th>
+                            <th>Город</th>
+                            <th>Организации</th>
+                            <th>Название теста</th>
+                            <th>Результаты</th>
+                            <th>Действие</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {f?.map((r, i) => {
+                            if (!r?.passed) return (
+                              <tr key={i}>
+                                <td>{r?.name}</td>
+                                <td>{r?.city}</td>
+                                <td>{r?.company}</td>
+                                <td>{r?.results?.name}</td>
+                                <td>
+                                  <Button
+                                    variant='subtle'
+                                    onClick={() => {
+                                      setModal(true)
+                                      setResults(r?.results)
+                                    }}
+                                  >
+                                    Результаты
+                                  </Button>
+                                </td>
+                                <td>
+                                  <Button 
+                                    compact
+                                    color='red'
+                                    variant='subtle'
+                                    onClick={() => {
+                                      openConfirmModal({
+                                        title: 'Удалить данные результаты',
+                                        centered: true, 
+                                        labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                                        onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
+                                      })
+                                    }}
+                                  >
+                                    Удалить
+                                  </Button>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </Table>
+                    </Tabs.Panel>
+                  </Tabs>
                 </Tabs.Panel>
               )
             })}
           </Tabs>
       
-        </Tabs.Panel>
-
-        <Tabs.Panel value='sdali'>
-          <Table>
-            <thead>
-              <tr>
-                <th>ФИО</th>
-                <th>Город</th>
-                <th>Организации</th>
-                <th>Название теста</th>
-                <th>Результаты</th>
-                <th>Действие</th>
-              </tr>
-            </thead>
-            <tbody>
-              {testerResults?.map((r, i) => {
-                if (r?.passed) return (
-                  <tr key={i}>
-                    <td>{r?.name}</td>
-                    <td>{r?.city}</td>
-                    <td>{r?.company}</td>
-                    <td>{r?.results?.name}</td>
-                    <td>
-                      <Button
-                        variant='subtle'
-                        onClick={() => {
-                          setModal(true)
-                          setResults(r?.results)
-                        }}
-                      >
-                        Результаты
-                      </Button>
-                    </td>
-                    <td>
-                      <Button 
-                        compact
-                        color='red'
-                        variant='subtle'
-                        onClick={() => {
-                          openConfirmModal({
-                            title: 'Удалить данные результаты',
-                            centered: true, 
-                            labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                            onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
-                          })
-                        }}
-                      >
-                        Удалить
-                      </Button>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </Table>
-        </Tabs.Panel>
-        <Tabs.Panel value='nesdali'>
-        {testerResults?.map((r, i) => {
-          if (!r?.passed) return (
-            <tr key={i}>
-              <td>{r?.name}</td>
-              <td>{r?.city}</td>
-              <td>{r?.company}</td>
-              <td>{r?.results?.name}</td>
-              <td>
-                <Button
-                  variant='subtle'
-                  onClick={() => {
-                    setModal(true)
-                    setResults(r?.results)
-                  }}
-                >
-                  Результаты
-                </Button>
-              </td>
-              <td>
-                <Button 
-                  compact
-                  color='red'
-                  variant='subtle'
-                  onClick={() => {
-                    openConfirmModal({
-                      title: 'Удалить данные результаты',
-                      centered: true, 
-                      labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                      onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
-                    })
-                  }}
-                >
-                  Удалить
-                </Button>
-              </td>
-            </tr>
-          )
-        })}
         </Tabs.Panel>
       </Tabs>   
       <Modal
@@ -487,7 +524,7 @@ export const Tester = () => {
         onClose={() => setModal(false)}
         size={'70%'}
       >
-        Правильных ответов: {results?.rightAnswers?.length}\{results?.totalQuestions}
+        Правильных ответов: {results?.rightAnswers}\{results?.totalQuestions}
         <div className='space-y-4'>
           {results?.questions?.map((q, i) => {
             return (
