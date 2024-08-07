@@ -985,7 +985,6 @@ export const Tester = () => {
                   })
                 })
               }}
-              color='gray'
             >
               Не сдал
             </Button>
