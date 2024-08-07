@@ -952,6 +952,45 @@ export const Tester = () => {
         size={'70%'}
       >
         Правильных ответов: {results?.rightAnswers}\{results?.totalQuestions}
+        {results?.status === 'created' && (
+          <div className='flex gap-4 justify-center my-4'>
+            <Button
+              onClick={() => {
+                openConfirmModal({
+                  title: 'Тест',
+                  centered: true,
+                  labels: {confirm: 'Подтвердить', cancel: 'Отмена'},
+                  onConfirm: async () => await pb.collection('tester_results').update(results?.id, {
+                    status: 'passed'
+                  })
+                  .then(() => {
+                    setModal(false)
+                  })
+                })
+              }}
+            >
+              Сдал
+            </Button>
+            <Button
+              onClick={() => {
+                openConfirmModal({
+                  title: 'Тест',
+                  centered: true,
+                  labels: {confirm: 'Подтвердить', cancel: 'Отмена'},
+                  onConfirm: async () => await pb.collection('tester_results').update(results?.id, {
+                    status: 'failed'
+                  })
+                  .then(() => {
+                    setModal(false)
+                  })
+                })
+              }}
+              color='gray'
+            >
+              Не сдал
+            </Button>
+          </div>
+        )}
         <div className='space-y-4'>
           {results?.results?.questions?.map((q, i) => {
             return (
@@ -1001,43 +1040,7 @@ export const Tester = () => {
             )
           })}
         </div>
-        <div className='flex gap-4 justify-center'>
-          <Button
-            onClick={() => {
-              openConfirmModal({
-                title: 'Тест',
-                centered: true,
-                labels: {confirm: 'Сдал', cancel: 'Отмена'},
-                onConfirm: async () => await pb.collection('tester_results').update(results?.id, {
-                  status: 'passed'
-                })
-                .then(() => {
-                  setModal(false)
-                })
-              })
-            }}
-          >
-            Сдал
-          </Button>
-          <Button
-            onClick={() => {
-              openConfirmModal({
-                title: 'Тест',
-                centered: true,
-                labels: {confirm: 'Сдал', cancel: 'Отмена'},
-                onConfirm: async () => await pb.collection('tester_results').update(results?.id, {
-                  status: 'failed'
-                })
-                .then(() => {
-                  setModal(false)
-                })
-              })
-            }}
-            color='gray'
-          >
-            Не сдал
-          </Button>
-        </div>
+
       </Modal>  
     </>
   )
