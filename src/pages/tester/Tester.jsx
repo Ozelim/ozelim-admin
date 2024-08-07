@@ -4,7 +4,7 @@ import { pb } from 'shared/api'
 import { openConfirmModal } from '@mantine/modals'
 import { useSearchParams } from 'react-router-dom'
 import { FaEdit } from 'react-icons/fa'
-import { MdDeleteForever } from 'react-icons/md'
+import { MdArrowBack, MdDeleteForever } from 'react-icons/md'
 import { showNotification } from '@mantine/notifications'
 
 async function getTests () {
@@ -197,8 +197,15 @@ export const Tester = () => {
         </Tabs.List>
 
         <Tabs.Panel value='all'>
+
           {currentTest?.id && (
             <>
+              <Button leftIcon={<MdArrowBack className='text-2xl'/>} className='my-3' color='gray' onClick={() => {
+                setTab('all')
+                setCurrentTest({})
+              }}>
+                Назад
+              </Button>
               <TextInput
                 label='Название теста'
                 value={currentTest?.name ?? ''}
@@ -600,184 +607,192 @@ export const Tester = () => {
         })} */}
         <Tabs.Panel value='results'> 
           {resultsTest?.id && (
-            <Tabs defaultValue='res'>
-              <Tabs.List>
-                <Tabs.Tab value='res'>Все</Tabs.Tab>
-                <Tabs.Tab value='sdali'>Сдали</Tabs.Tab>
-                <Tabs.Tab value='nesdali'>Не сдали</Tabs.Tab>
-              </Tabs.List>
-              <Tabs.Panel value='res'>
-                <div className='my-4'>
-                  Количество тестов: {folders.filter(q => q?.[0] === resultsTest?.index)?.[0]?.[1]?.filter(q => q?.status === 'created' || q?.status === '')?.length}
-                </div>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>№</th>
-                      <th>ФИО</th>
-                      <th>Город</th>
-                      <th>Организации</th>
-                      <th>Название теста</th>
-                      <th>Результаты</th>
-                      <th>Действие</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {folders.filter(q => q?.[0] === resultsTest?.index)?.[0]?.[1]?.filter(q => q?.status === 'created' || q?.status === '')?.map((r, i) => {
-                      if (r?.status === 'created' || r?.status === '') return (
-                        <tr key={i}>
-                          <td>{i + 1}</td>
-                          <td>{r?.name}</td>
-                          <td>{r?.city}</td>
-                          <td>{r?.company}</td>
-                          <td>{r?.results?.name}</td>
-                          <td>
-                            <Button
-                              variant='subtle'
-                              onClick={() => {
-                                setModal(true)
-                                setResults(r)
-                              }}
-                            >
-                              Результаты
-                            </Button>
-                          </td>
-                          <td>
-                            <Button 
-                              compact
-                              color='red'
-                              variant='subtle'
-                              onClick={() => {
-                                openConfirmModal({
-                                  title: 'Удалить данные результаты',
-                                  centered: true, 
-                                  labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                                  onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
-                                })
-                              }}
-                            >
-                              Удалить
-                            </Button>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </Table>
-              </Tabs.Panel>
-              <Tabs.Panel value='sdali'>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>№</th>
-                      <th>ФИО</th>
-                      <th>Город</th>
-                      <th>Организации</th>
-                      <th>Название теста</th>
-                      <th>Результаты</th>
-                      <th>Действие</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {folders.filter(q => q?.[0] === resultsTest?.index)?.[0]?.[1]?.filter?.(q => q?.status === 'passed')?.map((r, i) => {
-                      if (r?.status === 'passed')return (
-                        <tr key={i}>
-                          <td>{i + 1}</td>
-                          <td>{r?.name}</td>
-                          <td>{r?.city}</td>
-                          <td>{r?.company}</td>
-                          <td>{r?.results?.name}</td>
-                          <td>
-                            <Button
-                              variant='subtle'
-                              onClick={() => {
-                                setModal(true)
-                                setResults(r)
-                              }}
-                            >
-                              Результаты
-                            </Button>
-                          </td>
-                          <td>
-                            <Button 
-                              compact
-                              color='red'
-                              variant='subtle'
-                              onClick={() => {
-                                openConfirmModal({
-                                  title: 'Удалить данные результаты',
-                                  centered: true, 
-                                  labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                                  onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
-                                })
-                              }}
-                            >
-                              Удалить
-                            </Button>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </Table>
-              </Tabs.Panel>
-              <Tabs.Panel value='nesdali'>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>№</th>
-                      <th>ФИО</th>
-                      <th>Город</th>
-                      <th>Организации</th>
-                      <th>Название теста</th>
-                      <th>Результаты</th>
-                      <th>Действие</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                {folders.filter(q => q?.[0] === resultsTest?.index)?.[0]?.[1]?.filter(q => q?.status === 'failed')?.map((r, i) => {
-                  return (
-                    <tr key={i}>
-                      <td>{i + 1}</td>
-                      <td>{r?.name}</td>
-                      <td>{r?.city}</td>
-                      <td>{r?.company}</td>
-                      <td>{r?.results?.name}</td>
-                      <td>
-                        <Button
-                          variant='subtle'
-                          onClick={() => {
-                            setModal(true)
-                            setResults(r)
-                          }}
-                        >
-                          Результаты
-                        </Button>
-                      </td>
-                      <td>
-                        <Button 
-                          compact
-                          color='red'
-                          variant='subtle'
-                          onClick={() => {
-                            openConfirmModal({
-                              title: 'Удалить данные результаты',
-                              centered: true, 
-                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                              onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
-                            })
-                          }}
-                        >
-                          Удалить
-                        </Button>
-                      </td>
-                    </tr>
-                  )
-                })}
-                            </tbody>
-                </Table>
-              </Tabs.Panel>
-            </Tabs>
+            <>
+              <Button leftIcon={<MdArrowBack className='text-2xl'/>} className='my-3' color='gray' onClick={() => {
+                setTab('results')
+                setResultsTest({})
+              }}>
+                Назад
+              </Button>
+              <Tabs defaultValue='res'>
+                <Tabs.List>
+                  <Tabs.Tab value='res'>Все</Tabs.Tab>
+                  <Tabs.Tab value='sdali'>Сдали</Tabs.Tab>
+                  <Tabs.Tab value='nesdali'>Не сдали</Tabs.Tab>
+                </Tabs.List>
+                <Tabs.Panel value='res'>
+                  <div className='my-4'>
+                    Количество тестов: {folders.filter(q => q?.[0] === resultsTest?.index)?.[0]?.[1]?.filter(q => q?.status === 'created' || q?.status === '')?.length}
+                  </div>
+                  <Table>
+                    <thead>
+                      <tr>
+                        <th>№</th>
+                        <th>ФИО</th>
+                        <th>Город</th>
+                        <th>Организации</th>
+                        <th>Название теста</th>
+                        <th>Результаты</th>
+                        <th>Действие</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {folders.filter(q => q?.[0] === resultsTest?.index)?.[0]?.[1]?.filter(q => q?.status === 'created' || q?.status === '')?.map((r, i) => {
+                        if (r?.status === 'created' || r?.status === '') return (
+                          <tr key={i}>
+                            <td>{i + 1}</td>
+                            <td>{r?.name}</td>
+                            <td>{r?.city}</td>
+                            <td>{r?.company}</td>
+                            <td>{r?.results?.name}</td>
+                            <td>
+                              <Button
+                                variant='subtle'
+                                onClick={() => {
+                                  setModal(true)
+                                  setResults(r)
+                                }}
+                              >
+                                Результаты
+                              </Button>
+                            </td>
+                            <td>
+                              <Button 
+                                compact
+                                color='red'
+                                variant='subtle'
+                                onClick={() => {
+                                  openConfirmModal({
+                                    title: 'Удалить данные результаты',
+                                    centered: true, 
+                                    labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                                    onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
+                                  })
+                                }}
+                              >
+                                Удалить
+                              </Button>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </Table>
+                </Tabs.Panel>
+                <Tabs.Panel value='sdali'>
+                  <Table>
+                    <thead>
+                      <tr>
+                        <th>№</th>
+                        <th>ФИО</th>
+                        <th>Город</th>
+                        <th>Организации</th>
+                        <th>Название теста</th>
+                        <th>Результаты</th>
+                        <th>Действие</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {folders.filter(q => q?.[0] === resultsTest?.index)?.[0]?.[1]?.filter?.(q => q?.status === 'passed')?.map((r, i) => {
+                        if (r?.status === 'passed')return (
+                          <tr key={i}>
+                            <td>{i + 1}</td>
+                            <td>{r?.name}</td>
+                            <td>{r?.city}</td>
+                            <td>{r?.company}</td>
+                            <td>{r?.results?.name}</td>
+                            <td>
+                              <Button
+                                variant='subtle'
+                                onClick={() => {
+                                  setModal(true)
+                                  setResults(r)
+                                }}
+                              >
+                                Результаты
+                              </Button>
+                            </td>
+                            <td>
+                              <Button 
+                                compact
+                                color='red'
+                                variant='subtle'
+                                onClick={() => {
+                                  openConfirmModal({
+                                    title: 'Удалить данные результаты',
+                                    centered: true, 
+                                    labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                                    onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
+                                  })
+                                }}
+                              >
+                                Удалить
+                              </Button>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </Table>
+                </Tabs.Panel>
+                <Tabs.Panel value='nesdali'>
+                  <Table>
+                    <thead>
+                      <tr>
+                        <th>№</th>
+                        <th>ФИО</th>
+                        <th>Город</th>
+                        <th>Организации</th>
+                        <th>Название теста</th>
+                        <th>Результаты</th>
+                        <th>Действие</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                  {folders.filter(q => q?.[0] === resultsTest?.index)?.[0]?.[1]?.filter(q => q?.status === 'failed')?.map((r, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>{i + 1}</td>
+                        <td>{r?.name}</td>
+                        <td>{r?.city}</td>
+                        <td>{r?.company}</td>
+                        <td>{r?.results?.name}</td>
+                        <td>
+                          <Button
+                            variant='subtle'
+                            onClick={() => {
+                              setModal(true)
+                              setResults(r)
+                            }}
+                          >
+                            Результаты
+                          </Button>
+                        </td>
+                        <td>
+                          <Button 
+                            compact
+                            color='red'
+                            variant='subtle'
+                            onClick={() => {
+                              openConfirmModal({
+                                title: 'Удалить данные результаты',
+                                centered: true, 
+                                labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                                onConfirm: async () => await pb.collection('tester_results').delete(r?.id)
+                              })
+                            }}
+                          >
+                            Удалить
+                          </Button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                              </tbody>
+                  </Table>
+                </Tabs.Panel>
+              </Tabs>
+            </>
           )}
           {!resultsTest?.id && (
             <div className='flex flex-col gap-6 mt-4'>
