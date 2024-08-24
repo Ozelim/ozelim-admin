@@ -36,7 +36,11 @@ import {
   Replenish,
   Bonuses,
   Tester,
-  ProfileCourses
+  ProfileCourses,
+  Fund,
+  HealthWorld,
+  Tours,
+  Rights
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -70,6 +74,10 @@ const appRouter = createBrowserRouter([
       { path: "/bonuses", element: <Bonuses /> },
       { path: "/tester", element: <Tester /> },
       { path: "/profile-courses", element: <ProfileCourses /> },
+      { path: "/fund", element: <Fund /> },
+      { path: "/health-world", element: <HealthWorld /> },
+      { path: "/tours", element: <Tours /> },
+      { path: "/rights", element: <Rights /> },
       { path: "*", element: <NotFound /> },
     ],
   },

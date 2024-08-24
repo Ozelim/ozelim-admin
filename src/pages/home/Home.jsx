@@ -45,6 +45,14 @@ export const Home = () => {
   const [changedHeadings, setChangedHeadings] = React.useState({})
   const [changedText, setChangedText] = React.useState({})
 
+  function handleImagesChange (val, index) {
+    setChangedImages({...changedImages, [`${index}`]: val})
+  }
+
+  function handleImageDelete (index) {
+    setChangedImages({...changedImages, [index]: ''})
+  }
+
   function handleAboutChange (val, type) {
     const {value, name} = val?.target
 
@@ -96,12 +104,273 @@ export const Home = () => {
   return (
     <div className='w-full'>
       <TextInput 
-        label='Главный заголовок'
+        label='Заголовок'
         value={changedHeadings?.[1] ?? ''}
         onChange={(e) => handleAboutChange(e, 'heading')}
         name='1'
+        className='max-w-xl'
       />
-      <div className='grid grid-cols-3 gap-8'>
+      <div className='mt-8 grid grid-cols-3'>
+        <div>
+          <Image
+            label={'Картинка'}
+            onChange={handleImagesChange}
+            record={about?.images}
+            image={changedImages?.['1']}
+            onDelete={handleImageDelete}
+            index={1}
+          />  
+          <Textarea
+            label='Описание'
+            value={changedText?.[1] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='1'
+            autosize
+          />
+        </div>
+        <div>
+          <Image
+            label={'Картинка'}
+            onChange={handleImagesChange}
+            record={about?.images}
+            image={changedImages?.['2']}
+            onDelete={handleImageDelete}
+            index={2}
+          />  
+          <Textarea
+            label='Описание'
+            value={changedText?.[2] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='2'
+            autosize
+          />
+        </div>
+        <div>
+          <Image
+            label={'Картинка'}
+            onChange={handleImagesChange}
+            record={about?.images}
+            image={changedImages?.['3']}
+            onDelete={handleImageDelete}
+            index={3}
+          />  
+          <Textarea
+            label='Описание'
+            value={changedText?.[3] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='3'
+            autosize
+          />
+        </div>
+      </div>
+
+      <div className='grid grid-cols-2 gap-4 mt-8'>
+        <Image
+          label={'Картинка'}
+          onChange={handleImagesChange}
+          record={about?.images}
+          image={changedImages?.['4']}
+          onDelete={handleImageDelete}
+          index={4}
+        />  
+        <TextInput 
+          label='Заголовок'
+          value={changedHeadings?.[2] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='2'
+        />
+        <div>
+          <Textarea
+            label='Описание'
+            value={changedText?.[4] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='4'
+            autosize
+          />
+          <Textarea
+            label='Описание'
+            value={changedText?.[5] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='5'
+            autosize
+          />
+          <Textarea
+            label='Описание'
+            value={changedText?.[6] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='6'
+            autosize
+          />
+          <Textarea
+            label='Описание'
+            value={changedText?.[7] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='7'
+            autosize
+          />
+          <Textarea
+            label='Описание'
+            value={changedText?.[8] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='8'
+            autosize
+          />
+        </div>
+      </div>
+
+      <div className='max-w-xl mt-8'>
+        <TextInput 
+          label='Заголовок'
+          value={changedHeadings?.[3] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='3'
+        />
+        <div>
+          <Textarea
+            label='Описание'
+            value={changedText?.[9] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='9'
+            autosize
+          />
+          <Textarea
+            label='Описание'
+            value={changedText?.[10] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='10'
+            autosize
+          />
+          <Textarea
+            label='Описание'
+            value={changedText?.[11] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='11'
+            autosize
+          />
+        </div>
+      </div>
+
+      <div className='max-w-xl mt-8'>
+        <Image
+          label={'Картинка'}
+          onChange={handleImagesChange}
+          record={about?.images}
+          image={changedImages?.['5']}
+          onDelete={handleImageDelete}
+          index={5}
+        />
+        <div>
+          <Textarea
+            label='Описание'
+            value={changedText?.[12] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='12'
+            autosize
+          />
+          <Textarea
+            label='Описание'
+            value={changedText?.[13] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='13'
+            autosize
+          />
+          <Textarea
+            label='Описание'
+            value={changedText?.[14] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='14'
+            autosize
+          />
+          <Textarea
+            label='Описание'
+            value={changedText?.[15] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='15'
+            autosize
+          />
+          <Textarea
+            label='Описание'
+            value={changedText?.[16] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'text')}
+            name='16'
+            autosize
+          />
+        </div>
+      </div>
+
+      <div className='max-w-xl mt-8'>
+        <Textarea
+          label='Описание'
+          value={changedText?.[17] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='17'
+          autosize
+        />
+        <Textarea
+          label='Описание'
+          value={changedText?.[18] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='18'
+          autosize
+        />
+        <Textarea
+          label='Описание'
+          value={changedText?.[19] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='19'
+          autosize
+        />
+      </div>
+
+      <div className='max-w-xl mt-8'>
+        <Textarea
+          label='Описание'
+          value={changedText?.[20] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='20'
+          autosize
+        />
+        <Textarea
+          label='Описание'
+          value={changedText?.[21] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='21'
+          autosize
+        />
+        <Textarea
+          label='Описание'
+          value={changedText?.[22] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='22'
+          autosize
+        />
+      </div>
+
+      <Textarea
+        label='Описание'
+        value={changedText?.[23] ?? ''}
+        onChange={(e) => handleAboutChange(e, 'text')}
+        name='23'
+        autosize
+        className='max-w-xl mt-8'
+      />
+
+      <div className='max-w-xl mt-8'>
+        <TextInput 
+          label='Заголовок'
+          value={changedHeadings?.[4] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='4'
+        />
+        <Textarea
+          label='Описание'
+          value={changedText?.[24] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='24'
+          autosize
+        />
+      </div>
+      {/* <div className='grid grid-cols-3 gap-8'>
         <Textarea 
           label='Данные'
           value={changedText?.[1] ?? ''}
@@ -162,7 +431,7 @@ export const Home = () => {
           name='z1'
           autosize
         />        
-        {/* <Textarea 
+        <Textarea 
           label='Текст'
           value={changedText?.z2 ?? ''}
           onChange={(e) => handleAboutChange(e, 'text')}
@@ -175,9 +444,13 @@ export const Home = () => {
           onChange={(e) => handleAboutChange(e, 'text')}
           name='z3'
           autosize
-        /> */}
+        />
         </div>
-      </div>
+      </div> */}
+
+
+
+
       <Button
         className='mt-5'
         onClick={saveAbout}
@@ -277,7 +550,6 @@ export const Home = () => {
           </Table>
         </div>
       )}
-      
     </div>
   );
 };

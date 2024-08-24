@@ -14,7 +14,7 @@ async function getData (page, withSlider) {
   return {
     // slider: slider[0], 
     images: images[0], 
-    text: text[0]
+    text: text[0],
   }
 }
 
