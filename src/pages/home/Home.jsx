@@ -84,7 +84,7 @@ export const Home = () => {
   }
 
   React.useEffect(() => {
-    getData('stats').then(res => {
+    getData('home').then(res => {
       setAbout(res);
       setHeadings(res?.text?.headings)
       setText(res?.text?.text)
