@@ -103,12 +103,27 @@ export const Home = () => {
 
   return (
     <div className='w-full'>
+      <div>
+        <TextInput 
+          label='Главный заголовок'
+          value={changedHeadings?.main ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='main'
+        />
+        <Textarea
+          label='Описание'
+          value={changedHeadings?.main2 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='main2'
+          autosize
+        />
+      </div>
       <TextInput 
         label='Заголовок'
         value={changedHeadings?.[1] ?? ''}
         onChange={(e) => handleAboutChange(e, 'heading')}
         name='1'
-        className='max-w-xl'
+        className='max-w-xl mt-8'
       />
       <div className='mt-8 grid grid-cols-3'>
         <div>
@@ -179,7 +194,7 @@ export const Home = () => {
           onChange={(e) => handleAboutChange(e, 'heading')}
           name='2'
         />
-        <div>
+        <div className='grid grid-cols-5 gap-4'>
           <Textarea
             label='Описание'
             value={changedText?.[4] ?? ''}
@@ -225,7 +240,7 @@ export const Home = () => {
           onChange={(e) => handleAboutChange(e, 'heading')}
           name='3'
         />
-        <div>
+        <div className='grid grid-cols-3 gap-4'>
           <Textarea
             label='Описание'
             value={changedText?.[9] ?? ''}
@@ -259,7 +274,7 @@ export const Home = () => {
           onDelete={handleImageDelete}
           index={5}
         />
-        <div>
+        <div className='grid grid-cols-5 gap-4'>
           <Textarea
             label='Описание'
             value={changedText?.[12] ?? ''}
