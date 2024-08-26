@@ -27,6 +27,7 @@ export { Fund } from './fund/Fund'
 export { HealthWorld } from './health-world/HealthWorld'
 export { Tours } from './tours/Tours'
 export { Rights } from './rights/Rights'
+export { Dual } from './dual/Dual'
 
 export { CharityFundKz } from './charity-fund/CharityfundKz'
 export { AboutKz } from './about/AboutKz'

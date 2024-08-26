@@ -40,7 +40,8 @@ import {
   Fund,
   HealthWorld,
   Tours,
-  Rights
+  Rights,
+  Dual
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -78,6 +79,7 @@ const appRouter = createBrowserRouter([
       { path: "/health-world", element: <HealthWorld /> },
       { path: "/tours", element: <Tours /> },
       { path: "/rights", element: <Rights /> },
+      { path: "/dual", element: <Dual /> },
       { path: "*", element: <NotFound /> },
     ],
   },

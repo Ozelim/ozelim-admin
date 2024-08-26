@@ -93,7 +93,7 @@ export const Rights = () => {
             label="Заголовок"
             value={changedHeadings?.heading1 ?? ""}
             onChange={(e) => handleHealthChange(e, "heading")}
-            name="heading3"
+            name="heading1"
           />
           <Textarea
             label="Описание"
@@ -115,7 +115,7 @@ export const Rights = () => {
             label="Заголовок"
             value={changedHeadings?.heading2 ?? ""}
             onChange={(e) => handleHealthChange(e, "heading")}
-            name="heading"
+            name="heading2"
           />
           <Textarea
             label="Описание"
@@ -178,7 +178,7 @@ export const Rights = () => {
           label="Описание"
           value={changedText?.text7 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
-          name="text10"
+          name="text7"
           autosize
         />
       </div>
@@ -186,15 +186,22 @@ export const Rights = () => {
       <div className='max-w-xl'>
         <TextInput
           label="Заголовок"
-          value={changedHeadings?.heading6 ?? ""}
+          value={changedHeadings?.heading4 ?? ""}
           onChange={(e) => handleHealthChange(e, "heading")}
-          name="heading6"
+          name="heading4"
         />
         <Textarea
           label="Описание"
-          value={changedText?.text10 ?? ""}
+          value={changedText?.text8 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
-          name="text10"
+          name="text8"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text9 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text9"
           autosize
         />
         <Textarea
@@ -206,23 +213,16 @@ export const Rights = () => {
         />
         <Textarea
           label="Описание"
-          value={changedText?.text10 ?? ""}
+          value={changedText?.text11 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
-          name="text10"
+          name="text11"
           autosize
         />
         <Textarea
           label="Описание"
-          value={changedText?.text10 ?? ""}
+          value={changedText?.text12 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
-          name="text10"
-          autosize
-        />
-        <Textarea
-          label="Описание"
-          value={changedText?.text10 ?? ""}
-          onChange={(e) => handleHealthChange(e, "text")}
-          name="text10"
+          name="text12"
           autosize
         />
       </div>
@@ -230,9 +230,9 @@ export const Rights = () => {
       <div className='max-w-xl'>
         <TextInput
           label="Заголовок"
-          value={changedHeadings?.heading6 ?? ""}
+          value={changedHeadings?.heading4 ?? ""}
           onChange={(e) => handleHealthChange(e, "heading")}
-          name="heading6"
+          name="heading4"
         />
         <Image
           className="ml-10 w-2/4"
@@ -245,9 +245,9 @@ export const Rights = () => {
         />
         <Textarea
           label="Описание"
-          value={changedText?.text10 ?? ""}
+          value={changedText?.text13 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
-          name="text10"
+          name="text13"
           autosize
         />
       </div>
