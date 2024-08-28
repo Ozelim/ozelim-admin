@@ -103,7 +103,7 @@ export const Home = () => {
 
   return (
     <div className='w-full'>
-      <div>
+      <div className='max-w-xl'>
         <TextInput 
           label='Главный заголовок'
           value={changedHeadings?.main ?? ''}
@@ -118,83 +118,88 @@ export const Home = () => {
           autosize
         />
       </div>
-      <TextInput 
-        label='Заголовок'
-        value={changedHeadings?.[1] ?? ''}
-        onChange={(e) => handleAboutChange(e, 'heading')}
-        name='1'
-        className='max-w-xl mt-8'
-      />
-      <div className='mt-8 grid grid-cols-3'>
-        <div>
-          <Image
-            label={'Картинка'}
-            onChange={handleImagesChange}
-            record={about?.images}
-            image={changedImages?.['1']}
-            onDelete={handleImageDelete}
-            index={1}
-          />  
-          <Textarea
-            label='Описание'
-            value={changedText?.[1] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='1'
-            autosize
-          />
-        </div>
-        <div>
-          <Image
-            label={'Картинка'}
-            onChange={handleImagesChange}
-            record={about?.images}
-            image={changedImages?.['2']}
-            onDelete={handleImageDelete}
-            index={2}
-          />  
-          <Textarea
-            label='Описание'
-            value={changedText?.[2] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='2'
-            autosize
-          />
-        </div>
-        <div>
-          <Image
-            label={'Картинка'}
-            onChange={handleImagesChange}
-            record={about?.images}
-            image={changedImages?.['3']}
-            onDelete={handleImageDelete}
-            index={3}
-          />  
-          <Textarea
-            label='Описание'
-            value={changedText?.[3] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='3'
-            autosize
-          />
+
+      <div className='mt-8'>
+        <TextInput 
+          label='Заголовок'
+          value={changedHeadings?.[1] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='1'
+          className='max-w-xl '
+        />
+        <div className='mt-8 grid grid-cols-3 gap-4'>
+          <div>
+            <Image
+              label={'Картинка'}
+              onChange={handleImagesChange}
+              record={about?.images}
+              image={changedImages?.['1']}
+              onDelete={handleImageDelete}
+              index={1}
+            />  
+            <Textarea
+              label='Описание'
+              value={changedText?.[1] ?? ''}
+              onChange={(e) => handleAboutChange(e, 'text')}
+              name='1'
+              autosize
+            />
+          </div>
+          <div>
+            <Image
+              label={'Картинка'}
+              onChange={handleImagesChange}
+              record={about?.images}
+              image={changedImages?.['2']}
+              onDelete={handleImageDelete}
+              index={2}
+            />  
+            <Textarea
+              label='Описание'
+              value={changedText?.[2] ?? ''}
+              onChange={(e) => handleAboutChange(e, 'text')}
+              name='2'
+              autosize
+            />
+          </div>
+          <div>
+            <Image
+              label={'Картинка'}
+              onChange={handleImagesChange}
+              record={about?.images}
+              image={changedImages?.['3']}
+              onDelete={handleImageDelete}
+              index={3}
+            />  
+            <Textarea
+              label='Описание'
+              value={changedText?.[3] ?? ''}
+              onChange={(e) => handleAboutChange(e, 'text')}
+              name='3'
+              autosize
+            />
+          </div>
         </div>
       </div>
 
-      <div className='grid grid-cols-2 gap-4 mt-8'>
-        <Image
-          label={'Картинка'}
-          onChange={handleImagesChange}
-          record={about?.images}
-          image={changedImages?.['4']}
-          onDelete={handleImageDelete}
-          index={4}
-        />  
-        <TextInput 
-          label='Заголовок'
-          value={changedHeadings?.[2] ?? ''}
-          onChange={(e) => handleAboutChange(e, 'heading')}
-          name='2'
-        />
-        <div className='grid grid-cols-5 gap-4'>
+      <div className='mt-8'>
+        <div className='grid grid-cols-2 gap-4'>
+          <Image
+            label={'Картинка'}
+            onChange={handleImagesChange}
+            record={about?.images}
+            image={changedImages?.['4']}
+            onDelete={handleImageDelete}
+            index={4}
+          />  
+          <TextInput 
+            label='Заголовок'
+            value={changedHeadings?.[2] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'heading')}
+            name='2'
+          />
+        </div>
+        <div className='grid grid-cols-5 gap-4 w-full'>
           <Textarea
             label='Описание'
             value={changedText?.[4] ?? ''}
@@ -233,13 +238,23 @@ export const Home = () => {
         </div>
       </div>
 
-      <div className='max-w-xl mt-8'>
-        <TextInput 
-          label='Заголовок'
-          value={changedHeadings?.[3] ?? ''}
-          onChange={(e) => handleAboutChange(e, 'heading')}
-          name='3'
-        />
+      <div className='mt-8'>
+        <div className='max-w-xl'>
+          <TextInput 
+            label='Заголовок'
+            value={changedHeadings?.[3] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'heading')}
+            name='3'
+          />
+          <Image
+            label={'Картинка'}
+            onChange={handleImagesChange}
+            record={about?.images}
+            image={changedImages?.['5']}
+            onDelete={handleImageDelete}
+            index={5}
+          />
+        </div>
         <div className='grid grid-cols-3 gap-4'>
           <Textarea
             label='Описание'
@@ -265,7 +280,7 @@ export const Home = () => {
         </div>
       </div>
 
-      <div className='max-w-xl mt-8'>
+      <div className='mt-8'>
         <Image
           label={'Картинка'}
           onChange={handleImagesChange}
@@ -314,6 +329,18 @@ export const Home = () => {
       </div>
 
       <div className='max-w-xl mt-8'>
+        <TextInput 
+          label='Заголовок'
+          value={changedHeadings?.[4] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='4'
+        />
+        <TextInput 
+          label='Подзаголовок'
+          value={changedHeadings?.[5] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='5'
+        />
         <Textarea
           label='Описание'
           value={changedText?.[17] ?? ''}
@@ -338,6 +365,12 @@ export const Home = () => {
       </div>
 
       <div className='max-w-xl mt-8'>
+        <TextInput 
+          label='Подзаголовок'
+          value={changedHeadings?.[6] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='6'
+        />
         <Textarea
           label='Описание'
           value={changedText?.[20] ?? ''}
@@ -360,22 +393,30 @@ export const Home = () => {
           autosize
         />
       </div>
+      <div className='max-w-xl mt-8'>
 
-      <Textarea
-        label='Описание'
-        value={changedText?.[23] ?? ''}
-        onChange={(e) => handleAboutChange(e, 'text')}
-        name='23'
-        autosize
-        className='max-w-xl mt-8'
-      />
+        <TextInput 
+          label='Заголовок'
+          value={changedHeadings?.[7] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='7'
+        />
+        <Textarea
+          label='Описание'
+          value={changedText?.[23] ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='23'
+          autosize
+          className='max-w-xl mt-8'
+        />
+      </div>
 
       <div className='max-w-xl mt-8'>
         <TextInput 
           label='Заголовок'
-          value={changedHeadings?.[4] ?? ''}
+          value={changedHeadings?.[8] ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
-          name='4'
+          name='8'
         />
         <Textarea
           label='Описание'
@@ -462,9 +503,6 @@ export const Home = () => {
         />
         </div>
       </div> */}
-
-
-
 
       <Button
         className='mt-5'

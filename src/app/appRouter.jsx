@@ -41,7 +41,9 @@ import {
   HealthWorld,
   Tours,
   Rights,
-  Dual
+  Dual,
+  HealthWorldKz,
+  FundKz
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -75,8 +77,8 @@ const appRouter = createBrowserRouter([
       { path: "/bonuses", element: <Bonuses /> },
       { path: "/tester", element: <Tester /> },
       { path: "/profile-courses", element: <ProfileCourses /> },
-      { path: "/fund", element: <Fund /> },
-      { path: "/health-world", element: <HealthWorld /> },
+      { path: "/fund", element: <SwitchLayout ru={<Fund />} kz={<FundKz/>}/> },
+      { path: "/health-world", element: <SwitchLayout ru={<HealthWorld/>} kz={<HealthWorldKz/>}/> },
       { path: "/tours", element: <Tours /> },
       { path: "/rights", element: <Rights /> },
       { path: "/dual", element: <Dual /> },

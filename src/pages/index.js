@@ -41,5 +41,8 @@ export { NewsKz } from './news/NewsKz'
 export { CoursesKz } from './courses/CoursesKz'
 export { PartnersKz } from './partners/PartnersKz'
 export { CoursesResortsKz } from './courses/CourseResortsKz'
+export { HealthWorldKz } from './health-world/HealthWorldKz'
+export { FundKz } from './fund/FundKz'
+
 export { Tester } from './tester/Tester'
 export { ProfileCourses } from './profile-courses/ProfileCourses'

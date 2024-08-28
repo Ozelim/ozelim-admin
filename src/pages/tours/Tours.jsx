@@ -4,6 +4,7 @@ import { getData, pb } from 'shared/api';
 import { Image } from 'shared/ui';
 import { openConfirmModal } from '@mantine/modals';
 import { getImageUrl } from 'shared/lib';
+import { ToursKz } from './ToursKz';
 
 async function getResorts () {
   return await pb.collection('resorts_data').getFullList()
@@ -127,7 +128,7 @@ export const Tours = () => {
       </Tabs.List>
       <Tabs.Panel value='ru' pt={20}>
         <div>
-          <div>
+          <div className='max-w-xl'>
             <Image
               className="ml-10 w-2/4"
               label={"Картинка"}
@@ -151,7 +152,7 @@ export const Tours = () => {
               autosize
             />
           </div>
-          <div>
+          <div className='mt-8 max-w-xl'>
             <TextInput
               label="Заголовок"
               value={changedHeadings?.heading2 ?? ""}
@@ -168,7 +169,7 @@ export const Tours = () => {
               index={2}
             />
           </div>
-          <div className='flex justify-center'>
+          <div className='flex justify-center mt-4'>
             <Button onClick={saveFund}>
               Сохранить
             </Button>
@@ -176,6 +177,7 @@ export const Tours = () => {
         </div>
       </Tabs.Panel>
       <Tabs.Panel value='kz' pt={20}>
+        <ToursKz/>
       </Tabs.Panel>
       <Tabs.Panel value='bids' pt={20}>
       </Tabs.Panel>
