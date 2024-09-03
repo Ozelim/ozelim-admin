@@ -10,6 +10,10 @@ async function getResorts () {
   return await pb.collection('resorts_data').getFullList()
 }
 
+async function getResortBids () {
+  return await pb.collection('resorts_bids').getFullList()
+}
+
 export const Tours = () => {
 
   const [fund, setFund] = React.useState({});
@@ -25,6 +29,8 @@ export const Tours = () => {
 
   const [resorts, setResorts] = React.useState([])
 
+  const [bids, setBids] = React.useState([])
+
   const [cards, setCards] = React.useState([])
 
   const [resort, setResort] = React.useState({
@@ -37,6 +43,12 @@ export const Tours = () => {
     getResorts()
     .then(res => {
       setResorts(res?.filter(q => !q?.card))
+      setCards(res?.filter(q => q?.card))
+    })
+
+    getResortBids()
+    .then(res => {
+      setBids(res)
       setCards(res?.filter(q => q?.card))
     })
 

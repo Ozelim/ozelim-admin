@@ -4,7 +4,38 @@ import { getData, pb } from 'shared/api';
 import { Image } from 'shared/ui';
 import { RightsKz } from './RightsKz';
 
+async function getTypes() {
+  return await pb.collection('rights_data').getFullList()
+}
+
+async function getRightsbids () {
+  return await pb.collection('rights_data').getFullList()
+}
+
 export const Rights = () => {
+
+  const [types, setTypes] = React.useState([])
+  const [bids, setBids] = React.useState({})
+
+  React.useEffect(() => {
+    getTypes()
+    .then(res => {
+      setTypes(res?.[0])
+    })
+
+    setBids()
+    .then(res => {
+      setBids(res)
+    })
+
+    pb.collection('rights_data').subscribe('*', () => {
+      getResorts()
+      .then(res => {
+        setResorts(res?.filter(q => !q?.card))
+        setCards(res?.filter(q => q?.card))
+      })
+    })
+  }, [])
 
   const [fund, setFund] = React.useState({});
 
