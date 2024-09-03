@@ -107,6 +107,8 @@ export const Rights = () => {
     setChangedImages(images);
   }, [images]);
 
+  return
+
   return (
     <Tabs
       defaultValue='ru'
