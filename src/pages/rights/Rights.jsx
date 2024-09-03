@@ -107,8 +107,6 @@ export const Rights = () => {
     setChangedImages(images);
   }, [images]);
 
-  return
-
   return (
     <Tabs
       defaultValue='ru'
@@ -172,27 +170,6 @@ export const Rights = () => {
                 name="text2"
                 autosize
               />
-              {/* <Textarea
-                label="Описание"
-                value={changedText?.text3 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text3"
-                autosize
-              />
-              <Textarea
-                label="Описание"
-                value={changedText?.text4 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text4"
-                autosize
-              />
-              <Textarea
-                label="Описание"
-                value={changedText?.text5 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text5"
-                autosize
-              /> */}
             </div>
           </div>
 

@@ -7,34 +7,7 @@ async function getTypes() {
   return await pb.collection('rights_data').getFullList()
 }
 
-async function getRightsbids () {
-  return await pb.collection('rights_data').getFullList()
-}
-
 export const RightsKz = () => {
-
-  const [types, setTypes] = React.useState([])
-  const [bids, setBids] = React.useState({})
-
-  React.useEffect(() => {
-    getTypes()
-    .then(res => {
-      setTypes(res?.[0])
-    })
-
-    // setBids()
-    // .then(res => {
-    //   setBids(res)
-    // })
-
-    pb.collection('rights_data').subscribe('*', () => {
-      getResorts()
-      .then(res => {
-        setResorts(res?.filter(q => !q?.card))
-        setCards(res?.filter(q => q?.card))
-      })
-    })
-  }, [])
 
   const [fund, setFund] = React.useState({});
 
@@ -107,207 +80,187 @@ export const RightsKz = () => {
   }, [images]);
 
   return (
-    <Tabs
-      defaultValue='ru'
-    >
-      <Tabs.List>
-        <Tabs.Tab value='ru'>
-          Русский
-        </Tabs.Tab>
-        <Tabs.Tab value='kz'>
-          Казахский
-        </Tabs.Tab>
-        <Tabs.Tab value='bids'>
-          Заявки
-        </Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel value='ru' pt={20}>
-        <div className='w-full space-y-8'>
-          <div className='grid grid-cols-2 gap-4'>
-            <div>
-              <Image
-                className="ml-10 w-2/4"
-                label={"Картинка"}
-                onChange={handleImagesChange}
-                record={fund?.images}
-                image={changedImages?.["1"]}
-                onDelete={handleImageDelete}
-                index={1}
-              />
-              <TextInput
-                label="Заголовок"
-                value={changedHeadings?.heading1 ?? ""}
-                onChange={(e) => handleHealthChange(e, "heading")}
-                name="heading1"
-              />
-              <Textarea
-                label="Описание"
-                value={changedText?.text1 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text1"
-                autosize
-              />
-              <TextInput
-                label="Ссылка"
-                value={changedHeadings?.link ?? ""}
-                onChange={(e) => handleHealthChange(e, "heading")}
-                name="link"
-              />
-            </div>
-
-            <div>
-              <TextInput
-                label="Заголовок"
-                value={changedHeadings?.heading2 ?? ""}
-                onChange={(e) => handleHealthChange(e, "heading")}
-                name="heading2"
-              />
-              <Textarea
-                label="Описание"
-                value={changedText?.text2 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text2"
-                autosize
-              />
-              {/* <Textarea
-                label="Описание"
-                value={changedText?.text3 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text3"
-                autosize
-              />
-              <Textarea
-                label="Описание"
-                value={changedText?.text4 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text4"
-                autosize
-              />
-              <Textarea
-                label="Описание"
-                value={changedText?.text5 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text5"
-                autosize
-              /> */}
-            </div>
-          </div>
-
-          <div>
-            <TextInput
-              label="Заголовок"
-              value={changedHeadings?.heading3 ?? ""}
-              onChange={(e) => handleHealthChange(e, "heading")}
-              name="heading3"
-            />
-            <div className='grid grid-cols-2 gap-4 mt-4'>
-              <Image
-                className="ml-10 w-2/4"
-                label={"Картинка"}
-                onChange={handleImagesChange}
-                record={fund?.images}
-                image={changedImages?.["2"]}
-                onDelete={handleImageDelete}
-                index={2}
-              />
-              <Textarea
-                label="Описание"
-                value={changedText?.text3 ?? ""}
-                onChange={(e) => handleHealthChange(e, "text")}
-                name="text3"
-                autosize
-              />
-            </div>
-          </div>
-
-          <div className='max-w-xl mx-auto'>
-            <Textarea
-              label="Описание"
-              value={changedText?.text4 ?? ""}
-              onChange={(e) => handleHealthChange(e, "text")}
-              name="text4"
-              autosize
-            />
-          </div>
-
-          <div className='max-w-xl'>
-            <TextInput
-              label="Заголовок"
-              value={changedHeadings?.heading4 ?? ""}
-              onChange={(e) => handleHealthChange(e, "heading")}
-              name="heading4"
-            />
-            <Textarea
-              label="Описание"
-              value={changedText?.text5 ?? ""}
-              onChange={(e) => handleHealthChange(e, "text")}
-              name="text5"
-              autosize
-            />
-            <Textarea
-              label="Описание"
-              value={changedText?.text6 ?? ""}
-              onChange={(e) => handleHealthChange(e, "text")}
-              name="text6"
-              autosize
-            />
-            <Textarea
-              label="Описание"
-              value={changedText?.text7 ?? ""}
-              onChange={(e) => handleHealthChange(e, "text")}
-              name="text7"
-              autosize
-            />
-            <Textarea
-              label="Описание"
-              value={changedText?.text8 ?? ""}
-              onChange={(e) => handleHealthChange(e, "text")}
-              name="text8"
-              autosize
-            />
-            <Textarea
-              label="Описание"
-              value={changedText?.text9 ?? ""}
-              onChange={(e) => handleHealthChange(e, "text")}
-              name="text9"
-              autosize
-            />
-          </div>
-          
-          <div className='max-w-xl'>
-            <TextInput
-              label="Заголовок"
-              value={changedHeadings?.heading5 ?? ""}
-              onChange={(e) => handleHealthChange(e, "heading")}
-              name="heading5"
-            />
-            <Image
-              className="ml-10 w-2/4"
-              label={"Картинка"}
-              onChange={handleImagesChange}
-              record={fund?.images}
-              image={changedImages?.["3"]}
-              onDelete={handleImageDelete}
-              index={3}
-            />
-            <Textarea
-              label="Описание"
-              value={changedText?.text10 ?? ""}
-              onChange={(e) => handleHealthChange(e, "text")}
-              name="text10"
-              autosize
-            />
-          </div>
-          <div className='flex justify-center'>
-            <Button onClick={saveFund}>
-              Сохранить
-            </Button>
-          </div>
+    <div className='w-full space-y-8'>
+      <div className='grid grid-cols-2 gap-4'>
+        <div>
+          <Image
+            className="ml-10 w-2/4"
+            label={"Картинка"}
+            onChange={handleImagesChange}
+            record={fund?.images}
+            image={changedImages?.["1"]}
+            onDelete={handleImageDelete}
+            index={1}
+          />
+          <TextInput
+            label="Заголовок"
+            value={changedHeadings?.heading1 ?? ""}
+            onChange={(e) => handleHealthChange(e, "heading")}
+            name="heading1"
+          />
+          <Textarea
+            label="Описание"
+            value={changedText?.text1 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="text1"
+            autosize
+          />
+          <TextInput
+            label="Ссылка"
+            value={changedHeadings?.link ?? ""}
+            onChange={(e) => handleHealthChange(e, "heading")}
+            name="link"
+          />
         </div>
-      </Tabs.Panel>
-      <Tabs.Panel value='kz'>
-        <RightsKz/>
-      </Tabs.Panel>
-    </Tabs>
+
+        <div>
+          <TextInput
+            label="Заголовок"
+            value={changedHeadings?.heading2 ?? ""}
+            onChange={(e) => handleHealthChange(e, "heading")}
+            name="heading2"
+          />
+          <Textarea
+            label="Описание"
+            value={changedText?.text2 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="text2"
+            autosize
+          />
+          {/* <Textarea
+            label="Описание"
+            value={changedText?.text3 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="text3"
+            autosize
+          />
+          <Textarea
+            label="Описание"
+            value={changedText?.text4 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="text4"
+            autosize
+          />
+          <Textarea
+            label="Описание"
+            value={changedText?.text5 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="text5"
+            autosize
+          /> */}
+        </div>
+      </div>
+
+      <div>
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.heading3 ?? ""}
+          onChange={(e) => handleHealthChange(e, "heading")}
+          name="heading3"
+        />
+        <div className='grid grid-cols-2 gap-4 mt-4'>
+          <Image
+            className="ml-10 w-2/4"
+            label={"Картинка"}
+            onChange={handleImagesChange}
+            record={fund?.images}
+            image={changedImages?.["2"]}
+            onDelete={handleImageDelete}
+            index={2}
+          />
+          <Textarea
+            label="Описание"
+            value={changedText?.text3 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="text3"
+            autosize
+          />
+        </div>
+      </div>
+
+      <div className='max-w-xl mx-auto'>
+        <Textarea
+          label="Описание"
+          value={changedText?.text4 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text4"
+          autosize
+        />
+      </div>
+
+      <div className='max-w-xl'>
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.heading4 ?? ""}
+          onChange={(e) => handleHealthChange(e, "heading")}
+          name="heading4"
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text5 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text5"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text6 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text6"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text7 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text7"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text8 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text8"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text9 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text9"
+          autosize
+        />
+      </div>
+      
+      <div className='max-w-xl'>
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.heading5 ?? ""}
+          onChange={(e) => handleHealthChange(e, "heading")}
+          name="heading5"
+        />
+        <Image
+          className="ml-10 w-2/4"
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={fund?.images}
+          image={changedImages?.["3"]}
+          onDelete={handleImageDelete}
+          index={3}
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text10 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text10"
+          autosize
+        />
+      </div>
+      <div className='flex justify-center'>
+        <Button onClick={saveFund}>
+          Сохранить
+        </Button>
+      </div>
+    </div>
   )
 }
