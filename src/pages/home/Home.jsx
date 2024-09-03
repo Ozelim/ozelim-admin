@@ -285,9 +285,9 @@ export const Home = () => {
           label={'Картинка'}
           onChange={handleImagesChange}
           record={about?.images}
-          image={changedImages?.['5']}
+          image={changedImages?.['6']}
           onDelete={handleImageDelete}
-          index={5}
+          index={6}
         />
         <div className='grid grid-cols-5 gap-4'>
           <Textarea

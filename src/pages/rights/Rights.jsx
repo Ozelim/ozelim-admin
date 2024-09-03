@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, TextInput, Textarea } from '@mantine/core';
+import { Button, Tabs, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
 import { Image } from 'shared/ui';
 import { RightsKz } from './RightsKz';
@@ -23,10 +23,10 @@ export const Rights = () => {
       setTypes(res?.[0])
     })
 
-    setBids()
-    .then(res => {
-      setBids(res)
-    })
+    // setBids()
+    // .then(res => {
+    //   setBids(res)
+    // })
 
     pb.collection('rights_data').subscribe('*', () => {
       getResorts()
@@ -194,32 +194,34 @@ export const Rights = () => {
             </div>
           </div>
 
-          <div className='max-w-xl'>
+          <div>
             <TextInput
               label="Заголовок"
               value={changedHeadings?.heading3 ?? ""}
               onChange={(e) => handleHealthChange(e, "heading")}
               name="heading3"
             />
-            <Image
-              className="ml-10 w-2/4"
-              label={"Картинка"}
-              onChange={handleImagesChange}
-              record={fund?.images}
-              image={changedImages?.["2"]}
-              onDelete={handleImageDelete}
-              index={2}
-            />
-            <Textarea
-              label="Описание"
-              value={changedText?.text3 ?? ""}
-              onChange={(e) => handleHealthChange(e, "text")}
-              name="text3"
-              autosize
-            />
+            <div className='grid grid-cols-2 gap-4 mt-4'>
+              <Image
+                className="ml-10 w-2/4"
+                label={"Картинка"}
+                onChange={handleImagesChange}
+                record={fund?.images}
+                image={changedImages?.["2"]}
+                onDelete={handleImageDelete}
+                index={2}
+              />
+              <Textarea
+                label="Описание"
+                value={changedText?.text3 ?? ""}
+                onChange={(e) => handleHealthChange(e, "text")}
+                name="text3"
+                autosize
+              />
+            </div>
           </div>
 
-          <div className='max-w-xl'>
+          <div className='max-w-xl mx-auto'>
             <Textarea
               label="Описание"
               value={changedText?.text4 ?? ""}

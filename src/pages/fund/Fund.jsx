@@ -113,9 +113,9 @@ export const Fund = () => {
       <div className='mt-8'>
         <TextInput
           label="Заголовок"
-          value={changedHeadings?.heading3 ?? ""}
+          value={changedHeadings?.heading2 ?? ""}
           onChange={(e) => handleHealthChange(e, "heading")}
-          name="heading3"
+          name="heading2"
         />
         <Textarea
           label="Описание"
@@ -197,7 +197,7 @@ export const Fund = () => {
           onChange={(e) => handleHealthChange(e, "heading")}
           name="heading5"
         />
-        <div className='grid grid-cols-3'>
+        <div className='grid gap-4 grid-cols-3'>
           <div>
             <TextInput
               label="Под заголовок"

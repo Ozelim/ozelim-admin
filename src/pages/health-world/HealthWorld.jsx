@@ -78,21 +78,6 @@ export const HealthWorld = () => {
   return (
     <div className='w-full space-y-10'>
 
-      <div className='max-w-xl '>
-        <TextInput
-          label="Заголовок"
-          value={changedHeadings?.heading1 ?? ""}
-          onChange={(e) => handleHealthChange(e, "heading")}
-          name="heading1"
-        />
-        <TextInput
-          label="Под заголовок"
-          value={changedHeadings?.heading2 ?? ""}
-          onChange={(e) => handleHealthChange(e, "heading")}
-          name="heading2"
-        />
-      </div>
-
       <div className='grid grid-cols-2 gap-4'>
         <div>
           <Image
@@ -351,7 +336,7 @@ export const HealthWorld = () => {
             autosize
           />
         </div>
-        <div className='max-w-xl'> 
+        {/* <div className='max-w-xl'> 
           <TextInput
             label="Заголовок"
             value={changedHeadings?.heading8 ?? ""}
@@ -365,7 +350,23 @@ export const HealthWorld = () => {
             name="text20"
             autosize
           />
-        </div>
+        </div> */}
+
+        {/* <div className='max-w-xl '>
+          <TextInput
+            label="Заголовок"
+            value={changedHeadings?.heading1 ?? ""}
+            onChange={(e) => handleHealthChange(e, "heading")}
+            name="heading1"
+          />
+          <TextInput
+            label="Под заголовок"
+            value={changedHeadings?.heading2 ?? ""}
+            onChange={(e) => handleHealthChange(e, "heading")}
+            name="heading2"
+          />
+        </div> */}
+
         <div className='flex justify-center'>
           <Button onClick={saveFund}>
             Сохранить
