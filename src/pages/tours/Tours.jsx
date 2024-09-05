@@ -171,7 +171,7 @@ export const Tours = () => {
               onChange={(e) => handleHealthChange(e, "heading")}
               name="heading2"
             />
-            <Image
+            {/* <Image
               className="ml-10 w-2/4"
               label={"Картинка"}
               onChange={handleImagesChange}
@@ -179,7 +179,7 @@ export const Tours = () => {
               image={changedImages?.["2"]}
               onDelete={handleImageDelete}
               index={2}
-            />
+            /> */}
           </div>
           <div className='flex justify-center mt-4'>
             <Button onClick={saveFund}>
