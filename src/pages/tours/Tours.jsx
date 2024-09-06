@@ -158,9 +158,9 @@ export const Tours = () => {
             />
             <Textarea
               label="Описание"
-              value={changedText?.text2 ?? ""}
+              value={changedText?.text1 ?? ""}
               onChange={(e) => handleHealthChange(e, "text")}
-              name="text2"
+              name="text1"
               autosize
             />
           </div>
@@ -171,7 +171,14 @@ export const Tours = () => {
               onChange={(e) => handleHealthChange(e, "heading")}
               name="heading2"
             />
-            {/* <Image
+            <Textarea
+              label="Описание"
+              value={changedText?.text2 ?? ""}
+              onChange={(e) => handleHealthChange(e, "text")}
+              name="text2"
+              autosize
+            />
+            <Image
               className="ml-10 w-2/4"
               label={"Картинка"}
               onChange={handleImagesChange}
@@ -179,8 +186,15 @@ export const Tours = () => {
               image={changedImages?.["2"]}
               onDelete={handleImageDelete}
               index={2}
-            /> */}
+            />
           </div>
+            <TextInput
+              label="Заголовок"
+              value={changedHeadings?.heading3 ?? ""}
+              onChange={(e) => handleHealthChange(e, "heading")}
+              name="heading3"
+              className='max-w-xl'
+            />
           <div className='flex justify-center mt-4'>
             <Button onClick={saveFund}>
               Сохранить
