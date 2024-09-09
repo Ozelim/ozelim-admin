@@ -117,6 +117,7 @@ export const Home = () => {
           name='main2'
           autosize
         />
+        
       </div>
 
       <div className='mt-8'>
@@ -200,44 +201,83 @@ export const Home = () => {
           />
         </div>
         <div className='grid grid-cols-5 gap-4 w-full'>
-          <Textarea
-            label='Описание'
-            value={changedText?.[4] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='4'
-            autosize
+          <div>
+          <TextInput 
+            label='Заголовок'
+            value={changedHeadings?.['z1'] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'heading')}
+            name='z1'
           />
-          <Textarea
-            label='Описание'
-            value={changedText?.[5] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='5'
-            autosize
+            <Textarea
+              label='Описание'
+              value={changedText?.[4] ?? ''}
+              onChange={(e) => handleAboutChange(e, 'text')}
+              name='4'
+              autosize
+            />
+          </div>
+          <div>
+          <TextInput 
+            label='Заголовок'
+            value={changedHeadings?.['z2'] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'heading')}
+            name='z2'
           />
-          <Textarea
-            label='Описание'
-            value={changedText?.[6] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='6'
-            autosize
+            <Textarea
+              label='Описание'
+              value={changedText?.[5] ?? ''}
+              onChange={(e) => handleAboutChange(e, 'text')}
+              name='5'
+              autosize
+            />
+          </div>
+          <div>
+          <TextInput 
+            label='Заголовок'
+            value={changedHeadings?.['z3'] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'heading')}
+            name='z3'
           />
-          <Textarea
-            label='Описание'
-            value={changedText?.[7] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='7'
-            autosize
+            <Textarea
+              label='Описание'
+              value={changedText?.[6] ?? ''}
+              onChange={(e) => handleAboutChange(e, 'text')}
+              name='6'
+              autosize
+            />
+          </div>
+          <div>
+          <TextInput 
+            label='Заголовок'
+            value={changedHeadings?.['z4'] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'heading')}
+            name='z4'
           />
-          <Textarea
-            label='Описание'
-            value={changedText?.[8] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='8'
-            autosize
+            <Textarea
+              label='Описание'
+              value={changedText?.[7] ?? ''}
+              onChange={(e) => handleAboutChange(e, 'text')}
+              name='7'
+              autosize
+            />
+          </div>
+          <div>
+          <TextInput 
+            label='Заголовок'
+            value={changedHeadings?.['z5'] ?? ''}
+            onChange={(e) => handleAboutChange(e, 'heading')}
+            name='z5'
           />
+            <Textarea
+              label='Описание'
+              value={changedText?.[8] ?? ''}
+              onChange={(e) => handleAboutChange(e, 'text')}
+              name='8'
+              autosize
+            />
+          </div>
         </div>
       </div>
-
       <div className='mt-8'>
         <div className='max-w-xl'>
           <TextInput 
@@ -279,8 +319,7 @@ export const Home = () => {
           />
         </div>
       </div>
-
-      <div className='mt-8'>
+      {/* <div className='mt-8'>
         <Image
           label={'Картинка'}
           onChange={handleImagesChange}
@@ -326,7 +365,7 @@ export const Home = () => {
             autosize
           />
         </div>
-      </div>
+      </div> */}
 
       <div className='max-w-xl mt-8'>
         <TextInput 
