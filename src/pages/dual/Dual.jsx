@@ -165,6 +165,35 @@ export const Dual = () => {
           </div>
         </div>
       </section>
+
+      <section className="grid grid-cols-2 gap-4">
+        <Image
+          className="ml-10 w-2/4 rounded-primary"
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={course?.images}
+          image={changedImages?.["9"]}
+          onDelete={handleImageDelete}
+          index={9}
+        />
+        <div>
+          <Textarea
+            label="Заголовок"
+            value={changedHeadings?.z1 ?? ""}
+            onChange={(e) => handleCourseChange(e, "heading")}
+            name="z1"
+            autosize
+          />
+          <Textarea
+            label="текст"
+            value={changedText?.z1 ?? ""}
+            onChange={(e) => handleCourseChange(e, "text")}
+            name="z1"
+            autosize
+          />
+        </div>
+      </section>
+
       <div className="grid grid-cols-3 gap-4 my-10">
         <div>
           <Textarea

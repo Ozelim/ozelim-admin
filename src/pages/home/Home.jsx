@@ -117,7 +117,7 @@ export const Home = () => {
           name='main2'
           autosize
         />
-        
+
       </div>
 
       <div className='mt-8'>
@@ -319,6 +319,34 @@ export const Home = () => {
           />
         </div>
       </div>
+
+      <section className="grid grid-cols-2 gap-4">
+        <Image
+          className="ml-10 w-2/4 rounded-primary"
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={about?.images}
+          image={changedImages?.["9"]}
+          onDelete={handleImageDelete}
+          index={9}
+        />
+        <div>
+          <Textarea
+            label="Заголовок"
+            value={changedHeadings?.x1 ?? ""}
+            onChange={(e) => handleCourseChange(e, "heading")}
+            name="x1"
+            autosize
+          />
+          <Textarea
+            label="текст"
+            value={changedText?.x1 ?? ""}
+            onChange={(e) => handleCourseChange(e, "text")}
+            name="x1"
+            autosize
+          />
+        </div>
+      </section>
       {/* <div className='mt-8'>
         <Image
           label={'Картинка'}
