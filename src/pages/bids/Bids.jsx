@@ -16,6 +16,10 @@ async function getAnswers () {
   });
 }
 
+async function get123 () {
+  return await pb.collection("123").getFullList();
+}
+
 async function getQuestions () {
   return (await pb.collection('questions').getFirstListItem(`question = true`))
 }
@@ -32,10 +36,17 @@ export const Bids = () => {
   const [bids, setBids] = React.useState([]);
 
   const [questions, setQuestions] = React.useState([])
-
+  
+  const [q, setQ] = React.useState([])
+  
   const { user } = useAuth()
 
   React.useEffect(() => {
+    get123()
+    .then(res => {
+      setQ(res)
+    })
+
     getAnswers().then((res) => {
       setAnswers(res);
     });
@@ -112,7 +123,26 @@ export const Bids = () => {
             <Tabs.Tab value="question1">Опросник ( Завер. )</Tabs.Tab>
             <Tabs.Tab value="price1">Прайс лист ( Завер. )</Tabs.Tab>
             <Tabs.Tab value="resort1">Курорты ( Завер. )</Tabs.Tab>
+            <Tabs.Tab value="123">Заявки органицазий</Tabs.Tab>
           </Tabs.List>
+          
+          <Tabs.Panel value="123">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Наименование орг.</th>
+                  <th>Эл. почта</th>
+                  <th>Номер телефона</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {activeAnswers?.map((bid) => (
+                  <BidsForm bid={bid} key={bid.id} q={questions} />
+                ))}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
           <Tabs.Panel value="question">
             <Table>
               <thead>
