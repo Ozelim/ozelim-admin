@@ -1,17 +1,18 @@
 import React from 'react'
-import { Button, FileButton, Tabs, TextInput, Textarea } from '@mantine/core';
+import { Button, FileButton, Table, Tabs, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
 import { Image } from 'shared/ui';
 import { openConfirmModal } from '@mantine/modals';
 import { getImageUrl } from 'shared/lib';
 import { ToursKz } from './ToursKz';
+import dayjs from 'dayjs';
 
 async function getResorts () {
   return await pb.collection('resorts_data').getFullList()
 }
 
 async function getResortBids () {
-  return await pb.collection('resorts_bids').getFullList()
+  return await pb.collection('tours_bids').getFullList()
 }
 
 export const Tours = () => {
@@ -49,7 +50,6 @@ export const Tours = () => {
     getResortBids()
     .then(res => {
       setBids(res)
-      setCards(res?.filter(q => q?.card))
     })
 
     pb.collection('resorts_data').subscribe('*', () => {
@@ -206,6 +206,59 @@ export const Tours = () => {
         <ToursKz/>
       </Tabs.Panel>
       <Tabs.Panel value='bids' pt={20}>
+        <Table>
+          <thead>
+            <tr>
+              <th>Категория</th>
+              <th>Дата</th>
+              <th>Взрослых</th>
+              <th>Детей</th>
+              <th>Телефон</th>
+              <th>Курорт</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bids?.map((w) => {
+              return (
+                <tr key={w?.id}>
+                  <td>
+                    {w?.category === 'standart' && 'Стандарт'}
+                    {w?.category === 'eco' && 'Эконом'}
+                    {w?.category === 'vip' && 'Вип'}
+                  </td>
+                  <td>с {dayjs(w?.date_picked?.[0]).format("YY-MM-DD")} по {dayjs(w?.date_picked?.[1]).format("YY-MM-DD")}</td>
+                  <td>{w?.adults}</td>
+                  <td>{w?.child}</td>
+                  <td>{w?.phone}</td>
+                  <td>{w?.resort?.name}</td>
+                  <td>
+                    <Button
+                      onClick={() => {
+                        openConfirmModal({
+                          labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                          centered: true,
+                          onConfirm: async () => {
+                            await pb.collection('tours_bids').delete(w?.id)
+                            .then(() => {
+                              getResortBids()
+                              .then(res => {
+                                setBids(res)
+                              })
+                            })
+                          }
+                        })
+                      }}  
+                      compact
+                      variant="light"
+                    >
+                      Удалить
+                    </Button>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </Table>
       </Tabs.Panel>
       <Tabs.Panel value='resorts' pt={20}>
         {resorts?.map((q, i) => {

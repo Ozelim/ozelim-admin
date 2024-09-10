@@ -1,21 +1,26 @@
 import React from 'react'
-import { Button, Tabs, TextInput, Textarea } from '@mantine/core';
+import { Button, Table, Tabs, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
 import { Image } from 'shared/ui';
 import { RightsKz } from './RightsKz';
+import { openConfirmModal } from '@mantine/modals';
 
 async function getTypes() {
   return await pb.collection('rights_data').getFullList()
 }
 
 async function getRightsbids () {
-  return await pb.collection('rights_data').getFullList()
+  return await pb.collection('rights_bids').getFullList()
 }
 
 export const Rights = () => {
 
   const [types, setTypes] = React.useState([])
-  const [bids, setBids] = React.useState({})
+  const [bids, setBids] = React.useState([])
+
+  const [type, setType] = React.useState('')
+
+  console.log(types, 'types');
 
   React.useEffect(() => {
     getTypes()
@@ -23,18 +28,17 @@ export const Rights = () => {
       setTypes(res?.[0])
     })
 
-    // setBids()
-    // .then(res => {
-    //   setBids(res)
-    // })
-
-    pb.collection('rights_data').subscribe('*', () => {
-      getResorts()
-      .then(res => {
-        setResorts(res?.filter(q => !q?.card))
-        setCards(res?.filter(q => q?.card))
-      })
+    getRightsbids()
+    .then(res => {
+      setBids(res)
     })
+
+    // pb.collection('rights_data').subscribe('*', () => {
+    //   getTypes()
+    //   .then(res => {
+    //     setTypes(res?.[0])
+    //   })
+    // })
   }, [])
 
   const [fund, setFund] = React.useState({});
@@ -42,7 +46,6 @@ export const Rights = () => {
   const [images, setImages] = React.useState({});
   const [headings, setHeadings] = React.useState({});
   const [text, setText] = React.useState({});
-  
   
   const [changedImages, setChangedImages] = React.useState({});
   const [changedHeadings, setChangedHeadings] = React.useState({});
@@ -120,6 +123,9 @@ export const Rights = () => {
         </Tabs.Tab>
         <Tabs.Tab value='bids'>
           Заявки
+        </Tabs.Tab>
+        <Tabs.Tab value='data'>
+          Виды услуг
         </Tabs.Tab>
       </Tabs.List>
       <Tabs.Panel value='ru' pt={20}>
@@ -287,6 +293,109 @@ export const Rights = () => {
       </Tabs.Panel>
       <Tabs.Panel value='kz'>
         <RightsKz/>
+      </Tabs.Panel>
+      <Tabs.Panel value='bids'>
+        <Table>
+          <thead>
+            <tr>
+              <th>Название</th>
+              <th>Номер телефона</th>
+              <th>Тип</th>
+              <th>Действие</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bids?.map((w) => {
+              return (
+                <tr key={w?.id}>
+                  <td>{w?.name}</td>
+                  <td>{w?.phone}</td>
+                  <td>{w?.type}</td>
+                  <td>
+                    <Button
+                      onClick={() => {
+                        openConfirmModal({
+                          labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                          centered: true,
+                          onConfirm: async () => {
+                            await pb.collection('rights_bids').delete(w?.id)
+                            .then(() => {
+                              getRightsbids()
+                              .then(res => {
+                                setBids(res)
+                              })
+                            })
+                          }
+                        })
+                      }}  
+                      compact
+                      variant="light"
+                    >
+                      Удалить
+                    </Button>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </Table>
+      </Tabs.Panel>
+      <Tabs.Panel value='data'>
+        {types?.types?.map((q, i) => {
+          return (
+            <>
+              <p className='text-lg'>{q}</p>
+              <Button
+                variant='subtle'
+                onClick={() => {
+                  openConfirmModal({
+                    centered: true,
+                    labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                    onConfirm: async () => {
+                      const newTypes = types?.types?.filter(w => w !== q)
+                      await pb.collection('rights_data').update(types?.id, {
+                        types: [...newTypes]
+                      })
+                      .then(res => {
+                        getTypes()
+                        .then((res) => {
+                          setTypes(res?.[0])
+                        })
+                      })
+                    }
+                  })
+                }}
+              >
+                Удалить 
+              </Button>
+            </>
+          )
+        })}
+        <div>          
+          <TextInput
+            className='max-w-md'
+            label='Название'
+            value={type ?? ''}
+            onChange={e => setType(e.currentTarget?.value)}
+          />
+          <Button
+            onClick={async () => {
+              await pb.collection('rights_data').update(types?.id, {
+                types: [...types?.types ?? [], type]
+              })
+              .then(() => {
+                getTypes()
+                .then(res => {
+                  setTypes(res?.[0])
+                  setType('')
+                })
+              })
+            }}
+            className='mt-6'
+          >
+            Добавить тип услуги
+          </Button>
+        </div>
       </Tabs.Panel>
     </Tabs>
   )

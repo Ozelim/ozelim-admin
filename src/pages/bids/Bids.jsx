@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Table, Tabs, TextInput } from "@mantine/core";
+import { Button, Modal, Table, Tabs, TextInput } from "@mantine/core";
 import dayjs from "dayjs";
 import { pb } from "shared/api";
 import { BidsForm } from "./BidsForm";
@@ -137,12 +137,42 @@ export const Bids = () => {
                 </tr>
               </thead>
               <tbody>
-                {activeAnswers?.map((bid) => (
-                  <BidsForm bid={bid} key={bid.id} q={questions} />
-                ))}
+                {q?.map((w) => {
+                  return (
+                    <tr key={w?.id}>
+                      <td>{w?.name}</td>
+                      <td>{w?.email}</td>
+                      <td>{w?.phone}</td>
+                      <td>
+                        <Button
+                          onClick={() => {
+                            openConfirmModal({
+                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                              centered: true,
+                              onConfirm: async () => {
+                                await pb.collection('123').delete(w?.id)
+                                .then(() => {
+                                  get123()
+                                  .then(res => {
+                                    setQ(res)
+                                  })
+                                })
+                              }
+                            })
+                          }}  
+                          compact
+                          variant="light"
+                        >
+                          Удалить
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </Table>
           </Tabs.Panel>
+          
           <Tabs.Panel value="question">
             <Table>
               <thead>
