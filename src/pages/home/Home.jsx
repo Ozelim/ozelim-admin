@@ -334,14 +334,14 @@ export const Home = () => {
           <Textarea
             label="Заголовок"
             value={changedHeadings?.x1 ?? ""}
-            onChange={(e) => handleCourseChange(e, "heading")}
+            onChange={(e) => handleAboutChange(e, "heading")}
             name="x1"
             autosize
           />
           <Textarea
             label="текст"
             value={changedText?.x1 ?? ""}
-            onChange={(e) => handleCourseChange(e, "text")}
+            onChange={(e) => handleAboutChange(e, "text")}
             name="x1"
             autosize
           />

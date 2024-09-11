@@ -52,16 +52,16 @@ export const FundKz = () => {
     }
 
     await pb.collection("text").update(fund?.text?.id, {
-      headings: changedHeadings,
-      text: changedText,
+      headings_kz: changedHeadings,
+      text_kz: changedText,
     });
   }
 
   React.useEffect(() => {
     getData("fund").then((res) => {
       setFund(res);
-      setHeadings(res?.text?.headings);
-      setText(res?.text?.text);
+      setHeadings(res?.text?.headings_kz);
+      setText(res?.text?.text_kz);
       setImages(res?.images);
     });
   }, []);

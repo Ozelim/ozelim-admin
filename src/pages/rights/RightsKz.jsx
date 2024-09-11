@@ -56,8 +56,8 @@ export const RightsKz = () => {
     }
 
     await pb.collection("text").update(fund?.text?.id, {
-      headings: changedHeadings,
-      text: changedText,
+      headings_kz: changedHeadings,
+      text_kz: changedText,
     });
   }
 

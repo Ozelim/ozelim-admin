@@ -164,6 +164,30 @@ export const Tours = () => {
               autosize
             />
           </div>
+          <div className='max-w-xl'>
+            <Image
+              className="ml-10 w-2/4"
+              label={"Картинка"}
+              onChange={handleImagesChange}
+              record={fund?.images}
+              image={changedImages?.["9"]}
+              onDelete={handleImageDelete}
+              index={9}
+            />
+            <TextInput
+              label="Заголовок"
+              value={changedHeadings?.headingx ?? ""}
+              onChange={(e) => handleHealthChange(e, "heading")}
+              name="headingx"
+            />
+            <Textarea
+              label="Описание"
+              value={changedText?.textx ?? ""}
+              onChange={(e) => handleHealthChange(e, "text")}
+              name="textx"
+              autosize
+            />
+          </div>
           <div className='mt-8 max-w-xl'>
             <TextInput
               label="Заголовок"
