@@ -1,8 +1,13 @@
 import React from "react";
-import { Button, TextInput, Textarea } from "@mantine/core";
+import { Button, Table, Tabs, TextInput, Textarea } from "@mantine/core";
 import { getData, pb } from "shared/api";
 import { Image } from "shared/ui";
 import ReactQuill from "react-quill";
+import { openConfirmModal } from "@mantine/modals";
+
+async function getServices() {
+  return await pb.collection('dual_data').getFullList()
+}
 
 export const Dual = () => {
 
@@ -16,6 +21,16 @@ export const Dual = () => {
 
   const [changedHeadings, setChangedHeadings] = React.useState({});
   const [changedText, setChangedText] = React.useState({});
+
+  const [services, setServices] = React.useState({})
+  const [service, setService] = React.useState('')
+
+  React.useEffect(() => {
+    getServices()
+    .then(res => {
+      setServices(res?.[0])
+    })
+  }, [])
 
   function handleCourseChange(val, type) {
     const { value, name } = val?.target;
@@ -458,7 +473,7 @@ export const Dual = () => {
         />
       </div>
 
-      <div>
+      {/* <div>
         <div className="grid grid-cols-3 gap-4 mt-20">
           {Array(3).fill(1).map((_, i) => {
             const index = i + 1
@@ -492,12 +507,72 @@ export const Dual = () => {
             );
           })}
         </div>
-      </div>
+      </div> */}
       <div className="flex justify-center mt-60">
         <Button onClick={saveCourses}>
           Сохранить
         </Button>
       </div>
+
+      <div>
+        <p>Виды услуг:</p>
+        {services?.services?.map((q, i) => {
+          return (
+            <>
+              <p className='text-lg'>{q}</p>
+              <Button
+                variant='subtle'
+                onClick={() => {
+                  openConfirmModal({
+                    centered: true,
+                    labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                    onConfirm: async () => {
+                      const newTypes = services?.services?.filter(w => w !== q)
+                      await pb.collection('dual_data').update(services?.id, {
+                        types: [...newTypes]
+                      })
+                      .then(res => {
+                        getServices()
+                        .then((res) => {
+                          setServices(res?.[0])
+                        })
+                      })
+                    }
+                  })
+                }}
+              >
+                Удалить 
+              </Button>
+            </>
+          )
+        })}
+        <div>          
+          <TextInput
+            className='max-w-md'
+            label='Название'
+            value={service ?? ''}
+            onChange={e => setService(e.currentTarget?.value)}
+          />
+          <Button
+            onClick={async () => {
+              await pb.collection('dual_data').update(services?.id, {
+                services: [...services?.services ?? [], service]
+              })
+              .then(() => {
+                getServices()
+                .then(res => {
+                  setServices(res?.[0])
+                  setService('')
+                })
+              })
+            }}
+            className='mt-6'
+          >
+            Добавить тип услуги
+          </Button>
+        </div>
+      </div>
+
     </div>
   );
 };

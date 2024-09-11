@@ -30,6 +30,10 @@ async function getBids () {
   })
 }
 
+async function getDualBids () {
+  return await pb.collection('dual_bids').getFullList()
+}
+
 export const Bids = () => {
 
   const [answers, setAnswers] = React.useState([])
@@ -38,6 +42,7 @@ export const Bids = () => {
   const [questions, setQuestions] = React.useState([])
   
   const [q, setQ] = React.useState([])
+  const [d, setD] = React.useState([])
   
   const { user } = useAuth()
 
@@ -45,6 +50,11 @@ export const Bids = () => {
     get123()
     .then(res => {
       setQ(res)
+    })
+
+    getDualBids()
+    .then(res => {
+      setD(res)
     })
 
     getAnswers().then((res) => {
@@ -124,6 +134,7 @@ export const Bids = () => {
             <Tabs.Tab value="price1">Прайс лист ( Завер. )</Tabs.Tab>
             <Tabs.Tab value="resort1">Курорты ( Завер. )</Tabs.Tab>
             <Tabs.Tab value="123">Заявки органицазий</Tabs.Tab>
+            <Tabs.Tab value="456">Заявки (дуальное об.)</Tabs.Tab>
           </Tabs.List>
           
           <Tabs.Panel value="123">
@@ -155,6 +166,52 @@ export const Bids = () => {
                                   get123()
                                   .then(res => {
                                     setQ(res)
+                                  })
+                                })
+                              }
+                            })
+                          }}  
+                          compact
+                          variant="light"
+                        >
+                          Удалить
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value="456">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Номер телефона</th>
+                  <th>Эл. почта</th>
+                  <th>Вид услуги</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {d?.map((w) => {
+                  return (
+                    <tr key={w?.id}>
+                      <td>{w?.phone}</td>
+                      <td>{w?.email}</td>
+                      <td>{w?.service}</td>
+                      <td>
+                        <Button
+                          onClick={() => {
+                            openConfirmModal({
+                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                              centered: true,
+                              onConfirm: async () => {
+                                await pb.collection('dual_bids').delete(w?.id)
+                                .then(() => {
+                                  getDualBids()
+                                  .then(res => {
+                                    setD(res)
                                   })
                                 })
                               }

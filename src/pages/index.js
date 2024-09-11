@@ -43,6 +43,7 @@ export { PartnersKz } from './partners/PartnersKz'
 export { CoursesResortsKz } from './courses/CourseResortsKz'
 export { HealthWorldKz } from './health-world/HealthWorldKz'
 export { FundKz } from './fund/FundKz'
+export { DualKz } from './dual/DualKz'
 
 export { Tester } from './tester/Tester'
 export { ProfileCourses } from './profile-courses/ProfileCourses'

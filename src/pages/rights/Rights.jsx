@@ -20,8 +20,6 @@ export const Rights = () => {
 
   const [type, setType] = React.useState('')
 
-  console.log(types, 'types');
-
   React.useEffect(() => {
     getTypes()
     .then(res => {
