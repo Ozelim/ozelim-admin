@@ -295,7 +295,7 @@ export const HomeKz = () => {
 
       <section className="grid grid-cols-2 gap-4">
         <Image
-          className="ml-10 w-2/4 rounded-primary"
+          className="w-full lg:max-w-xl max-w-lg mx-auto lg:mx-0 rounded-primary max-h-96 object-cover"
           label={"Картинка"}
           onChange={handleImagesChange}
           record={about?.images}

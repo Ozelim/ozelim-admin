@@ -135,7 +135,7 @@ export const ToursKz = () => {
       </div>
       <div className='max-w-xl'>
           <Image
-            className="ml-10 w-2/4"
+            className="w-full lg:max-w-xl max-w-lg mx-auto lg:mx-0 rounded-primary max-h-96 object-cover"
             label={"Картинка"}
             onChange={handleImagesChange}
             record={fund?.images}
