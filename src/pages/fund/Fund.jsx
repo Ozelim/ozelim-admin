@@ -271,6 +271,23 @@ export const Fund = () => {
           />
         </div>
       </div>
+
+      <div className='mt-8'>
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.headin99 ?? ""}
+          onChange={(e) => handleHealthChange(e, "heading")}
+          name="heading99"
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text99 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text99"
+          autosize
+        />
+      </div>
+
       <div className='mt-8'>
         <TextInput
           label="Заголовок"

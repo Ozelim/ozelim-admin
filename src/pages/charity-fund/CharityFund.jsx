@@ -150,10 +150,31 @@ export const CharityFund = () => {
             name="card3"
           />
           <Textarea
-            label="Описание"
+            label="Пункт 1"
             value={changedText?.card3 ?? ""}
             onChange={(e) => handleCharityChange(e, "text")}
             name="card3"
+            autosize
+          />
+          <Textarea
+            label="Пункт 2"
+            value={changedText?.card31 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="card31"
+            autosize
+          />
+          <Textarea
+            label="Пункт 3"
+            value={changedText?.card32 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="card32"
+            autosize
+          />
+          <Textarea
+            label="Пункт 4"
+            value={changedText?.card33 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="card33"
             autosize
           />
         </div>
@@ -169,6 +190,48 @@ export const CharityFund = () => {
             value={changedText?.card4 ?? ""}
             onChange={(e) => handleCharityChange(e, "text")}
             name="card4"
+            autosize
+          />
+          <Textarea
+            label="Пункт 1"
+            value={changedText?.card41 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="card41"
+            autosize
+          />
+          <Textarea
+            label="Пункт 2"
+            value={changedText?.card42 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="card42"
+            autosize
+          />
+          <Textarea
+            label="Пункт 3"
+            value={changedText?.card43 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="card43"
+            autosize
+          />
+          <Textarea
+            label="Пункт 4"
+            value={changedText?.card44 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="card44"
+            autosize
+          />
+          <Textarea
+            label="Пункт 5"
+            value={changedText?.card45 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="card45"
+            autosize
+          />
+          <Textarea
+            label="Описание"
+            value={changedText?.card46 ?? ""}
+            onChange={(e) => handleCharityChange(e, "text")}
+            name="card46"
             autosize
           />
         </div>

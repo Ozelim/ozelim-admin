@@ -9,6 +9,10 @@ async function getServices() {
   return await pb.collection('dual_data').getFullList()
 }
 
+async function getVaca() {
+  return await pb.collection('dual_vacas').getFullList()
+}
+
 export const Dual = () => {
 
   const [course, setCourse] = React.useState({});
@@ -25,10 +29,21 @@ export const Dual = () => {
   const [services, setServices] = React.useState({})
   const [service, setService] = React.useState('')
 
+  const [vacas, setVacas] = React.useState({})
+  const [vaca, setVaca] = React.useState({
+    name: '',
+    desc: ''
+  })
+
   React.useEffect(() => {
     getServices()
     .then(res => {
       setServices(res?.[0])
+    })
+
+    getVaca()
+    .then(res => {
+      setVacas(res?.[0])
     })
   }, [])
 
@@ -513,66 +528,137 @@ export const Dual = () => {
           Сохранить
         </Button>
       </div>
-
-      <div>
-        <p>Виды услуг:</p>
-        {services?.services?.map((q, i) => {
-          return (
-            <>
-              <p className='text-lg'>{q}</p>
-              <Button
-                variant='subtle'
-                onClick={() => {
-                  openConfirmModal({
-                    centered: true,
-                    labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                    onConfirm: async () => {
-                      const newTypes = services?.services?.filter(w => w !== q)
-                      await pb.collection('dual_data').update(services?.id, {
-                        types: [...newTypes]
-                      })
-                      .then(res => {
-                        getServices()
-                        .then((res) => {
-                          setServices(res?.[0])
+      <div className="grid grid-cols-2 gap-4 mt-8">
+        <div>
+          <p>Виды услуг:</p>
+          {services?.services?.map((q, i) => {
+            return (
+              <>
+                <p className='text-lg'>{q}</p>
+                <Button
+                  variant='subtle'
+                  onClick={() => {
+                    openConfirmModal({
+                      centered: true,
+                      labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                      onConfirm: async () => {
+                        const newTypes = services?.services?.filter(w => w !== q)
+                        await pb.collection('dual_data').update(services?.id, {
+                          types: [...newTypes]
                         })
-                      })
-                    }
-                  })
-                }}
-              >
-                Удалить 
-              </Button>
-            </>
-          )
-        })}
-        <div>          
-          <TextInput
-            className='max-w-md'
-            label='Название'
-            value={service ?? ''}
-            onChange={e => setService(e.currentTarget?.value)}
-          />
-          <Button
-            onClick={async () => {
-              await pb.collection('dual_data').update(services?.id, {
-                services: [...services?.services ?? [], service]
-              })
-              .then(() => {
-                getServices()
-                .then(res => {
-                  setServices(res?.[0])
-                  setService('')
+                        .then(res => {
+                          getServices()
+                          .then((res) => {
+                            setServices(res?.[0])
+                          })
+                        })
+                      }
+                    })
+                  }}
+                >
+                  Удалить 
+                </Button>
+              </>
+            )
+          })}
+          <div>          
+            <TextInput
+              className='max-w-md'
+              label='Название'
+              value={service ?? ''}
+              onChange={e => setService(e.currentTarget?.value)}
+            />
+            <Button
+              onClick={async () => {
+                await pb.collection('dual_data').update(services?.id, {
+                  services: [...services?.services ?? [], service]
                 })
-              })
-            }}
-            className='mt-6'
-          >
-            Добавить тип услуги
-          </Button>
+                .then(() => {
+                  getServices()
+                  .then(res => {
+                    setServices(res?.[0])
+                    setService('')
+                  })
+                })
+              }}
+              className='mt-6'
+            >
+              Добавить тип услуги
+            </Button>
+          </div>
+        </div>
+        <div>
+          <p>Открытые вакансии:</p>
+          {vacas?.vacas?.map((q, i) => {
+            return (
+              <>
+                <div>
+                  <p className='text-lg'>Название: {q?.name}</p>
+                  <p className='text-lg'>Описание: {q?.desc}</p>
+                </div>
+                <Button
+                  variant='subtle'
+                  onClick={() => {
+                    openConfirmModal({
+                      centered: true,
+                      labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                      onConfirm: async () => {
+                        const newTypes = vacas?.vacas?.filter(w => w !== q)
+                        await pb.collection('dual_vacas').update(vacas?.id, {
+                          vacas: [...newTypes]
+                        })
+                        .then(res => {
+                          getVaca()
+                          .then((res) => {
+                            setVacas(res?.[0])
+                          })
+                        })
+                      }
+                    })
+                  }}
+                >
+                  Удалить 
+                </Button>
+              </>
+            )
+          })}
+          <div>          
+            <TextInput
+              className='max-w-md'
+              label='Название'
+              value={vaca?.name ?? ''}
+              onChange={e => setVaca({...vaca, name: e.currentTarget?.value})}
+            />
+            <Textarea
+              className='max-w-md'
+              label='Описание'
+              value={vaca?.desc ?? ''}
+              onChange={e => setVaca({...vaca, desc: e.currentTarget?.value})}
+              autosize
+            />
+            <Button
+              onClick={async () => {
+                await pb.collection('dual_vacas').update(vacas?.id, {
+                  vacas: [...vacas?.vacas ?? [], vaca]
+                })
+                .then(() => {
+                  getVaca()
+                  .then(res => {
+                    setVacas(res?.[0])
+                    setVaca({
+                      name: '',
+                      desc: ''
+                    })
+                  })
+                })
+              }}
+              className='mt-6'
+            >
+              Добавить тип услуги
+            </Button>
+          </div>
         </div>
       </div>
-
     </div>
   );
 };
