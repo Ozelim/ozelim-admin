@@ -3,7 +3,7 @@ import { Button, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
 import { Image } from 'shared/ui';
 
-export const HealthWorld = () => {
+export const HealthWorldKz = () => {
 
   const [fund, setFund] = React.useState({});
 
