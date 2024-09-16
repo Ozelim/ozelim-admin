@@ -2,8 +2,25 @@ import React from "react";
 import { Button, TextInput, Textarea } from "@mantine/core";
 import { getData, pb } from "shared/api";
 import { Image } from "shared/ui";
+import { openConfirmModal } from "@mantine/modals";
+
+async function getTypes() {
+  return await pb.collection('insurance_data').getFullList()
+}
 
 export const CharityFund = () => {
+
+  const [types, setTypes] = React.useState([])
+
+  const [type, setType] = React.useState('')
+
+  React.useEffect(() => {
+    getTypes()
+    .then(res => {
+      setTypes(res?.[0])
+    })
+  }, [])
+
   const [charity, setCharity] = React.useState({});
 
   const [images, setImages] = React.useState({});
@@ -323,11 +340,178 @@ export const CharityFund = () => {
           />
         </div>
       </div>
+      <div className="max-w-xl">
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.q ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="q"
+        />
+        <TextInput
+          label="Подзаголовок"
+          value={changedHeadings?.w ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="w"
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.e ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="e"
+          autosize
+        />
+        <TextInput
+          label="Подзаголовок"
+          value={changedHeadings?.r ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="r"
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.t ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="t"
+          autosize
+        />
+        <Image
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={charity?.images}
+          image={changedImages?.["6"]}
+          onDelete={handleImageDelete}
+          index={6}
+        />
+        <TextInput
+          label="Подзаголовок"
+          value={changedHeadings?.y ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="y"
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.u ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="u"
+          autosize
+        />
+        <TextInput
+          label="Подзаголовок"
+          value={changedHeadings?.i ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="i"
+        />
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.o ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="o"
+        />
+        <Image
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={charity?.images}
+          image={changedImages?.["7"]}
+          onDelete={handleImageDelete}
+          index={7}
+        />
+        <TextInput
+          label="Подзаголовок"
+          value={changedHeadings?.p ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="p"
+        />
+
+        <Textarea
+          label="Описание"
+          value={changedText?.a ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="a"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.s ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="s"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.d ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="d"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.f ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="f"
+          autosize
+        />
+
+      </div>
       <div  className="flex justify-center mt-10">
         <Button className="mt-10"  onClick={saveCharity}>
           Сохранить
         </Button>
       </div>
+      {types?.types?.map((q, i) => {
+        return (
+          <React.Fragment key={i}>
+            <p className='text-lg'>{q}</p>
+            <Button
+              variant='subtle'
+              onClick={() => {
+                openConfirmModal({
+                  centered: true,
+                  labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                  onConfirm: async () => {
+                    const newTypes = types?.types?.filter(w => w !== q)
+                    await pb.collection('insurance_data').update(types?.id, {
+                      types: [...newTypes]
+                    })
+                    .then(res => {
+                      getTypes()
+                      .then((res) => {
+                        setTypes(res?.[0])
+                      })
+                    })
+                  }
+                })
+              }}
+            >
+              Удалить 
+            </Button>
+          </React.Fragment>
+        )
+      })}
+      <div>          
+        <TextInput
+          className='max-w-md'
+          label='Название'
+          value={type ?? ''}
+          onChange={e => setType(e.currentTarget?.value)}
+        />
+        <Button
+          onClick={async () => {
+            await pb.collection('insurance_data').update(types?.id, {
+              types: [...types?.types ?? [], type]
+            })
+            .then(() => {
+              getTypes()
+              .then(res => {
+                setTypes(res?.[0])
+                setType('')
+              })
+            })
+          }}
+          className='mt-6'
+        >
+          Добавить тип услуги
+        </Button>
+      </div>
+
     </div>
   );
 };

@@ -34,6 +34,10 @@ async function getDualBids () {
   return await pb.collection('dual_bids').getFullList()
 }
 
+async function getInsuranceBids () {
+  return await pb.collection('insurance_bids').getFullList()
+}
+
 export const Bids = () => {
 
   const [answers, setAnswers] = React.useState([])
@@ -43,6 +47,7 @@ export const Bids = () => {
   
   const [q, setQ] = React.useState([])
   const [d, setD] = React.useState([])
+  const [s, setS] = React.useState([])
   
   const { user } = useAuth()
 
@@ -50,6 +55,11 @@ export const Bids = () => {
     get123()
     .then(res => {
       setQ(res)
+    })
+
+    getInsuranceBids()
+    .then(res => {
+      setS(res)
     })
 
     getDualBids()
@@ -135,6 +145,7 @@ export const Bids = () => {
             <Tabs.Tab value="resort1">Курорты ( Завер. )</Tabs.Tab>
             <Tabs.Tab value="123">Заявки органицазий</Tabs.Tab>
             <Tabs.Tab value="456">Заявки (дуальное об.)</Tabs.Tab>
+            <Tabs.Tab value="789">Заявки (страхование)</Tabs.Tab>
           </Tabs.List>
           
           <Tabs.Panel value="123">
@@ -212,6 +223,52 @@ export const Bids = () => {
                                   getDualBids()
                                   .then(res => {
                                     setD(res)
+                                  })
+                                })
+                              }
+                            })
+                          }}  
+                          compact
+                          variant="light"
+                        >
+                          Удалить
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value="789">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Номер телефона</th>
+                  <th>Имя</th>
+                  <th>Вид услуги</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {s?.map((w) => {
+                  return (
+                    <tr key={w?.id}>
+                      <td>{w?.phone}</td>
+                      <td>{w?.name}</td>
+                      <td>{w?.type}</td>
+                      <td>
+                        <Button
+                          onClick={() => {
+                            openConfirmModal({
+                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                              centered: true,
+                              onConfirm: async () => {
+                                await pb.collection('insurance_bids').delete(w?.id)
+                                .then(() => {
+                                  getInsuranceBids()
+                                  .then(res => {
+                                    setS(res)
                                   })
                                 })
                               }
