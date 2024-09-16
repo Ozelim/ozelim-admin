@@ -3,7 +3,7 @@ import { Button, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
 import { Image } from 'shared/ui';
 
-export const HealthWorldKz = () => {
+export const HealthWorld = () => {
 
   const [fund, setFund] = React.useState({});
 
@@ -266,7 +266,7 @@ export const HealthWorldKz = () => {
               autosize
             />
           </div>
-          <div className='grid grid-cols-2'>
+          <div className='grid grid-cols-2 gap-4'>
             <Textarea
               label="Описание"
               value={changedText?.text16 ?? ""}
@@ -284,7 +284,7 @@ export const HealthWorldKz = () => {
               index={4}
             />
           </div>
-          <div className='grid grid-cols-2'>
+          <div className='grid grid-cols-2 gap-4'>
             <Image
               className="ml-10 w-2/4"
               label={"Картинка"}
@@ -302,7 +302,7 @@ export const HealthWorldKz = () => {
               autosize
             />
           </div>
-          <div className='grid grid-cols-2'>
+          <div className='grid grid-cols-2 gap-4'>
             <Textarea
               label="Описание"
               value={changedText?.text18 ?? ""}
@@ -321,6 +321,7 @@ export const HealthWorldKz = () => {
             />
           </div>
         </div>
+        
         <div className='max-w-xl'>
           <TextInput
             label="Заголовок"

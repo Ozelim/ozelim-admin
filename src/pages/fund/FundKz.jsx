@@ -275,7 +275,7 @@ export const FundKz = () => {
       <div className='mt-8'>
         <TextInput
           label="Заголовок"
-          value={changedHeadings?.headin99 ?? ""}
+          value={changedHeadings?.heading99 ?? ""}
           onChange={(e) => handleHealthChange(e, "heading")}
           name="heading99"
         />

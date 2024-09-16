@@ -266,7 +266,7 @@ export const HealthWorld = () => {
               autosize
             />
           </div>
-          <div className='grid grid-cols-2'>
+          <div className='grid grid-cols-2 gap-4'>
             <Textarea
               label="Описание"
               value={changedText?.text16 ?? ""}
@@ -284,7 +284,7 @@ export const HealthWorld = () => {
               index={4}
             />
           </div>
-          <div className='grid grid-cols-2'>
+          <div className='grid grid-cols-2 gap-4'>
             <Image
               className="ml-10 w-2/4"
               label={"Картинка"}
@@ -302,7 +302,7 @@ export const HealthWorld = () => {
               autosize
             />
           </div>
-          <div className='grid grid-cols-2'>
+          <div className='grid grid-cols-2 gap-4'>
             <Textarea
               label="Описание"
               value={changedText?.text18 ?? ""}
@@ -321,6 +321,7 @@ export const HealthWorld = () => {
             />
           </div>
         </div>
+        
         <div className='max-w-xl'>
           <TextInput
             label="Заголовок"

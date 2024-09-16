@@ -272,10 +272,10 @@ export const Fund = () => {
         </div>
       </div>
 
-      <div className='mt-8'>
+      <div className='mt-8 max-w-xl'>
         <TextInput
           label="Заголовок"
-          value={changedHeadings?.headin99 ?? ""}
+          value={changedHeadings?.heading99 ?? ""}
           onChange={(e) => handleHealthChange(e, "heading")}
           name="heading99"
         />
