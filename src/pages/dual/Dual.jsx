@@ -654,7 +654,7 @@ export const Dual = () => {
               }}
               className='mt-6'
             >
-              Добавить тип услуги
+              Добавить вакансию
             </Button>
           </div>
         </div>
