@@ -4,6 +4,7 @@ import { getData, pb } from "shared/api";
 import { Image } from "shared/ui";
 
 export const CharityFundKz = () => {
+
   const [charity, setCharity] = React.useState({});
 
   const [images, setImages] = React.useState({});
@@ -51,16 +52,16 @@ export const CharityFundKz = () => {
     }
 
     await pb.collection("text").update(charity?.text?.id, {
-      headings_kz: changedHeadings,
-      text_kz: changedText,
+      headings: changedHeadings,
+      text: changedText,
     });
   }
 
   React.useEffect(() => {
     getData("insurance").then((res) => {
       setCharity(res);
-      setHeadings(res?.text?.headings_kz);
-      setText(res?.text?.text_kz);
+      setHeadings(res?.text?.headings);
+      setText(res?.text?.text);
       setImages(res?.images);
     });
   }, []);
@@ -322,6 +323,139 @@ export const CharityFundKz = () => {
             autosize
           />
         </div>
+      </div>
+      <div className="max-w-xl">
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.q ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="q"
+        />
+        <TextInput
+          label="Подзаголовок"
+          value={changedHeadings?.w ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="w"
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.e ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="e"
+          autosize
+        />
+        <TextInput
+          label="Подзаголовок"
+          value={changedHeadings?.r ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="r"
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.t ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="t"
+          autosize
+        />
+        <Image
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={charity?.images}
+          image={changedImages?.["6"]}
+          onDelete={handleImageDelete}
+          index={6}
+        />
+        <TextInput
+          label="Подзаголовок"
+          value={changedHeadings?.y ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="y"
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.u ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="u"
+          autosize
+        />
+        <TextInput
+          label="Подзаголовок"
+          value={changedHeadings?.i ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="i"
+        />
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.o ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="o"
+        />
+        <Image
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={charity?.images}
+          image={changedImages?.["7"]}
+          onDelete={handleImageDelete}
+          index={7}
+        />
+        <TextInput
+          label="Подзаголовок"
+          value={changedHeadings?.p ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="p"
+        />
+
+        <Textarea
+          label="Описание"
+          value={changedText?.a ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="a"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.s ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="s"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.d ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="d"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.f ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="f"
+          autosize
+        />
+      </div>
+      <div className="max-w-xl">
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.zz ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="zz"
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.zz ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="zz"
+          autosize
+        />
+        <Image
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={charity?.images}
+          image={changedImages?.["8"]}
+          onDelete={handleImageDelete}
+          index={8}
+        />
       </div>
       <div  className="flex justify-center mt-10">
         <Button className="mt-10"  onClick={saveCharity}>

@@ -449,7 +449,29 @@ export const CharityFund = () => {
           name="f"
           autosize
         />
-
+      </div>
+      <div className="max-w-xl">
+        <TextInput
+          label="Заголовок"
+          value={changedHeadings?.zz ?? ""}
+          onChange={(e) => handleCharityChange(e, "heading")}
+          name="zz"
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.zz ?? ""}
+          onChange={(e) => handleCharityChange(e, "text")}
+          name="zz"
+          autosize
+        />
+        <Image
+          label={"Картинка"}
+          onChange={handleImagesChange}
+          record={charity?.images}
+          image={changedImages?.["8"]}
+          onDelete={handleImageDelete}
+          index={8}
+        />
       </div>
       <div  className="flex justify-center mt-10">
         <Button className="mt-10"  onClick={saveCharity}>
