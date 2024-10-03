@@ -281,9 +281,58 @@ export const Fund = () => {
         />
         <Textarea
           label="Описание"
-          value={changedText?.text99 ?? ""}
+          value={changedText?.text991 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
-          name="text99"
+          name="text991"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text992 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text992"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text993 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text993"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text994 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text994"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text995 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text995"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text996 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text996"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text997 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text997"
+          autosize
+        />
+        <Textarea
+          label="Описание"
+          value={changedText?.text998 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text998"
           autosize
         />
       </div>
