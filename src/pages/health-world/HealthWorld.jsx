@@ -1,9 +1,29 @@
 import React from 'react'
-import { Button, TextInput, Textarea } from '@mantine/core';
+import { Accordion, Button, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
-import { Image } from 'shared/ui';
+import { Editor, Image } from 'shared/ui';
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { openConfirmModal } from '@mantine/modals';
+
+async function getResorts () {
+  return await pb.collection('health_data').getFullList()
+}
 
 export const HealthWorld = () => {
+
+  const [resort, setResort] = React.useState('')
+  const [editor, setEditor] = React.useState('')
+
+  const [resorts, setResorts] = React.useState({})
+
+  React.useEffect(() => {
+    getResorts()
+    .then(res => {
+      setResorts(res?.[0])
+    })
+  }, [])
 
   const [fund, setFund] = React.useState({});
 
@@ -74,6 +94,15 @@ export const HealthWorld = () => {
   React.useEffect(() => {
     setChangedImages(images);
   }, [images]);
+
+  const resetStyles = {
+    all: "unset !important",
+    boxSizing: "border-box",
+    display: "block",
+    margin: 0,
+    padding: 0,
+    listStyle: 'disc'
+  };
 
   return (
     <div className='w-full space-y-10'>
@@ -368,6 +397,94 @@ export const HealthWorld = () => {
           />
         </div> */}
 
+        <div>
+          <p>Санатории:</p>
+          {resorts?.resorts?.map((q, i) => {
+            return (
+              <React.Fragment key={i}>
+                <Accordion
+                  variant='separated'
+                  className='my-10'
+                  defaultValue='0'
+                >
+                  {resorts?.resorts?.map((q, i) => {
+                    return (
+                      <Accordion.Item value={`${i}`}>
+                        <Accordion.Control className='!text-xl !font-bold '>{i + 1}. 
+                          <span className='text-primary-500'>{q?.name}</span>
+                        </Accordion.Control>
+                        <Accordion.Panel className='p-4'>
+                          <div className='health-wrld' dangerouslySetInnerHTML={{__html: q?.desc ?? <></>}}/>
+                        </Accordion.Panel>
+
+                        <Button
+                          variant='subtle'
+                          onClick={() => {
+                            openConfirmModal({
+                              centered: true,
+                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                              onConfirm: async () => {
+                                const newTypes = resorts?.resorts?.filter(w => w !== q)
+                                await pb.collection('health_data').update(resorts?.id, {
+                                  resorts: [...newTypes]
+                                })
+                                .then(res => {
+                                  getResorts()
+                                  .then((res) => {
+                                    setResorts(res?.[0])
+                                  })
+                                })
+                              }
+                            })
+                          }}
+                        >
+                          Удалить 
+                        </Button>
+                      </Accordion.Item>
+                    )
+                  })}
+                </Accordion>
+              </React.Fragment>
+            )
+          })}
+          <div>          
+            <TextInput
+              className='max-w-md'
+              label='Название'
+              value={resort ?? ''}
+              onChange={e => setResort(e.currentTarget.value)}
+            />
+            <label>Описание</label>
+            <ReactQuill
+              value={editor}
+              theme='snow'
+              onChange={setEditor}
+              className='max-w-3xl'
+              modules={{
+                toolbar: [{'list': 'bullet'}]
+              }}
+            />
+            <Button
+              onClick={async () => {
+                await pb.collection('health_data').update(resorts?.id, {
+                  resorts: [...resorts?.resorts ?? [], {name: resort, desc: editor}]
+                })
+                .then(() => {
+                  getResorts()
+                  .then(res => {
+                    setResorts(res?.[0])
+                    setResort('')
+                    setEditor('')
+                  })
+                })
+              }}
+              className='mt-6'
+            >
+              Добавить санаторий
+            </Button>
+          </div>
+        </div>
+        
         <div className='flex justify-center'>
           <Button onClick={saveFund}>
             Сохранить

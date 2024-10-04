@@ -42,6 +42,10 @@ async function getVacaBids () {
   return await pb.collection('vaca_bids').getFullList()
 }
 
+async function getHealthBids () {
+  return await pb.collection('health_bids').getFullList()
+}
+
 export const Bids = () => {
 
   const [answers, setAnswers] = React.useState([])
@@ -53,6 +57,7 @@ export const Bids = () => {
   const [d, setD] = React.useState([])
   const [s, setS] = React.useState([])
   const [x, setX] = React.useState([])
+  const [h, setH] = React.useState([])
   
   const { user } = useAuth()
 
@@ -65,6 +70,11 @@ export const Bids = () => {
     getInsuranceBids()
     .then(res => {
       setS(res)
+    })
+
+    getHealthBids()
+    .then(res => {
+      setH(res)
     })
 
     getVacaBids()
@@ -157,6 +167,7 @@ export const Bids = () => {
             <Tabs.Tab value="456">Заявки (дуальное об.)</Tabs.Tab>
             <Tabs.Tab value="789">Заявки (страхование)</Tabs.Tab>
             <Tabs.Tab value="zxc">Заявки (вакансии)</Tabs.Tab>
+            <Tabs.Tab value="asd">Заявки (мир здоровья)</Tabs.Tab>
           </Tabs.List>
           
           <Tabs.Panel value="123">
@@ -326,6 +337,52 @@ export const Bids = () => {
                                   getVacaBids()
                                   .then(res => {
                                     setX(res)
+                                  })
+                                })
+                              }
+                            })
+                          }}  
+                          compact
+                          variant="light"
+                        >
+                          Удалить
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value="asd">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Номер телефона</th>
+                  <th>Имя</th>
+                  <th>Курорт</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {h?.map((w) => {
+                  return (
+                    <tr key={w?.id}>
+                      <td>{w?.phone}</td>
+                      <td>{w?.name}</td>
+                      <td>{w?.resort}</td>
+                      <td>
+                        <Button
+                          onClick={() => {
+                            openConfirmModal({
+                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                              centered: true,
+                              onConfirm: async () => {
+                                await pb.collection('health_bids').delete(w?.id)
+                                .then(() => {
+                                  getHealthBids()
+                                  .then(res => {
+                                    setH(res)
                                   })
                                 })
                               }

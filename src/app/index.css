@@ -23,3 +23,13 @@
 .ql-container { 
     min-height: 350px !important;
 }
+
+.health-wrld ul {
+    list-style: disc !important;
+    margin-left: 15px;
+}
+
+.health-wrld ol {
+    list-style: disc !important;
+    margin-left: 15px;
+}

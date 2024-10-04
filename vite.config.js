@@ -8,5 +8,8 @@ export default defineConfig({
   plugins: [react(), zxc()],
   server: {
     port: 8000
-  }
+  },
+  define: {
+    global: 'window',
+  },
 })
