@@ -46,7 +46,17 @@ async function getHealthBids () {
   return await pb.collection('health_bids').getFullList()
 }
 
+async function getToursBids () {
+  return await pb.collection('tours_bids2').getFullList()
+}
+
+async function getFundBids () {
+  return await pb.collection('fund_bids').getFullList()
+}
+
 export const Bids = () => {
+
+  const { user } = useAuth()
 
   const [answers, setAnswers] = React.useState([])
   const [bids, setBids] = React.useState([]);
@@ -58,8 +68,9 @@ export const Bids = () => {
   const [s, setS] = React.useState([])
   const [x, setX] = React.useState([])
   const [h, setH] = React.useState([])
+  const [t, setT] = React.useState([])
+  const [f, setF] = React.useState([])
   
-  const { user } = useAuth()
 
   React.useEffect(() => {
     get123()
@@ -95,8 +106,16 @@ export const Bids = () => {
       setQuestions(res)
     })
 
+    getToursBids().then(res => {
+      setT(res)
+    })
+
     getBids().then((res) => {
       setBids(res);
+    });
+
+    getFundBids().then((res) => {
+      setF(res);
     });
 
     pb.collection('bids').subscribe('*', function () {
@@ -156,8 +175,6 @@ export const Bids = () => {
         <Tabs>
           <Tabs.List grow>
             <Tabs.Tab value="question">Опросник</Tabs.Tab>
-            {/* <Tabs.Tab value="health">Оздоровление</Tabs.Tab> */}
-            {/* <Tabs.Tab value="courses">Курсы туризма</Tabs.Tab> */}
             <Tabs.Tab value="price">Прайс лист</Tabs.Tab>
             <Tabs.Tab value="resort">Курорты</Tabs.Tab>
             <Tabs.Tab value="question1">Опросник ( Завер. )</Tabs.Tab>
@@ -168,6 +185,8 @@ export const Bids = () => {
             <Tabs.Tab value="789">Заявки (страхование)</Tabs.Tab>
             <Tabs.Tab value="zxc">Заявки (вакансии)</Tabs.Tab>
             <Tabs.Tab value="asd">Заявки (мир здоровья)</Tabs.Tab>
+            <Tabs.Tab value="t">Заявки (туры)</Tabs.Tab>
+            <Tabs.Tab value="f">Заявки (фонд)</Tabs.Tab>
           </Tabs.List>
           
           <Tabs.Panel value="123">
@@ -199,6 +218,94 @@ export const Bids = () => {
                                   get123()
                                   .then(res => {
                                     setQ(res)
+                                  })
+                                })
+                              }
+                            })
+                          }}  
+                          compact
+                          variant="light"
+                        >
+                          Удалить
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value="t">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Наименование орг.</th>
+                  <th>Номер телефона</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {f?.map((w) => {
+                  return (
+                    <tr key={w?.id}>
+                      <td>{w?.name}</td>
+                      <td>{w?.phone}</td>
+                      <td>
+                        <Button
+                          onClick={() => {
+                            openConfirmModal({
+                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                              centered: true,
+                              onConfirm: async () => {
+                                await pb.collection('fund_bids').delete(w?.id)
+                                .then(() => {
+                                  getFundBids()
+                                  .then(res => {
+                                    setF(res)
+                                  })
+                                })
+                              }
+                            })
+                          }}  
+                          compact
+                          variant="light"
+                        >
+                          Удалить
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value="f">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Наименование орг.</th>
+                  <th>Номер телефона</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {f?.map((w) => {
+                  return (
+                    <tr key={w?.id}>
+                      <td>{w?.name}</td>
+                      <td>{w?.phone}</td>
+                      <td>
+                        <Button
+                          onClick={() => {
+                            openConfirmModal({
+                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                              centered: true,
+                              onConfirm: async () => {
+                                await pb.collection('tours_bids2').delete(w?.id)
+                                .then(() => {
+                                  getToursBids()
+                                  .then(res => {
+                                    setT(res)
                                   })
                                 })
                               }
@@ -440,78 +547,7 @@ export const Bids = () => {
               </tbody>
             </Table>
           </Tabs.Panel>
-          {/* <Tabs.Panel value="health">
-            <Table>
-              <thead>
-                <tr>
-                  <th>Дата</th>
-                  <th>Имя</th>
-                  <th>Почта</th>
-                  <th>Телефон</th>
-                  <th>Дейтсвие</th>
-                </tr>
-              </thead>
-              <tbody>
-                {healthBids?.map((health) => {
-                  return (
-                    <tr key={health?.id}>
-                      <td>
-                        {dayjs(health?.created).format("YY-MM-DD, HH:mm")}
-                      </td>
-                      <td>{health?.name}</td>
-                      <td>{health?.email}</td>
-                      <td>{health?.phone}</td>
-                      <td>
-                        <CiCircleRemove
-                          size={35}
-                          color='red'
-                          onClick={() => removeWithdrawConfirm(health?.id)}
-                          className='cursor-pointer hover:fill-yellow-500'
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </Tabs.Panel> */}
-          {/* <Tabs.Panel value="courses">
-            <Table>
-              <thead>
-                <tr>
-                  <th>Дата</th>
-                  <th>Имя</th>
-                  <th>Почта</th>
-                  <th>Телефон</th>
-                  <th>Курс</th>
-                  <th>Действие</th>
-                </tr>
-              </thead>
-              <tbody>
-                {coursesBids?.map((course) => {
-                  return (
-                    <tr key={course?.id}>
-                      <td>
-                        {dayjs(course?.created).format("YY-MM-DD, HH:mm")}
-                      </td>
-                      <td>{course?.name}</td>
-                      <td>{course?.email}</td>
-                      <td>{course?.phone}</td>
-                      <td>{course?.data}</td>
-                      <td>
-                        <CiCircleRemove
-                          size={35}
-                          color='red'
-                          onClick={() => removeWithdrawConfirm(course?.id)}
-                          className='cursor-pointer hover:fill-yellow-500'
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </Tabs.Panel> */}
+
           <Tabs.Panel value="price">
             <Table>
               <thead>
