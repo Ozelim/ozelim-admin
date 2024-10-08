@@ -193,6 +193,7 @@ export const Bids = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>Дата</th>
                   <th>Наименование орг.</th>
                   <th>Эл. почта</th>
                   <th>Номер телефона</th>
@@ -203,6 +204,7 @@ export const Bids = () => {
                 {q?.map((w) => {
                   return (
                     <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
                       <td>{w?.name}</td>
                       <td>{w?.email}</td>
                       <td>{w?.phone}</td>
@@ -239,6 +241,7 @@ export const Bids = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>Дата</th>
                   <th>Наименование орг.</th>
                   <th>Номер телефона</th>
                   <th>Действие</th>
@@ -248,6 +251,7 @@ export const Bids = () => {
                 {f?.map((w) => {
                   return (
                     <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
                       <td>{w?.name}</td>
                       <td>{w?.phone}</td>
                       <td>
@@ -283,6 +287,7 @@ export const Bids = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>Дата</th>
                   <th>Наименование орг.</th>
                   <th>Номер телефона</th>
                   <th>Действие</th>
@@ -292,6 +297,7 @@ export const Bids = () => {
                 {f?.map((w) => {
                   return (
                     <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
                       <td>{w?.name}</td>
                       <td>{w?.phone}</td>
                       <td>
@@ -327,6 +333,7 @@ export const Bids = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>Дата</th>
                   <th>Номер телефона</th>
                   <th>Эл. почта</th>
                   <th>Вид услуги</th>
@@ -337,6 +344,7 @@ export const Bids = () => {
                 {d?.map((w) => {
                   return (
                     <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
                       <td>{w?.phone}</td>
                       <td>{w?.email}</td>
                       <td>{w?.service}</td>
@@ -373,6 +381,7 @@ export const Bids = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>Дата</th>
                   <th>Номер телефона</th>
                   <th>Имя</th>
                   <th>Вид услуги</th>
@@ -383,6 +392,7 @@ export const Bids = () => {
                 {s?.map((w) => {
                   return (
                     <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
                       <td>{w?.phone}</td>
                       <td>{w?.name}</td>
                       <td>{w?.type}</td>
@@ -419,6 +429,7 @@ export const Bids = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>Дата</th>
                   <th>Номер телефона</th>
                   <th>Имя</th>
                   <th>Вид услуги</th>
@@ -429,6 +440,7 @@ export const Bids = () => {
                 {x?.map((w) => {
                   return (
                     <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
                       <td>{w?.phone}</td>
                       <td>{w?.name}</td>
                       <td>{w?.vaca}</td>
@@ -465,6 +477,7 @@ export const Bids = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>Дата</th>
                   <th>Номер телефона</th>
                   <th>Имя</th>
                   <th>Курорт</th>
@@ -475,6 +488,7 @@ export const Bids = () => {
                 {h?.map((w) => {
                   return (
                     <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
                       <td>{w?.phone}</td>
                       <td>{w?.name}</td>
                       <td>{w?.resort}</td>
