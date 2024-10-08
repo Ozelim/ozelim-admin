@@ -185,8 +185,8 @@ export const Bids = () => {
             <Tabs.Tab value="789">Заявки (страхование)</Tabs.Tab>
             <Tabs.Tab value="zxc">Заявки (вакансии)</Tabs.Tab>
             <Tabs.Tab value="asd">Заявки (мир здоровья)</Tabs.Tab>
-            <Tabs.Tab value="t">Заявки (туры)</Tabs.Tab>
-            <Tabs.Tab value="f">Заявки (фонд)</Tabs.Tab>
+            <Tabs.Tab value="tours">Заявки (туры)</Tabs.Tab>
+            <Tabs.Tab value="fund">Заявки (фонд)</Tabs.Tab>
           </Tabs.List>
           
           <Tabs.Panel value="123">
@@ -237,7 +237,7 @@ export const Bids = () => {
               </tbody>
             </Table>
           </Tabs.Panel>
-          <Tabs.Panel value="f">
+          <Tabs.Panel value="fund">
             <Table>
               <thead>
                 <tr>
@@ -283,7 +283,7 @@ export const Bids = () => {
               </tbody>
             </Table>
           </Tabs.Panel>
-          <Tabs.Panel value="t">
+          <Tabs.Panel value="tours">
             <Table>
               <thead>
                 <tr>
