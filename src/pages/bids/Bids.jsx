@@ -237,7 +237,7 @@ export const Bids = () => {
               </tbody>
             </Table>
           </Tabs.Panel>
-          <Tabs.Panel value="t">
+          <Tabs.Panel value="f">
             <Table>
               <thead>
                 <tr>
@@ -283,7 +283,7 @@ export const Bids = () => {
               </tbody>
             </Table>
           </Tabs.Panel>
-          <Tabs.Panel value="f">
+          <Tabs.Panel value="t">
             <Table>
               <thead>
                 <tr>
@@ -294,7 +294,7 @@ export const Bids = () => {
                 </tr>
               </thead>
               <tbody>
-                {f?.map((w) => {
+                {t?.map((w) => {
                   return (
                     <tr key={w?.id}>
                       <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
