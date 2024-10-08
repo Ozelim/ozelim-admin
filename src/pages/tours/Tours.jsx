@@ -340,6 +340,7 @@ export const Tours = () => {
         <Table>
           <thead>
             <tr>
+              <th>Дата</th>
               <th>Категория</th>
               <th>Дата</th>
               <th>Взрослых</th>
@@ -352,6 +353,7 @@ export const Tours = () => {
             {bids?.map((w) => {
               return (
                 <tr key={w?.id}>
+                  <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
                   <td>
                     {w?.category === 'standart' && 'Стандарт'}
                     {w?.category === 'eco' && 'Эконом'}

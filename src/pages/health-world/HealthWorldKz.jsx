@@ -1,9 +1,29 @@
 import React from 'react'
-import { Button, TextInput, Textarea } from '@mantine/core';
+import { Accordion, Button, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
-import { Image } from 'shared/ui';
+import { Editor, Image } from 'shared/ui';
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { openConfirmModal } from '@mantine/modals';
+
+async function getResorts () {
+  return await pb.collection('health_data').getFullList()
+}
 
 export const HealthWorldKz = () => {
+
+  const [resort, setResort] = React.useState('')
+  const [editor, setEditor] = React.useState('')
+
+  const [resorts, setResorts] = React.useState({})
+
+  React.useEffect(() => {
+    getResorts()
+    .then(res => {
+      setResorts(res?.[0])
+    })
+  }, [])
 
   const [fund, setFund] = React.useState({});
 
@@ -52,16 +72,16 @@ export const HealthWorldKz = () => {
     }
 
     await pb.collection("text").update(fund?.text?.id, {
-      headings_kz: changedHeadings,
-      text_kz: changedText,
+      headings: changedHeadings,
+      text: changedText,
     });
   }
 
   React.useEffect(() => {
     getData("health-world").then((res) => {
       setFund(res);
-      setHeadings(res?.text?.headings_kz);
-      setText(res?.text?.text_kz);
+      setHeadings(res?.text?.headings);
+      setText(res?.text?.text);
       setImages(res?.images);
     });
   }, []);
@@ -74,6 +94,16 @@ export const HealthWorldKz = () => {
   React.useEffect(() => {
     setChangedImages(images);
   }, [images]);
+
+  const resetStyles = {
+    all: "unset !important",
+    boxSizing: "border-box",
+    display: "block",
+    margin: 0,
+    padding: 0,
+    listStyle: 'disc'
+  };
+
 
   return (
     <div className='w-full space-y-10'>
@@ -336,42 +366,6 @@ export const HealthWorldKz = () => {
             name="text19"
             autosize
           />
-        </div>
-        {/* <div className='max-w-xl'> 
-          <TextInput
-            label="Заголовок"
-            value={changedHeadings?.heading8 ?? ""}
-            onChange={(e) => handleHealthChange(e, "heading")}
-            name="heading8"
-          />
-          <Textarea
-            label="Описание"
-            value={changedText?.text20 ?? ""}
-            onChange={(e) => handleHealthChange(e, "text")}
-            name="text20"
-            autosize
-          />
-        </div> */}
-
-        {/* <div className='max-w-xl '>
-          <TextInput
-            label="Заголовок"
-            value={changedHeadings?.heading1 ?? ""}
-            onChange={(e) => handleHealthChange(e, "heading")}
-            name="heading1"
-          />
-          <TextInput
-            label="Под заголовок"
-            value={changedHeadings?.heading2 ?? ""}
-            onChange={(e) => handleHealthChange(e, "heading")}
-            name="heading2"
-          />
-        </div> */}
-
-        <div className='flex justify-center'>
-          <Button onClick={saveFund}>
-            Сохранить
-          </Button>
         </div>
     </div>
   )
