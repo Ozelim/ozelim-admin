@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Modal, Table, Tabs, TextInput } from "@mantine/core";
+import { Button, Modal, Table, Tabs, TextInput, Textarea } from "@mantine/core";
 import dayjs from "dayjs";
 import { pb } from "shared/api";
 import { BidsForm } from "./BidsForm";
@@ -8,6 +8,7 @@ import { openConfirmModal } from "@mantine/modals";
 
 import { BiAccessibility, BiBadgeCheck } from 'react-icons/bi'
 import { useAuth } from "shared/hooks";
+import { BsCheckCircle } from "react-icons/bs";
 
 async function getAnswers () {
   return await pb.collection("questions").getFullList({
@@ -64,38 +65,67 @@ export const Bids = () => {
   const [questions, setQuestions] = React.useState([])
   
   const [q, setQ] = React.useState([])
+  const [qs, setQs] = React.useState([])
+  const [qr, setQr] = React.useState([])
+
   const [d, setD] = React.useState([])
+  const [ds, setDs] = React.useState([])
+  const [dr, setDr] = React.useState([])
+
   const [s, setS] = React.useState([])
+  const [ss, setSs] = React.useState([])
+  const [sr, setSr] = React.useState([])
+
   const [x, setX] = React.useState([])
+  const [xs, setXs] = React.useState([])
+  const [xr, setXr] = React.useState([])
+
   const [h, setH] = React.useState([])
+  const [hs, setHs] = React.useState([])
+  const [hr, setHr] = React.useState([])
+
   const [t, setT] = React.useState([])
+  const [ts, setTs] = React.useState([])
+  const [tr, setTr] = React.useState([])
+
   const [f, setF] = React.useState([])
-  
+  const [fs, setFs] = React.useState([])
+  const [fr, setFr] = React.useState([])
 
   React.useEffect(() => {
     get123()
     .then(res => {
-      setQ(res)
+      setQ(res?.filter(w => w?.status === ''))
+      setQs(res?.filter(w => w?.status === 'succ'))
+      setQr(res?.filter(w => w?.status === 'ref'))
     })
 
     getInsuranceBids()
     .then(res => {
-      setS(res)
+      setS(res?.filter(w => w?.status === ''))
+      setSs(res?.filter(w => w?.status === 'succ'))
+      setSr(res?.filter(w => w?.status === 'ref'))
     })
 
     getHealthBids()
     .then(res => {
-      setH(res)
+      setH(res?.filter(w => w?.status === ''))
+      setHs(res?.filter(w => w?.status === 'succ'))
+      setHr(res?.filter(w => w?.status === 'ref'))
     })
 
     getVacaBids()
     .then(res => {
-      setX(res)
+      setX(res?.filter(w => w?.status === ''))
+      setXs(res?.filter(w => w?.status === 'succ'))
+      setXr(res?.filter(w => w?.status === 'ref'))
     })
 
     getDualBids()
     .then(res => {
-      setD(res)
+      setD(res?.filter(w => w?.status === ''))
+      setDs(res?.filter(w => w?.status === 'succ'))
+      setDr(res?.filter(w => w?.status === 'ref'))
     })
 
     getAnswers().then((res) => {
@@ -107,15 +137,19 @@ export const Bids = () => {
     })
 
     getToursBids().then(res => {
-      setT(res)
-    })
+      setT(res?.filter(w => w?.status === ''))
+      setTs(res?.filter(w => w?.status === 'succ'))
+      setTr(res?.filter(w => w?.status === 'ref'))
+    }) 
 
     getBids().then((res) => {
       setBids(res);
     });
 
     getFundBids().then((res) => {
-      setF(res);
+      setF(res?.filter(w => w?.status === ''));
+      setFs(res?.filter(w => w?.status === 'succ'))
+      setFr(res?.filter(w => w?.status === 'ref'))
     });
 
     pb.collection('bids').subscribe('*', function () {
@@ -180,253 +214,843 @@ export const Bids = () => {
             <Tabs.Tab value="question1">Опросник ( Завер. )</Tabs.Tab>
             <Tabs.Tab value="price1">Прайс лист ( Завер. )</Tabs.Tab>
             <Tabs.Tab value="resort1">Курорты ( Завер. )</Tabs.Tab>
+
             <Tabs.Tab value="123">Заявки органицазий</Tabs.Tab>
+
             <Tabs.Tab value="456">Заявки (дуальное об.)</Tabs.Tab>
+            <Tabs.Tab value="456">Заявки (дуальное об.)</Tabs.Tab>
+            <Tabs.Tab value="456">Заявки (дуальное об.)</Tabs.Tab>
+
             <Tabs.Tab value="789">Заявки (страхование)</Tabs.Tab>
+
             <Tabs.Tab value="zxc">Заявки (вакансии)</Tabs.Tab>
+
             <Tabs.Tab value="asd">Заявки (мир здоровья)</Tabs.Tab>
+
             <Tabs.Tab value="tours">Заявки (туры)</Tabs.Tab>
+
             <Tabs.Tab value="fund">Заявки (фонд)</Tabs.Tab>
           </Tabs.List>
           
           <Tabs.Panel value="123">
-            <Table>
-              <thead>
-                <tr>
-                  <th>Дата</th>
-                  <th>Наименование орг.</th>
-                  <th>Эл. почта</th>
-                  <th>Номер телефона</th>
-                  <th>Действие</th>
-                </tr>
-              </thead>
-              <tbody>
-                {q?.map((w) => {
-                  return (
-                    <tr key={w?.id}>
-                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
-                      <td>{w?.name}</td>
-                      <td>{w?.email}</td>
-                      <td>{w?.phone}</td>
-                      <td>
-                        <Button
-                          onClick={() => {
-                            openConfirmModal({
-                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                              centered: true,
-                              onConfirm: async () => {
-                                await pb.collection('123').delete(w?.id)
-                                .then(() => {
-                                  get123()
-                                  .then(res => {
-                                    setQ(res)
-                                  })
-                                })
-                              }
-                            })
-                          }}  
-                          compact
-                          variant="light"
-                        >
-                          Удалить
-                        </Button>
-                      </td>
+            <Tabs defaultValue="bids">
+              <Tabs.List>
+                <Tabs.Tab value="bids">Заявки</Tabs.Tab>
+                <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
+                <Tabs.Tab value="ref">Отклоненные</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="bids">
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Наименование орг.</th>
+                      <th>Эл. почта</th>
+                      <th>Номер телефона</th>
+                      <th>Действие</th>
                     </tr>
-                  )
-                })}
-              </tbody>
-            </Table>
+                  </thead>
+                  <tbody>
+                    {q?.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.name}</td>
+                          <td>{w?.email}</td>
+                          <td>{w?.phone}</td>
+                          <td>
+                            <div className='flex gap-4'>
+                              <Textarea
+                                autosize
+                                value={w?.comment}
+                                onChange={e => {
+                                  const newQ = q?.map(r => {
+                                    if (r?.id === w?.id) return {
+                                      ...r, comment: e?.currentTarget?.value
+                                    }
+                                    return {...r}
+                                  })
+                                  setQ([...newQ])
+                                }}
+                              />
+                              <BsCheckCircle
+                                size={30} 
+                                color='green'
+                                // onClick={() => handleConfirmBid(q)}
+                                onClick={async () => {
+                                  openConfirmModal({
+                                    labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                    centered: true,
+                                    onConfirm: async () => {
+                                      await pb.collection('123').update(w?.id, {
+                                        status: 'succ',
+                                        comment: w?.comment
+                                      })
+                                      .then(() => {
+                                        get123()
+                                        .then(res => {
+                                          setQ(res?.filter(w => w?.status === ''))
+                                          setQs(res?.filter(w => w?.status === 'succ'))
+                                          setQr(res?.filter(w => w?.status === 'ref'))
+                                        })
+                                      })
+                                    }
+                                    
+                                  })
+                                }}
+                                className='cursor-pointer hover:fill-yellow-500'
+                              />
+                              <CiCircleRemove 
+                                size={35}
+                                color='red'
+                                onClick={async () => {
+                                  openConfirmModal({
+                                    labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                    centered: true,
+                                    onConfirm: async () => {
+                                      await pb.collection('123').update(w?.id, {
+                                        status: 'ref',
+                                        comment: w?.comment
+                                      })
+                                      .then(() => {
+                                        get123()
+                                        .then(res => {
+                                          setQ(res?.filter(w => w?.status === ''))
+                                          setQs(res?.filter(w => w?.status === 'succ'))
+                                          setQr(res?.filter(w => w?.status === 'ref'))
+                                        })
+                                      })
+                                    }
+                                    
+                                  })
+                                }}
+                                className='cursor-pointer hover:fill-yellow-500'
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="succ">
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Наименование орг.</th>
+                      <th>Эл. почта</th>
+                      <th>Номер телефона</th>
+                      <th>Действие</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {qs.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.name}</td>
+                          <td>{w?.email}</td>
+                          <td>{w?.phone}</td>
+                          <td>
+                            {w?.comment}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="ref">
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Наименование орг.</th>
+                      <th>Эл. почта</th>
+                      <th>Номер телефона</th>
+                      <th>Действие</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {qr?.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.name}</td>
+                          <td>{w?.email}</td>
+                          <td>{w?.phone}</td>
+                          <td>
+                            {w?.comment}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </Tabs.Panel>
+            </Tabs>
           </Tabs.Panel>
+
           <Tabs.Panel value="fund">
-            <Table>
-              <thead>
-                <tr>
-                  <th>Дата</th>
-                  <th>Наименование орг.</th>
-                  <th>Номер телефона</th>
-                  <th>Действие</th>
-                </tr>
-              </thead>
-              <tbody>
-                {f?.map((w) => {
-                  return (
-                    <tr key={w?.id}>
-                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
-                      <td>{w?.name}</td>
-                      <td>{w?.phone}</td>
-                      <td>
-                        <Button
-                          onClick={() => {
-                            openConfirmModal({
-                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                              centered: true,
-                              onConfirm: async () => {
-                                await pb.collection('fund_bids').delete(w?.id)
-                                .then(() => {
-                                  getFundBids()
-                                  .then(res => {
-                                    setF(res)
-                                  })
-                                })
-                              }
-                            })
-                          }}  
-                          compact
-                          variant="light"
-                        >
-                          Удалить
-                        </Button>
-                      </td>
+            <Tabs>
+              <Tabs.List>
+                <Tabs.Tab value="bids">Заявки</Tabs.Tab>
+                <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
+                <Tabs.Tab value="ref">Отклоненные</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="bids">
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Наименование орг.</th>
+                      <th>Номер телефона</th>
+                      <th>Действие</th>
                     </tr>
-                  )
-                })}
-              </tbody>
-            </Table>
+                  </thead>
+                  <tbody>
+                    {f?.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.name}</td>
+                          <td>{w?.phone}</td>
+                          <td>
+                            <div className='flex gap-4'>
+                              <Textarea
+                                autosize
+                                value={w?.comment}
+                                onChange={e => {
+                                  const newQ = f?.map(r => {
+                                    if (r?.id === w?.id) return {
+                                      ...r, comment: e?.currentTarget?.value
+                                    }
+                                    return {...r}
+                                  })
+                                  setF([...newQ])
+                                }}
+                              />
+                              <BsCheckCircle
+                                size={30} 
+                                color='green'
+                                // onClick={() => handleConfirmBid(q)}
+                                onClick={async () => {
+                                  openConfirmModal({
+                                    labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                    centered: true,
+                                    onConfirm: async () => {
+                                      await pb.collection('fund_bids').update(w?.id, {
+                                        status: 'succ',
+                                        comment: w?.comment
+                                      })
+                                      .then(() => {
+                                        getFundBids()
+                                        .then(res => {
+                                          setF(res?.filter(w => w?.status === ''))
+                                          setFs(res?.filter(w => w?.status === 'succ'))
+                                          setFr(res?.filter(w => w?.status === 'ref'))
+                                        })
+                                      })
+                                    }
+                                    
+                                  })
+                                }}
+                                className='cursor-pointer hover:fill-yellow-500'
+                              />
+                              <CiCircleRemove 
+                                size={35}
+                                color='red'
+                                onClick={async () => {
+                                  openConfirmModal({
+                                    labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                    centered: true,
+                                    onConfirm: async () => {
+                                      await pb.collection('123').update(w?.id, {
+                                        status: 'ref',
+                                        comment: w?.comment
+                                      })
+                                      .then(() => {
+                                        get123()
+                                        .then(res => {
+                                          setQ(res?.filter(w => w?.status === ''))
+                                          setQs(res?.filter(w => w?.status === 'succ'))
+                                          setQr(res?.filter(w => w?.status === 'ref'))
+                                        })
+                                      })
+                                    }
+                                    
+                                  })
+                                }}
+                                className='cursor-pointer hover:fill-yellow-500'
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="succ">
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Наименование орг.</th>
+                      <th>Эл. почта</th>
+                      <th>Номер телефона</th>
+                      <th>Действие</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fs.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.name}</td>
+                          <td>{w?.email}</td>
+                          <td>{w?.phone}</td>
+                          <td>
+                            {w?.comment}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="ref">
+              <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Наименование орг.</th>
+                      <th>Эл. почта</th>
+                      <th>Номер телефона</th>
+                      <th>Действие</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fr.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.name}</td>
+                          <td>{w?.email}</td>
+                          <td>{w?.phone}</td>
+                          <td>
+                            {w?.comment}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </Tabs.Panel>
+            </Tabs>
+
           </Tabs.Panel>
+
           <Tabs.Panel value="tours">
-            <Table>
-              <thead>
-                <tr>
-                  <th>Дата</th>
-                  <th>Наименование орг.</th>
-                  <th>Номер телефона</th>
-                  <th>Действие</th>
-                </tr>
-              </thead>
-              <tbody>
-                {t?.map((w) => {
-                  return (
-                    <tr key={w?.id}>
-                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
-                      <td>{w?.name}</td>
-                      <td>{w?.phone}</td>
-                      <td>
-                        <Button
-                          onClick={() => {
-                            openConfirmModal({
-                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                              centered: true,
-                              onConfirm: async () => {
-                                await pb.collection('tours_bids2').delete(w?.id)
-                                .then(() => {
-                                  getToursBids()
-                                  .then(res => {
-                                    setT(res)
-                                  })
-                                })
-                              }
-                            })
-                          }}  
-                          compact
-                          variant="light"
-                        >
-                          Удалить
-                        </Button>
-                      </td>
+            <Tabs defaultValue="bids">
+              <Tabs.List>
+                <Tabs.Tab value="bids">Заявки</Tabs.Tab>
+                <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
+                <Tabs.Tab value="ref">Отклоненные</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="bids">
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Наименование орг.</th>
+                      <th>Номер телефона</th>
+                      <th>Действие</th>
                     </tr>
-                  )
-                })}
-              </tbody>
-            </Table>
+                  </thead>
+                  <tbody>
+                    {t?.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.name}</td>
+                          <td>{w?.phone}</td>
+                          <td>
+                            <div className='flex gap-4'>
+                              <Textarea
+                                autosize
+                                value={w?.comment}
+                                onChange={e => {
+                                  const newQ = t?.map(r => {
+                                    if (r?.id === w?.id) return {
+                                      ...r, comment: e?.currentTarget?.value
+                                    }
+                                    return {...r}
+                                  })
+                                  setT([...newQ])
+                                }}
+                              />
+                              <BsCheckCircle
+                                size={30} 
+                                color='green'
+                                // onClick={() => handleConfirmBid(q)}
+                                onClick={async () => {
+                                  openConfirmModal({
+                                    labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                    centered: true,
+                                    onConfirm: async () => {
+                                      await pb.collection('tours_bids2').update(w?.id, {
+                                        status: 'succ',
+                                        comment: w?.comment
+                                      })
+                                      .then(() => {
+                                        getToursBids()
+                                        .then(res => {
+                                          setT(res?.filter(w => w?.status === ''))
+                                          setTs(res?.filter(w => w?.status === 'succ'))
+                                          setTr(res?.filter(w => w?.status === 'ref'))
+                                        })
+                                      })
+                                    }
+                                    
+                                  })
+                                }}
+                                className='cursor-pointer hover:fill-yellow-500'
+                              />
+                              <CiCircleRemove 
+                                size={35}
+                                color='red'
+                                onClick={async () => {
+                                  openConfirmModal({
+                                    labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                    centered: true,
+                                    onConfirm: async () => {
+                                      await pb.collection('123').update(w?.id, {
+                                        status: 'ref',
+                                        comment: w?.comment
+                                      })
+                                      .then(() => {
+                                        getToursBids()
+                                        .then(res => {
+                                          setT(res?.filter(w => w?.status === ''))
+                                          setTs(res?.filter(w => w?.status === 'succ'))
+                                          setTr(res?.filter(w => w?.status === 'ref'))
+                                        })
+                                      })
+                                    }
+                                    
+                                  })
+                                }}
+                                className='cursor-pointer hover:fill-yellow-500'
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="succ">
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Наименование орг.</th>
+                      <th>Номер телефона</th>
+                      <th>Действие</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ts.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.name}</td>
+                          <td>{w?.phone}</td>
+                          <td>
+                            {w?.comment}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="ref">
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Наименование орг.</th>
+                      <th>Номер телефона</th>
+                      <th>Действие</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tr.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.name}</td>
+                          <td>{w?.phone}</td>
+                          <td>
+                            {w?.comment}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </Tabs.Panel>
+            </Tabs>
+            
+
           </Tabs.Panel>
+
           <Tabs.Panel value="456">
-            <Table>
-              <thead>
-                <tr>
-                  <th>Дата</th>
-                  <th>Номер телефона</th>
-                  <th>Эл. почта</th>
-                  <th>Вид услуги</th>
-                  <th>Действие</th>
-                </tr>
-              </thead>
-              <tbody>
-                {d?.map((w) => {
-                  return (
-                    <tr key={w?.id}>
-                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
-                      <td>{w?.phone}</td>
-                      <td>{w?.email}</td>
-                      <td>{w?.service}</td>
-                      <td>
-                        <Button
-                          onClick={() => {
-                            openConfirmModal({
-                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                              centered: true,
-                              onConfirm: async () => {
-                                await pb.collection('dual_bids').delete(w?.id)
-                                .then(() => {
-                                  getDualBids()
-                                  .then(res => {
-                                    setD(res)
-                                  })
-                                })
-                              }
-                            })
-                          }}  
-                          compact
-                          variant="light"
-                        >
-                          Удалить
-                        </Button>
-                      </td>
+            <Tabs defaultValue="bids">
+              <Tabs.List>
+                <Tabs.Tab value="bids">Заявки</Tabs.Tab>
+                <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
+                <Tabs.Tab value="ref">Отклоненные</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="bids">
+                
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Номер телефона</th>
+                      <th>Эл. почта</th>
+                      <th>Вид услуги</th>
+                      <th>Действие</th>
                     </tr>
-                  )
-                })}
-              </tbody>
-            </Table>
+                  </thead>
+                  <tbody>
+                    {d?.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.phone}</td>
+                          <td>{w?.email}</td>
+                          <td>{w?.service}</td>
+                          <td>
+                            <div className='flex gap-4'>
+                              <Textarea
+                                autosize
+                                value={w?.comment}
+                                onChange={e => {
+                                  const newQ = d?.map(r => {
+                                    if (r?.id === w?.id) return {
+                                      ...r, comment: e?.currentTarget?.value
+                                    }
+                                    return {...r}
+                                  })
+                                  setD([...newQ])
+                                }}
+                              />
+                              <BsCheckCircle
+                                size={30} 
+                                color='green'
+                                // onClick={() => handleConfirmBid(q)}
+                                onClick={async () => {
+                                  openConfirmModal({
+                                    labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                    centered: true,
+                                    onConfirm: async () => {
+                                      await pb.collection('dual_bids').update(w?.id, {
+                                        status: 'succ',
+                                        comment: w?.comment
+                                      })
+                                      .then(() => {
+                                        getDualBids()
+                                        .then(res => {
+                                          setD(res?.filter(w => w?.status === ''))
+                                          setDs(res?.filter(w => w?.status === 'succ'))
+                                          setDr(res?.filter(w => w?.status === 'ref'))
+                                        })
+                                      })
+                                    }
+                                    
+                                  })
+                                }}
+                                className='cursor-pointer hover:fill-yellow-500'
+                              />
+                              <CiCircleRemove 
+                                size={35}
+                                color='red'
+                                onClick={async () => {
+                                  openConfirmModal({
+                                    labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                    centered: true,
+                                    onConfirm: async () => {
+                                      await pb.collection('dual_bids').update(w?.id, {
+                                        status: 'ref',
+                                        comment: w?.comment
+                                      })
+                                      .then(() => {
+                                        getToursBids()
+                                        .then(res => {
+                                          setD(res?.filter(w => w?.status === ''))
+                                          setDs(res?.filter(w => w?.status === 'succ'))
+                                          setDr(res?.filter(w => w?.status === 'ref'))
+                                        })
+                                      })
+                                    }
+                                    
+                                  })
+                                }}
+                                className='cursor-pointer hover:fill-yellow-500'
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+
+              </Tabs.Panel>
+              <Tabs.Panel value="succ">
+                
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Номер телефона</th>
+                      <th>Эл. почта</th>
+                      <th>Вид услуги</th>
+                      <th>Действие</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ds?.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.phone}</td>
+                          <td>{w?.email}</td>
+                          <td>{w?.service}</td>
+                          <td>
+                            {w?.comment}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+
+              </Tabs.Panel>
+              <Tabs.Panel value="ref">
+                
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Дата</th>
+                      <th>Номер телефона</th>
+                      <th>Эл. почта</th>
+                      <th>Вид услуги</th>
+                      <th>Действие</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dr?.map((w) => {
+                      return (
+                        <tr key={w?.id}>
+                          <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                          <td>{w?.phone}</td>
+                          <td>{w?.email}</td>
+                          <td>{w?.service}</td>
+                          <td>
+                            {w?.comment}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+
+              </Tabs.Panel>
+            </Tabs>
           </Tabs.Panel>
+
+          
+          
           <Tabs.Panel value="789">
-            <Table>
-              <thead>
-                <tr>
-                  <th>Дата</th>
-                  <th>Номер телефона</th>
-                  <th>Имя</th>
-                  <th>Вид услуги</th>
-                  <th>Действие</th>
-                </tr>
-              </thead>
-              <tbody>
-                {s?.map((w) => {
-                  return (
-                    <tr key={w?.id}>
-                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
-                      <td>{w?.phone}</td>
-                      <td>{w?.name}</td>
-                      <td>{w?.type}</td>
-                      <td>
-                        <Button
-                          onClick={() => {
-                            openConfirmModal({
-                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                              centered: true,
-                              onConfirm: async () => {
-                                await pb.collection('insurance_bids').delete(w?.id)
-                                .then(() => {
-                                  getInsuranceBids()
-                                  .then(res => {
-                                    setS(res)
-                                  })
-                                })
-                              }
-                            })
-                          }}  
-                          compact
-                          variant="light"
-                        >
-                          Удалить
-                        </Button>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </Table>
+            <Tabs defaultValue="bids">
+              <Tabs.List>
+                <Tabs.Tab value="bids">Заявки</Tabs.Tab>
+                <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
+                <Tabs.Tab value="ref">Отклоненные</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="bids">
+                
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Дата</th>
+                    <th>Номер телефона</th>
+                    <th>Имя</th>
+                    <th>Вид услуги</th>
+                    <th>Действие</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {s?.map((w) => {
+                    return (
+                      <tr key={w?.id}>
+                        <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                        <td>{w?.phone}</td>
+                        <td>{w?.name}</td>
+                        <td>{w?.type}</td>
+                        <td>
+                        <div className='flex gap-4'>
+                                <Textarea
+                                  autosize
+                                  value={w?.comment}
+                                  onChange={e => {
+                                    const newQ = s?.map(r => {
+                                      if (r?.id === w?.id) return {
+                                        ...r, comment: e?.currentTarget?.value
+                                      }
+                                      return {...r}
+                                    })
+                                    sets([...newQ])
+                                  }}
+                                />
+                                <BsCheckCircle
+                                  size={30} 
+                                  color='green'
+                                  // onClick={() => handleConfirmBid(q)}
+                                  onClick={async () => {
+                                    openConfirmModal({
+                                      labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                      centered: true,
+                                      onConfirm: async () => {
+                                        await pb.collection('insurance_bids').update(w?.id, {
+                                          status: 'succ',
+                                          comment: w?.comment
+                                        })
+                                        .then(() => {
+                                          getDualBids()
+                                          .then(res => {
+                                            setS(res?.filter(w => w?.status === ''))
+                                            setSs(res?.filter(w => w?.status === 'succ'))
+                                            setSr(res?.filter(w => w?.status === 'ref'))
+                                          })
+                                        })
+                                      }
+                                      
+                                    })
+                                  }}
+                                  className='cursor-pointer hover:fill-yellow-500'
+                                />
+                                <CiCircleRemove 
+                                  size={35}
+                                  color='red'
+                                  onClick={async () => {
+                                    openConfirmModal({
+                                      labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                      centered: true,
+                                      onConfirm: async () => {
+                                        await pb.collection('insurance_bids').update(w?.id, {
+                                          status: 'ref',
+                                          comment: w?.comment
+                                        })
+                                        .then(() => {
+                                          getToursBids()
+                                          .then(res => {
+                                            setS(res?.filter(w => w?.status === ''))
+                                            setSs(res?.filter(w => w?.status === 'succ'))
+                                            setSr(res?.filter(w => w?.status === 'ref'))
+                                          })
+                                        })
+                                      }
+                                      
+                                    })
+                                  }}
+                                  className='cursor-pointer hover:fill-yellow-500'
+                                />
+                              </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+             </Table>
+
+              </Tabs.Panel>
+              <Tabs.Panel value="succ">
+                           <Table>
+                <thead>
+                  <tr>
+                    <th>Дата</th>
+                    <th>Номер телефона</th>
+                    <th>Имя</th>
+                    <th>Вид услуги</th>
+                    <th>Действие</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ss?.map((w) => {
+                    return (
+                      <tr key={w?.id}>
+                        <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                        <td>{w?.phone}</td>
+                        <td>{w?.name}</td>
+                        <td>{w?.type}</td>
+                        <td>
+                        {w?.comment}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+             </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="ref">
+                           <Table>
+                <thead>
+                  <tr>
+                    <th>Дата</th>
+                    <th>Номер телефона</th>
+                    <th>Имя</th>
+                    <th>Вид услуги</th>
+                    <th>Действие</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sr?.map((w) => {
+                    return (
+                      <tr key={w?.id}>
+                        <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                        <td>{w?.phone}</td>
+                        <td>{w?.name}</td>
+                        <td>{w?.type}</td>
+                        <td>
+                          {w?.comment}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+             </Table>
+              </Tabs.Panel>
+            </Tabs>
+
           </Tabs.Panel>
           <Tabs.Panel value="zxc">
-            <Table>
+            <Tabs value="bids">
+              <Tabs.List>
+                <Tabs.Tab value="bids">Заявки</Tabs.Tab>
+                <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
+                <Tabs.Tab value="ref">Отклоненные</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="bids">
+                    <Table>
               <thead>
                 <tr>
                   <th>Дата</th>
@@ -445,36 +1069,150 @@ export const Bids = () => {
                       <td>{w?.name}</td>
                       <td>{w?.vaca}</td>
                       <td>
-                        <Button
-                          onClick={() => {
-                            openConfirmModal({
-                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                              centered: true,
-                              onConfirm: async () => {
-                                await pb.collection('vaca_bids').delete(w?.id)
-                                .then(() => {
-                                  getVacaBids()
-                                  .then(res => {
-                                    setX(res)
-                                  })
-                                })
-                              }
-                            })
-                          }}  
-                          compact
-                          variant="light"
-                        >
-                          Удалить
-                        </Button>
+                      <div className='flex gap-4'>
+                                <Textarea
+                                  autosize
+                                  value={w?.comment}
+                                  onChange={e => {
+                                    const newQ = x?.map(r => {
+                                      if (r?.id === w?.id) return {
+                                        ...r, comment: e?.currentTarget?.value
+                                      }
+                                      return {...r}
+                                    })
+                                    setX([...newQ])
+                                  }}
+                                />
+                                <BsCheckCircle
+                                  size={30} 
+                                  color='green'
+                                  // onClick={() => handleConfirmBid(q)}
+                                  onClick={async () => {
+                                    openConfirmModal({
+                                      labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                      centered: true,
+                                      onConfirm: async () => {
+                                        await pb.collection('vaca_bids').update(w?.id, {
+                                          status: 'succ',
+                                          comment: w?.comment
+                                        })
+                                        .then(() => {
+                                          getVacaBids()
+                                          .then(res => {
+                                            setX(res?.filter(w => w?.status === ''))
+                                            setXs(res?.filter(w => w?.status === 'succ'))
+                                            setXr(res?.filter(w => w?.status === 'ref'))
+                                          })
+                                        })
+                                      }
+                                      
+                                    })
+                                  }}
+                                  className='cursor-pointer hover:fill-yellow-500'
+                                />
+                                <CiCircleRemove 
+                                  size={35}
+                                  color='red'
+                                  onClick={async () => {
+                                    openConfirmModal({
+                                      labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                      centered: true,
+                                      onConfirm: async () => {
+                                        await pb.collection('vaca_bids').update(w?.id, {
+                                          status: 'ref',
+                                          comment: w?.comment
+                                        })
+                                        .then(() => {
+                                          getVacaBids()
+                                          .then(res => {
+                                            setX(res?.filter(w => w?.status === ''))
+                                            setXs(res?.filter(w => w?.status === 'succ'))
+                                            setXr(res?.filter(w => w?.status === 'ref'))
+                                          })
+                                        })
+                                      }
+                                      
+                                    })
+                                  }}
+                                  className='cursor-pointer hover:fill-yellow-500'
+                                />
+                              </div>
                       </td>
                     </tr>
                   )
                 })}
               </tbody>
             </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="succ">
+                    <Table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Номер телефона</th>
+                  <th>Имя</th>
+                  <th>Вид услуги</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {xs?.map((w) => {
+                  return (
+                    <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                      <td>{w?.phone}</td>
+                      <td>{w?.name}</td>
+                      <td>{w?.vaca}</td>
+                      <td>
+                      {w?.comment}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="ref">
+                    <Table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Номер телефона</th>
+                  <th>Имя</th>
+                  <th>Вид услуги</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {xr?.map((w) => {
+                  return (
+                    <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                      <td>{w?.phone}</td>
+                      <td>{w?.name}</td>
+                      <td>{w?.vaca}</td>
+                      <td>
+                        {w?.comment}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+              </Tabs.Panel>
+            </Tabs>
+        
           </Tabs.Panel>
           <Tabs.Panel value="asd">
-            <Table>
+
+            <Tabs defaultValue="bids">
+              <Tabs.List>
+                <Tabs.Tab value="bids">Заявки</Tabs.Tab>
+                <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
+                <Tabs.Tab value="ref">Отклоненные</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="bids">
+              <Table>
               <thead>
                 <tr>
                   <th>Дата</th>
@@ -493,33 +1231,139 @@ export const Bids = () => {
                       <td>{w?.name}</td>
                       <td>{w?.resort}</td>
                       <td>
-                        <Button
-                          onClick={() => {
-                            openConfirmModal({
-                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                              centered: true,
-                              onConfirm: async () => {
-                                await pb.collection('health_bids').delete(w?.id)
-                                .then(() => {
-                                  getHealthBids()
-                                  .then(res => {
-                                    setH(res)
-                                  })
-                                })
-                              }
-                            })
-                          }}  
-                          compact
-                          variant="light"
-                        >
-                          Удалить
-                        </Button>
+                      <div className='flex gap-4'>
+                                <Textarea
+                                  autosize
+                                  value={w?.comment}
+                                  onChange={e => {
+                                    const newQ = h?.map(r => {
+                                      if (r?.id === w?.id) return {
+                                        ...r, comment: e?.currentTarget?.value
+                                      }
+                                      return {...r}
+                                    })
+                                    setH([...newQ])
+                                  }}
+                                />
+                                <BsCheckCircle
+                                  size={30} 
+                                  color='green'
+                                  // onClick={() => handleConfirmBid(q)}
+                                  onClick={async () => {
+                                    openConfirmModal({
+                                      labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                      centered: true,
+                                      onConfirm: async () => {
+                                        await pb.collection('health_bids').update(w?.id, {
+                                          status: 'succ',
+                                          comment: w?.comment
+                                        })
+                                        .then(() => {
+                                          getVacaBids()
+                                          .then(res => {
+                                            setH(res?.filter(w => w?.status === ''))
+                                            setHs(res?.filter(w => w?.status === 'succ'))
+                                            setHr(res?.filter(w => w?.status === 'ref'))
+                                          })
+                                        })
+                                      }
+                                      
+                                    })
+                                  }}
+                                  className='cursor-pointer hover:fill-yellow-500'
+                                />
+                                <CiCircleRemove 
+                                  size={35}
+                                  color='red'
+                                  onClick={async () => {
+                                    openConfirmModal({
+                                      labels: {cancel: 'Назад', confirm: 'Одобрить'},
+                                      centered: true,
+                                      onConfirm: async () => {
+                                        await pb.collection('health_bids').update(w?.id, {
+                                          status: 'ref',
+                                          comment: w?.comment
+                                        })
+                                        .then(() => {
+                                          getVacaBids()
+                                          .then(res => {
+                                            setH(res?.filter(w => w?.status === ''))
+                                            setHs(res?.filter(w => w?.status === 'succ'))
+                                            setHr(res?.filter(w => w?.status === 'ref'))
+                                          })
+                                        })
+                                      }
+                                      
+                                    })
+                                  }}
+                                  className='cursor-pointer hover:fill-yellow-500'
+                                />
+                              </div>
                       </td>
                     </tr>
                   )
                 })}
               </tbody>
             </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="succ">
+                            <Table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Номер телефона</th>
+                  <th>Имя</th>
+                  <th>Курорт</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {hs?.map((w) => {
+                  return (
+                    <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                      <td>{w?.phone}</td>
+                      <td>{w?.name}</td>
+                      <td>{w?.resort}</td>
+                      <td>
+                      {w?.comment}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+              </Tabs.Panel>
+              <Tabs.Panel value="ref">
+                            <Table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Номер телефона</th>
+                  <th>Имя</th>
+                  <th>Курорт</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {hr?.map((w) => {
+                  return (
+                    <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                      <td>{w?.phone}</td>
+                      <td>{w?.name}</td>
+                      <td>{w?.resort}</td>
+                      <td>
+                        {w?.comment}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+              </Tabs.Panel>
+            </Tabs>
+
           </Tabs.Panel>
           
           <Tabs.Panel value="question">
