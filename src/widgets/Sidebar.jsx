@@ -9,22 +9,31 @@ export const Sidebar = () => {
   const {lang} = useLangContext()
 
   const array = [
+
+    
+    {path: '/partners', labelru: 'Партнеры'},
+
+    {path: '/users', labelru: 'Пользователи', labelkz: 'Пользователи', mng: true},
+    {path: '/agents', labelru: 'Агенты', labelkz: 'Пользователи', mng: true},
+    {path: '/agents-bids', labelru: 'Заявки агентов', labelkz: 'Заявки агентов', mng: true},
+
+
     {path: '/construct', labelru: 'Конструктор туров'},
     {path: '/about', labelru: 'О компании', labelkz: 'Компания туралы'},
-    {path: '/health', labelru: 'Твое здоровье', labelkz: 'Сенің денсаулығың'},
-    {path: '/courses', labelru: 'Курсы по туризму', labelkz: 'Туристік курстар'},
+    // {path: '/health', labelru: 'Твое здоровье', labelkz: 'Сенің денсаулығың'},
+    // {path: '/courses', labelru: 'Курсы по туризму', labelkz: 'Туристік курстар'},
     {path: '/resorts', labelru: 'Санатории', labelkz: 'Санаториялар'},
-    {path: '/partners', labelru: 'Наши туристы', labelkz: `Наши туристы`},
+    // {path: '/partners', labelru: 'Наши туристы', labelkz: `Наши туристы`},
     {path: '/price', labelru: 'Услуги (страница)'},
     {path: '/program', labelru: 'Партнерская программа', labelkz: 'Агенттік бағдарлама'},
     {path: '/our-team', labelru: 'Наша команда'},
     {path: '/insurance', labelru: 'Страхование', labelkz: `Сақтандыру`},
     {path: '/news', labelru: 'Новости компании', labelkz: `Жаңалықтар`},
-    {path: '/users', labelru: 'Пользователи'},
+
     {path: '/levels', labelru: 'Уровни'},
     {path: '/binary', labelru: 'Бинар'},
     {path: '/bids', labelru: 'Заявки'},
-    {path: '/money-flow', labelru: 'Движение средтв'},
+    // {path: '/money-flow', labelru: 'Движение средтв'},
     {path: '/withdraws', labelru: 'Выводы', buhgalter: true},
     {path: '/services', labelru: 'Услуги', labelkz: 'Қызметтер', tur: true},
     {path: '/replenish', labelru: 'Пополнения', labelkz: 'Пополнения'},
@@ -35,6 +44,7 @@ export const Sidebar = () => {
     {path: '/health-world', labelru: 'Мир здоровья', labelkz: 'Мир здоровья', mng: true},
     {path: '/tours', labelru: 'Туры с Ozelim', labelkz: 'Туры с Ozelim', mng: true},
     {path: '/rights', labelru: 'Правовая защита', labelkz: 'Правовая защита', mng: true},
+    {path: '/tourist', labelru: 'Пользователь', labelkz: 'Пользователь', mng: true},
     {path: '/dual', labelru: 'Дуальное обучение', labelkz: 'Дуальное обучение', mng: true},
   ]
 
