@@ -15,11 +15,11 @@ export const Sidebar = () => {
 
     {path: '/users', labelru: 'Пользователи', labelkz: 'Пользователи', mng: true},
     {path: '/agents', labelru: 'Агенты', labelkz: 'Пользователи', mng: true},
-    {path: '/agents-bids', labelru: 'Заявки агентов', labelkz: 'Заявки агентов', mng: true},
+    // {path: '/agents-bids', labelru: 'Заявки агентов', labelkz: 'Заявки агентов', mng: true},
 
 
     {path: '/construct', labelru: 'Конструктор туров'},
-    {path: '/about', labelru: 'О компании', labelkz: 'Компания туралы'},
+    // {path: '/about', labelru: 'О компании', labelkz: 'Компания туралы'},
     // {path: '/health', labelru: 'Твое здоровье', labelkz: 'Сенің денсаулығың'},
     // {path: '/courses', labelru: 'Курсы по туризму', labelkz: 'Туристік курстар'},
     {path: '/resorts', labelru: 'Санатории', labelkz: 'Санаториялар'},
@@ -70,7 +70,7 @@ export const Sidebar = () => {
                       : page.labelru
                     }
                   </span>
-              </div>
+                </div>
             </Link>
           )
         }

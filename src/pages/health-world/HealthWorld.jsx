@@ -3,8 +3,6 @@ import { Accordion, Button, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
 import { Editor, Image } from 'shared/ui';
 
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import { openConfirmModal } from '@mantine/modals';
 
 async function getResorts () {
@@ -14,7 +12,6 @@ async function getResorts () {
 export const HealthWorld = () => {
 
   const [resort, setResort] = React.useState('')
-  const [editor, setEditor] = React.useState('')
 
   const [resorts, setResorts] = React.useState({})
 
@@ -94,16 +91,12 @@ export const HealthWorld = () => {
   React.useEffect(() => {
     setChangedImages(images);
   }, [images]);
+  
+  const [html, setHtml] = React.useState('')
 
-  const resetStyles = {
-    all: "unset !important",
-    boxSizing: "border-box",
-    display: "block",
-    margin: 0,
-    padding: 0,
-    listStyle: 'disc'
-  };
-
+  function getHTML (e) {
+    setHtml(e)
+  }
 
   return (
     <div className='w-full space-y-10'>
@@ -367,37 +360,12 @@ export const HealthWorld = () => {
             autosize
           />
         </div>
-        {/* <div className='max-w-xl'> 
-          <TextInput
-            label="Заголовок"
-            value={changedHeadings?.heading8 ?? ""}
-            onChange={(e) => handleHealthChange(e, "heading")}
-            name="heading8"
-          />
-          <Textarea
-            label="Описание"
-            value={changedText?.text20 ?? ""}
-            onChange={(e) => handleHealthChange(e, "text")}
-            name="text20"
-            autosize
-          />
-        </div> */}
-
-        {/* <div className='max-w-xl '>
-          <TextInput
-            label="Заголовок"
-            value={changedHeadings?.heading1 ?? ""}
-            onChange={(e) => handleHealthChange(e, "heading")}
-            name="heading1"
-          />
-          <TextInput
-            label="Под заголовок"
-            value={changedHeadings?.heading2 ?? ""}
-            onChange={(e) => handleHealthChange(e, "heading")}
-            name="heading2"
-          />
-        </div> */}
-
+        
+        <div className='flex justify-center'>
+          <Button onClick={saveFund}>
+            Сохранить
+          </Button>
+        </div>
         <div>
           <p>Санатории:</p>
           {resorts?.resorts?.map((q, i) => {
@@ -414,8 +382,8 @@ export const HealthWorld = () => {
                         <Accordion.Control className='!text-xl !font-bold '>{i + 1}. 
                           <span className='text-primary-500'>{q?.name}</span>
                         </Accordion.Control>
-                        <Accordion.Panel className='p-4'>
-                          <div className='health-wrld' dangerouslySetInnerHTML={{__html: q?.desc ?? <></>}}/>
+                        <Accordion.Panel>
+                          <div className='accordion-body' dangerouslySetInnerHTML={{__html: q?.desc ?? <></>}}/>
                         </Accordion.Panel>
 
                         <Button
@@ -456,26 +424,20 @@ export const HealthWorld = () => {
               onChange={e => setResort(e.currentTarget.value)}
             />
             <label>Описание</label>
-            <ReactQuill
-              value={editor}
-              theme='snow'
-              onChange={setEditor}
-              className='max-w-3xl'
-              modules={{
-                toolbar: [{'list': 'bullet'}]
-              }}
+            <Editor
+              getHTML={getHTML}
             />
+
             <Button
               onClick={async () => {
                 await pb.collection('health_data').update(resorts?.id, {
-                  resorts: [...resorts?.resorts ?? [], {name: resort, desc: editor}]
+                  resorts: [...resorts?.resorts ?? [], {name: resort, desc: html}]
                 })
                 .then(() => {
                   getResorts()
                   .then(res => {
                     setResorts(res?.[0])
                     setResort('')
-                    setEditor('')
                   })
                 })
               }}
@@ -485,12 +447,7 @@ export const HealthWorld = () => {
             </Button>
           </div>
         </div>
-        
-        <div className='flex justify-center'>
-          <Button onClick={saveFund}>
-            Сохранить
-          </Button>
-        </div>
+
     </div>
   )
 }

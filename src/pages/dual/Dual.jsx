@@ -1,9 +1,10 @@
 import React from "react";
-import { Button, Table, Tabs, TextInput, Textarea } from "@mantine/core";
+import { Accordion, Button, Table, Tabs, TextInput, Textarea } from "@mantine/core";
 import { getData, pb } from "shared/api";
-import { Image } from "shared/ui";
-import ReactQuill from "react-quill";
+import { Editor, Image } from "shared/ui";
 import { openConfirmModal } from "@mantine/modals";
+
+import { RichTextEditor, Link } from '@mantine/tiptap';
 
 async function getServices() {
   return await pb.collection('dual_data').getFullList()
@@ -105,6 +106,12 @@ export const Dual = () => {
   React.useEffect(() => {
     setChangedImages(images);
   }, [images]);
+
+  const [html, setHtml] = React.useState('')
+
+  function getHTML (e) {
+    setHtml(e)
+  }
 
   return (
     <div className="w-full">
@@ -488,41 +495,6 @@ export const Dual = () => {
         />
       </div>
 
-      {/* <div>
-        <div className="grid grid-cols-3 gap-4 mt-20">
-          {Array(3).fill(1).map((_, i) => {
-            const index = i + 1
-            return (
-              <div className="space-y-2">
-                <TextInput
-                  label="Заголовок"
-                  value={changedText?.[`label${index}`] ?? ""}
-                  name={`label${index}`}
-                  onChange={(e) =>
-                    handleCourseChange(e, "text")
-                  }
-                />
-                <TextInput
-                  label="Цена"
-                  value={changedText?.[`cost${index}`] ?? ""}
-                  name={`cost${index}`}
-                  onChange={(e) =>
-                    handleCourseChange(e, "text")
-                  }
-                />
-                <ReactQuill
-                  value={changedText?.[`editor${index}`] ?? ""}
-                  onChange={(e) => {
-                    setChangedText({ ...changedText, [`editor${index}`]: e});
-                  }}
-                  className="h-full"
-                  name={`editor${index}`}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div> */}
       <div className="flex justify-center mt-60">
         <Button onClick={saveCourses}>
           Сохранить
@@ -533,7 +505,7 @@ export const Dual = () => {
           <p>Виды услуг:</p>
           {services?.services?.map((q, i) => {
             return (
-              <>
+              <React.Fragment key={i}>
                 <p className='text-lg'>{q}</p>
                 <Button
                   variant='subtle'
@@ -558,7 +530,7 @@ export const Dual = () => {
                 >
                   Удалить 
                 </Button>
-              </>
+              </React.Fragment>
             )
           })}
           <div>          
@@ -589,57 +561,63 @@ export const Dual = () => {
         </div>
         <div>
           <p>Открытые вакансии:</p>
+          <Accordion
+            variant='separated'
+            className='my-10'
+            defaultValue='0'
+          >
           {vacas?.vacas?.map((q, i) => {
             return (
-              <>
-                <div>
-                  <p className='text-lg'>Название: {q?.name}</p>
-                  <p className='text-lg'>Описание: {q?.desc}</p>
-                </div>
-                <Button
-                  variant='subtle'
-                  onClick={() => {
-                    openConfirmModal({
-                      centered: true,
-                      labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                      onConfirm: async () => {
-                        const newTypes = vacas?.vacas?.filter(w => w !== q)
-                        await pb.collection('dual_vacas').update(vacas?.id, {
-                          vacas: [...newTypes]
-                        })
-                        .then(res => {
-                          getVaca()
-                          .then((res) => {
-                            setVacas(res?.[0])
+              <Accordion.Item value={`${i}`} key={i + 1}>
+                <Accordion.Control className='!text-xl !font-bold '>{i + 1}. 
+                  <span className='text-primary-500'>{q?.name}</span>
+                </Accordion.Control>
+                <Accordion.Panel>
+                  <div dangerouslySetInnerHTML={{__html: q?.desc}} className="accordion-body" />
+
+                  <Button
+                    variant='subtle'
+                    onClick={() => {
+                      openConfirmModal({
+                        centered: true,
+                        labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                        onConfirm: async () => {
+                          const newTypes = vacas?.vacas?.filter(w => w !== q)
+                          await pb.collection('dual_vacas').update(vacas?.id, {
+                            vacas: [...newTypes]
                           })
-                        })
-                      }
-                    })
-                  }}
-                >
-                  Удалить 
-                </Button>
-              </>
-            )
-          })}
-          <div>          
+                          .then(res => {
+                            getVaca()
+                            .then((res) => {
+                              setVacas(res?.[0])
+                            })
+                          })
+                        }
+                      })
+                    }}
+                  >
+                    Удалить 
+                  </Button>
+                </Accordion.Panel>
+              </Accordion.Item>
+            )})}
+            </Accordion>
+       
+          <div>     
             <TextInput
               className='max-w-md'
               label='Название'
               value={vaca?.name ?? ''}
               onChange={e => setVaca({...vaca, name: e.currentTarget?.value})}
             />
-            <Textarea
-              className='max-w-md'
-              label='Описание'
-              value={vaca?.desc ?? ''}
-              onChange={e => setVaca({...vaca, desc: e.currentTarget?.value})}
-              autosize
+
+            <Editor
+              getHTML={getHTML}
             />
             <Button
               onClick={async () => {
                 await pb.collection('dual_vacas').update(vacas?.id, {
-                  vacas: [...vacas?.vacas ?? [], vaca]
+                  vacas: [...vacas?.vacas ?? [], {name: vaca?.name, desc: html}]
                 })
                 .then(() => {
                   getVaca()

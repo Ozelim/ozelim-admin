@@ -38,8 +38,8 @@ import {
   HealthWorldKz,
   FundKz,
   DualKz,
-  // Agents,
-  // AgentsBids,
+  Agents,
+  AgentsBids,
   Tourist,
   Partners
 } from "pages";
@@ -75,10 +75,10 @@ const appRouter = createBrowserRouter([
       { path: "/health-world", element: <SwitchLayout ru={<HealthWorld/>} kz={<HealthWorldKz/>}/> },
       { path: "/tours", element: <Tours /> },
       { path: "/rights", element: <Rights /> },
-      // { path: "/agents", element: <Agents /> },
+      { path: "/agents", element: <Agents /> },
       { path: "/users", element: <Users /> },
       { path: "/tourist", element: <Tourist /> },
-      // { path: "/agents-bids", element: <AgentsBids /> },
+      { path: "/agents-bids", element: <AgentsBids /> },
       { path: "/dual", element: <SwitchLayout ru={<Dual />} kz={<DualKz/>} /> },
       { path: "*", element: <NotFound /> },
     ],

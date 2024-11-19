@@ -15,4 +15,3 @@ async function compress (file, options) {
 }
 
 export { compress }
-

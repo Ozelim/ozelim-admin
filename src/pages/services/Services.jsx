@@ -79,14 +79,14 @@ export const Services = () => {
     })
     .then(async () => {
       if (!bid?.pay && !bid?.bonuses) {
-        await pb.collection('users').update(bid?.user, {
+        await pb.collection(bid?.agent ? 'agents' : 'users').update(bid?.agent ? bid?.agent : bid?.user, {
           'balance+': bid?.total_cost
         })
         .then(res => {
           setRejectModal({...rejectModal, modal: false})
         })
       } else if (rejectModal.payback) {
-          await pb.collection('users').update(bid?.user, {
+          await pb.collection(bid?.agent ? 'agents' : 'users').update(bid?.agent ? bid?.agent : bid?.user, {
             'balance+': bid?.total_cost
           })
           .then(res => {
@@ -94,7 +94,7 @@ export const Services = () => {
           })
         }
       else if (bid?.bonuses) {
-        await pb.collection('users').update(bid?.user, {
+        await pb.collection(bid?.agent ? 'agents' : 'users').update(bid?.agent ? bid?.agent : bid?.user, {
           'bonuses+': bid?.total_cost
         })
         .then(res => {

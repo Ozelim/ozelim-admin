@@ -1,321 +1,333 @@
 import React from "react";
-import { Button, Modal, TextInput, Textarea, FileInput } from "@mantine/core";
-import { pb } from "shared/api";
-import { PartnersCard } from "shared/ui/PartnersCard";
-
-
-import { FiEdit } from 'react-icons/fi'
-import { MdDeleteForever } from 'react-icons/md'
+import { Button, LoadingOverlay, Menu, Modal, Pagination, Table, TextInput } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
-import { Image } from "shared/ui";
-import { getExtension, getImageUrl } from "shared/lib";
+import dayjs from "dayjs";
+import { pb } from "shared/api";
 
+import { AiFillCheckCircle, AiFillLock } from "react-icons/ai";
+import { showNotification } from "@mantine/notifications";
+import { formatNumber } from "shared/lib";
 
-async function getPartners () {
-  return await pb.collection('partners').getFullList({filter: `kz = false`})
+async function getUsers() {
+  return await pb.collection("users").getFullList({
+    sort: '-created'
+  });
 }
 
 export const Partners = () => {
 
-  const [partners, setPartners] = React.useState([]);
-  const [partner, setPartner] = React.useState({})
-  const [images, setImages] = React.useState([])
+  const [users, setUsers] = React.useState([]);
 
-  const [editModal, setEditModal] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
-  async function handlePartners () {
-    await getPartners()
-    .then(res => {
-      setPartners(res)
-    })
-  }
+  const [search, setSearch] = React.useState("");
 
-  React.useEffect(() => {
-    handlePartners()
-
-    pb.collection('partners').subscribe('*', function () {
-      handlePartners()
-    })
-
-    return () => {
-      pb.collection('partners').unsubscribe('*')
+  async function searchByValue() {
+    if (!search) {
+      handleUsers(1);
+      return;
     }
-  }, [])
-
-  React.useEffect(() => {
-    // let imgs = {}
-    // for (const key in partner) {
-    //   if (!isNaN(key)) {
-    //     imgs = {
-    //       ...imgs,
-    //       [key]: partner?.[key]
-    //     }
-    //   }
-    // }
-    // setImages(imgs)
-  }, [partner])
-
-  async function deletePartner (partnerId) {
-    await pb.collection('partners').delete(partnerId)
-  }
-
-  const confirmDelete = (partnerId) => openConfirmModal({
-    title: 'Подтвердите действие',
-    centered: true,
-    labels: {confirm: 'Удалить', cancel: 'Отмена'},
-    onConfirm: () => deletePartner(partnerId)
-  })
-
-  function openEditModal (val) {
-    setPartner(val)
-    let imgs = {}
-      for (const index in val) {
-        if (!isNaN(index)) {
-          imgs = {
-            ...imgs,
-            [index]: val?.[index]
-          }
-
-        }
-      }
-    setImages(imgs)
-    setEditModal(true)
-  }
-
-  function closeModal () {
-    setPartner({})
-    setEditModal(false)
-  } 
-
-  function handlePartnerChange (e) {
-    const { value, name } = e?.currentTarget
-    setPartner({...partner, [name]: value}) 
-  }
-
-  function handleImagesChange(val, index) {
-    setImages({ ...images, [`${index}`]: val });
-  }
-
-  function handlePdfChange(val) {
-    setPartner({ ...partner, pdf: val });
-  }
-
-  function handleImageDelete(index) {
-    setImages({ ...images, [index]: null});
-  }
-
-  async function savePartner () {
-    const formData = new FormData();      
-    formData.append('name', partner.name)
-    formData.append('description', partner.description)
-
-    if (partner?.id) {
-      console.log(images);
-      await pb
-        .collection("partners")
-        .update(partner?.id, {
-          description: partner.description,
-          name: partner.name,
-        })
-        .then(async (res) => {
-          formData.append("pdf", partner?.pdf);
-          if (partner?.pdf) {
-            await pb.collection("partners").update(res.id, formData);
-          }
-
-          for (const index in images) {
-            if (!isNaN(index)) {
-              if (images?.[index] == null) {
-                await pb
-                  .collection("partners")
-                  .update(res.id, {
-                    [index]: null 
-                  })
-                  .then((res) => {
-                    console.log(res);
-                  });
-              }
-                if (images?.[index] instanceof File) {
-                  formData.append([`${index}`], images?.[index]);
-                  await pb
-                    .collection("partners")
-                    .update(res.id, formData)
-                    .then((res) => {
-                      console.log(res);
-                    });
-                }
-            }
-          }
-        });
-
-        setEditModal(false)
-        
-      return
-    }
-
-    await pb.collection('partners').create({
-      description: partner.description,
-      name: partner.name
-    })
-    .then(async (res) => {
-      formData.append("pdf", partner?.pdf);
-      if (partner?.pdf) {
-        await pb.collection("partners").update(res.id, formData);
-      }
-
-      for (const index in images) {
-        if (!isNaN(index)) {
-          if (images?.[index] instanceof File) {
-            formData.append([`${index}`], images?.[index]);
-            await pb
-              .collection("partners")
-              .update(res.id, formData)
-              .then((res) => {
-                console.log(res);
-              });
-          }
-        }
-      }
-      setEditModal(false);
+    const foundUsers = await pb.collection("users").getFullList({
+      filter: `
+        id = '${search}' ||
+        name ?~ '${search}' ||
+        email ?~ '${search}' ||
+        phone ?~ '${search}' ||
+        city ?~ '${search}'
+      `,
     });
 
-  } 
-
-  const [viewModal, setViewModal] = React.useState(false)
-
-  function view (val) {
-    setPartner(val)
-    setViewModal(true)
+    if (foundUsers.length !== 0) {
+      setUsers(foundUsers);
+      showNotification({
+        title: 'Поиск',
+        message: 'Не найдено',
+        color: 'teal'
+      })
+    }
   }
+
+  React.useEffect(()  => {
+    getUsers().then((res) => {
+      setUsers(res);
+    });
+
+    pb.collection("users").subscribe("*", function () {
+      getUsers().then((res) => {
+        setUsers(res);
+      });
+    });
+  }, []); 
+
+  function handleUsers(val) {
+    getUsers(val).then((res) => {
+      setUsers(res);
+    });
+  }
+
+  async function verifyUser(userId) {
+    setLoading(true)
+    return await pb
+      .collection("users")
+      .update(userId, {
+        verified: true
+      })
+      .then(async res => {
+        const sponsor = await pb.collection('users').getOne(res?.sponsor)
+        await pb.collection('users').update(sponsor?.id, {
+          referals: [...sponsor?.referals, res?.id]
+        })
+        
+        const referals = await pb.collection('users').getFullList({filter: `sponsor = '${sponsor?.id}' && verified = true`})
+
+        if (referals?.length === 1) {
+          await pb.collection('users').update(sponsor?.id, {
+            balance: sponsor?.balance + 30000            
+          })
+          setLoading(false)
+          return
+        }
+
+        if (referals?.length >= 4) {
+          await pb.collection('users').update(sponsor?.id, {
+            balance: sponsor?.balance + 15000            
+          })
+          setLoading(false)
+          return
+        }
+        setLoading(false)
+      })
+      .catch(err => {
+        setLoading(false)
+      })
+  }
+  // Пример использования
+
+  const confirmVerifing = (userId) =>
+    openConfirmModal({
+      title: "Подтвердить верификацию",
+      centered: true,
+      children: <>Подтверить верификацию пользователя</>,
+      labels: { confirm: "Подтвердить", cancel: "Отмена" },
+      onConfirm: () => verifyUser(userId),
+  });
+
+  const confirmLevel = (user, val) => {
+    openConfirmModal({
+      title: "Подтвердить верификацию",
+      centered: true,
+      children: <>Выдать уровень {val} пользователю {user?.id} </>,
+      labels: { confirm: "Подтвердить", cancel: "Отмена" },
+      onConfirm: () => giveLevel(user, val),
+  })}
+
+  async function giveLevel (user, val) {
+    await pb.collection('users').update(user?.id, {
+      level: val
+    })
+  }
+
+  const [modal, setModal] = React.useState({
+    show: false,
+    bonuses: {}
+  })
 
   return (
     <>
       <div className="w-full">
-        <Button
-          onClick={() => {
-            setEditModal(true)
-            setPartner({
-              name: '',
-              description: '',
-              pdf: null,
-            })
-            setImages({})
-          }}
-        >
-          Создать бизнес-партнера
-        </Button>
-
-        <div className="grid grid-cols-4 gap-5 mt-5">
-          {partners?.map((partner, i) => {
-            return (
-              <div key={i}>
-                <PartnersCard 
-                  partner={partner}
-                  viewPdf={view}
-                />
-                <div className="flex gap-4 mt-2 justify-center">
-                  <FiEdit
-                    size={30}
-                    color="teal"
-                    onClick={() => openEditModal(partner)}
-                  />
-                  <MdDeleteForever
-                    size={30}
-                    color="red"
-                    onClick={() => confirmDelete(partner?.id)}
-                  />
-                </div>
-              </div>
-            );
-          })}
+        <LoadingOverlay visible={loading} />
+        <div className="flex items-end">
+          <TextInput
+            label="Поиск"
+            value={search}
+            onChange={(e) => setSearch(e.currentTarget.value)}
+          />
+          <Button
+            onClick={() => searchByValue()}
+          >
+            Поиск
+          </Button>
         </div>
+        <Table className="mt-4">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th></th>
+              <th>Имя</th>
+              <th>Фамилия</th>
+              <th>Бинар</th>
+              <th>Уровни</th>
+              <th>Баланс</th>
+              <th>Почта</th>
+              <th>Телефон</th>
+              <th>Область</th>
+              <th>Адрес</th>
+              <th>Спонсор</th>
+              <th>Дата регистрации</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user, i) => {
+              return (
+                <tr
+                  key={i}
+                  // onClick={() => openChangeModal(user)}
+                >
+                  <td>{user.id}</td>
+                  <td>
+                    {user?.verified ? (
+                      <Button compact variant={"subtle"} color={"green"}>
+                        <AiFillCheckCircle size={20} />
+                      </Button>
+                    ) : (
+                      <Button
+                        compact
+                        variant={"subtle"}
+                        color="yellow"
+                        onClick={() => confirmVerifing(user?.id)}
+                        // onClick={() => verifyUser(user?.id)}
+                      >
+                        <AiFillLock size={20} />
+                      </Button>
+                    )}
+                  </td>
+                  <td>{user.name}</td>
+                  <td>{user.surname}</td>
+                  <td>{user.bin ? "Да" : "Нет"}</td>
+                  <td>
+                    {user?.bin 
+                        ? (user.level === '0' || !user.level) && '1' ||
+                        (user.level === '1') && `2` ||
+                        (user.level === '2') && `3` ||
+                        (user.level === '3') && `4` ||
+                        (user.level === '4.1' || user.level === '4.2') && 5 ||
+                        (user.level === '5' && 6)
+                      : '0'
+                    }
+ 
+                    {/* {user?.level 
+                      ? (user?.level === '4.1' && '4.Путевка' || 
+                        user?.level === '4.2' && '4.Курса' || user?.level)
+                      : !user?.level && 0} */}
+                  </td>
+                  <td>
+                    <Button 
+                      size="xs"
+                      onClick={async () => {
+                        await pb.collection('user_bonuses').getOne(user?.id)
+                        .then(res => {
+                          setModal({...modal, show: true, bonuses: res})
+                        })
+                      }}
+                    >
+                      {user.balance}
+                    </Button>
+                  </td>
+                  <td>{user.email}</td>
+                  <td>{user.phone}</td>
+                  <td>{user.region}</td>
+                  <td>{user.adress}</td>
+                  <td>{user.sponsor}</td>
+                  <td>{dayjs(user.created).format(`DD.MM.YY, HH:mm`)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
       </div>
       <Modal
-        opened={editModal}
-        onClose={closeModal}
-        title="Редактирование"
+        opened={modal?.show}
         centered
+        onClose={() => setModal({...modal, show: false})}
+        size={'70%'}
       >
-        <ParntnersForm
-          partner={partner}
-          handlePartnerChange={handlePartnerChange}
-          handleImagesChange={handleImagesChange}
-          handleImageDelete={handleImageDelete}
-          handlePdfChange={handlePdfChange}
-          images={images}
-        />
-        <Button
-          onClick={savePartner}
-        >
-          Сохранить
-        </Button>
-      </Modal>
-      <Modal
-        opened={viewModal}
-        onClose={() => setViewModal(false)}
-        size='50%'
-        centered
-      >
-        {getExtension(partner?.pdf) === 'pdf' ?
-          <iframe
-            className='w-full h-screen' 
-            src={getImageUrl(partner, partner?.pdf)} frameborder="0"
-          />
-          : <img src={getImageUrl(partner, partner?.pdf)} alt="" className='w-full h-auto' />
-        }
+        <div className="mt-12 overflow-scroll">
+          <h2 className="text-center text-xl font-head">История</h2>
+          <Table className="border mt-4">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Тип</th>
+                <th>ID</th>
+                <th>Сумма</th>
+              </tr>
+            </thead>
+            <tbody>
+              {modal?.bonuses?.referals?.map((q, i) => {
+                return (
+                  <tr key={i} className="text">
+                    <td className='whitespace-nowrap'>
+                      {dayjs(q?.created).format(
+                        'YY-MM-DD, hh:mm'
+                      )}
+                    </td>
+                    <td className="text-black">Система</td>
+                    <td>{q?.referal}</td>
+                    <td className='text-green-500'>+ {formatNumber(q?.sum)}</td>
+                  </tr>
+                )
+              })}
+              {modal?.bonuses?.bonuses?.map((q, i) => {
+                return (
+                  <tr key={i} className="text">
+                    <td className='whitespace-nowrap'>
+                      {dayjs(q?.created).format(
+                        'YY-MM-DD, hh:mm'
+                      )}
+                    </td>
+                    <td className="text-black">Бонус</td>
+                    <td>-</td>
+                    <td className='text-green-500'>+ {formatNumber(q?.sum)}</td>
+                  </tr>
+                )
+              })}
+              {modal?.bonuses?.replenish?.map((q, i) => {
+                return (
+                  <tr key={i} className="text">
+                    <td className='whitespace-nowrap'>
+                      {dayjs(q?.created).format(
+                        'YY-MM-DD, hh:mm'
+                      )}
+                    </td>
+                    <td className="text-black">Пополнение</td>
+                    <td>-</td>
+                    <td className='text-green-500'>+ {formatNumber(q?.sum)}</td>
+                  </tr>
+                )
+              })}
+              {modal?.bonuses?.withdraws?.map((q, i) => {
+                return (
+                  <tr key={i} className="text">
+                    <td className='whitespace-nowrap'>
+                      {dayjs(q?.created).format(
+                        'YY-MM-DD, hh:mm'
+                      )}
+                    </td>
+                    <td className="text-black">Вывод</td>
+                    <td>-</td>
+                    <td className='text-red-500'>- {formatNumber(q?.sum)}</td>
+                  </tr>
+                )
+              })}
+              {modal?.bonuses?.services?.map((q, i) => {
+                return (
+                  <tr key={i} className="text">
+                    <td className='whitespace-nowrap'>
+                      {dayjs(q?.created).format(
+                        'YY-MM-DD, hh:mm'
+                      )}
+                    </td>
+                    <td className="text-black">Услуга</td>
+                    <td>-</td>
+                    <td className='text-red-500'>- {formatNumber(q?.sum)}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        </div>
+
       </Modal>
     </>
   );
 };
-
-const ParntnersForm = ({
-  partner,
-  handlePartnerChange,
-  handleImagesChange,
-  handleImageDelete,
-  images,
-  handlePdfChange
-}) => {
-    return (
-      <div className="space-y-4">
-        <TextInput
-          name="name"
-          onChange={handlePartnerChange}
-          label="Имя"
-          value={partner?.name ?? ''}
-        />
-        <Textarea
-          name="description"
-          onChange={handlePartnerChange}
-          label="Описание"
-          value={partner?.description ?? ''}
-        />
-        <div>
-          {Array(4)
-            .fill(1)
-            .map((_, i) => {
-              const index = i + 1;
-
-              return (
-                <Image
-                  label={`Фото ${index}`}
-                  onChange={handleImagesChange}
-                  onDelete={handleImageDelete}
-                  image={images?.[index]}
-                  index={index}
-                  record={partner}
-                  key={index}
-                />
-              );
-            })}
-        </div>
-        <FileInput
-          onChange={(e) => handlePdfChange(e)}
-          name="pdf"
-          label="Файл (pdf)"
-        />
-      </div>
-    );
-}
-
-

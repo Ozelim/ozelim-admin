@@ -9,8 +9,9 @@ import { showNotification } from "@mantine/notifications";
 import { formatNumber } from "shared/lib";
 
 async function getUsers() {
-  return await pb.collection("users").getFullList({
-    sort: '-created'
+  return await pb.collection("agents").getFullList({
+    sort: '-created',
+    filter: `agent = false`
   });
 }
 
@@ -147,22 +148,25 @@ export const Users = () => {
           >
             Поиск
           </Button>
+
+          <div className="mx-4 flex items-center gap-2">
+            <p>Количество: </p>
+            <p>{users?.length}</p>
+          </div>
         </div>
         <Table className="mt-4">
           <thead>
             <tr>
               <th>ID</th>
-              <th></th>
-              <th>Имя</th>
-              <th>Фамилия</th>
-              <th>Бинар</th>
-              <th>Уровни</th>
+              <th>Верифицирован</th>
+              <th>ФИО</th>
+              <th>Бонусы</th>
               <th>Баланс</th>
               <th>Почта</th>
               <th>Телефон</th>
               <th>Область</th>
-              <th>Адрес</th>
-              <th>Спонсор</th>
+              <th>Населенный пункт</th>
+              <th>Агент-наставник</th>
               <th>Дата регистрации</th>
             </tr>
           </thead>
@@ -184,50 +188,21 @@ export const Users = () => {
                         compact
                         variant={"subtle"}
                         color="yellow"
-                        onClick={() => confirmVerifing(user?.id)}
+                        // onClick={() => confirmVerifing(user?.id)}
                         // onClick={() => verifyUser(user?.id)}
                       >
                         <AiFillLock size={20} />
                       </Button>
                     )}
                   </td>
-                  <td>{user.name}</td>
-                  <td>{user.surname}</td>
-                  <td>{user.bin ? "Да" : "Нет"}</td>
-                  <td>
-                    {user?.bin 
-                        ? (user.level === '0' || !user.level) && '1' ||
-                        (user.level === '1') && `2` ||
-                        (user.level === '2') && `3` ||
-                        (user.level === '3') && `4` ||
-                        (user.level === '4.1' || user.level === '4.2') && 5 ||
-                        (user.level === '5' && 6)
-                      : '0'
-                    }
- 
-                    {/* {user?.level 
-                      ? (user?.level === '4.1' && '4.Путевка' || 
-                        user?.level === '4.2' && '4.Курса' || user?.level)
-                      : !user?.level && 0} */}
-                  </td>
-                  <td>
-                    <Button 
-                      size="xs"
-                      onClick={async () => {
-                        await pb.collection('user_bonuses').getOne(user?.id)
-                        .then(res => {
-                          setModal({...modal, show: true, bonuses: res})
-                        })
-                      }}
-                    >
-                      {user.balance}
-                    </Button>
-                  </td>
-                  <td>{user.email}</td>
-                  <td>{user.phone}</td>
-                  <td>{user.region}</td>
-                  <td>{user.adress}</td>
-                  <td>{user.sponsor}</td>
+                  <td>{user?.fio}</td>
+                  <td>{user?.bonuses}</td>
+                  <td>{user?.balance}</td>
+                  <td>{user?.email}</td>
+                  <td>{user?.phone}</td>
+                  <td>{user?.region}</td>
+                  <td>{user?.village}</td>
+                  <td>{user?.sponsor}</td>
                   <td>{dayjs(user.created).format(`DD.MM.YY, HH:mm`)}</td>
                 </tr>
               );

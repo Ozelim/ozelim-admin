@@ -93,15 +93,22 @@ export const Tourist = () => {
 
   return (
     <div className='w-full'>
+      <div className='flex gap-8 overflow-scroll'>
+        {Array(5).fill(1).map((q, i) => {
+          return (
+            <Image
+              label={'Картинка'}
+              onChange={handleImagesChange}
+              record={about?.images}
+              image={changedImages?.[`${i + 1}`]}
+              onDelete={handleImageDelete}
+              index={i + 1}
+              className='w-full h-auto'
+            />  
+          )
+        })}
+      </div>
       <div className='max-w-xl mt-10'>
-        <Image
-          label={'Картинка'}
-          onChange={handleImagesChange}
-          record={about?.images}
-          image={changedImages?.['1']}
-          onDelete={handleImageDelete}
-          index={1}
-        />  
         <TextInput 
           label='Заголовок'
           value={changedHeadings?.q1 ?? ''}
@@ -170,15 +177,21 @@ export const Tourist = () => {
           label={'Картинка'}
           onChange={handleImagesChange}
           record={about?.images}
-          image={changedImages?.['2']}
+          image={changedImages?.['6']}
           onDelete={handleImageDelete}
-          index={2}
+          index={6}
         />  
         <TextInput
           label='Заголовок'
           value={changedHeadings?.q3 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
           name='q3'
+        />
+        <TextInput
+          label='Заголовок'
+          value={changedHeadings?.q4 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='q4'
         />
         <Textarea 
           label='Описание'
@@ -191,9 +204,9 @@ export const Tourist = () => {
           label={'Картинка'}
           onChange={handleImagesChange}
           record={about?.images}
-          image={changedImages?.['3']}
+          image={changedImages?.['7']}
           onDelete={handleImageDelete}
-          index={3}
+          index={7}
         />  
         <TextInput
           label='Заголовок'
@@ -214,9 +227,9 @@ export const Tourist = () => {
           label={'Картинка'}
           onChange={handleImagesChange}
           record={about?.images}
-          image={changedImages?.['4']}
+          image={changedImages?.['8']}
           onDelete={handleImageDelete}
-          index={4}
+          index={8}
         />  
         <TextInput
           label='Заголовок'
@@ -306,7 +319,7 @@ export const Tourist = () => {
           onChange={(e) => handleAboutChange(e, 'text')}
           name='q20'
           autosize
-        />
+        /> 
         <Textarea
           label='Описание'
           value={changedText?.q21 ?? ''}
@@ -321,9 +334,9 @@ export const Tourist = () => {
           label={'Картинка'}
           onChange={handleImagesChange}
           record={about?.images}
-          image={changedImages?.['5']}
+          image={changedImages?.['9']}
           onDelete={handleImageDelete}
-          index={5}
+          index={9}
         />  
         <TextInput
           label='Заголовок'

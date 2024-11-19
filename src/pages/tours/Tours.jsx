@@ -1,12 +1,11 @@
 import React from 'react'
 import { Accordion, Button, FileButton, Table, Tabs, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
-import { Image } from 'shared/ui';
+import { Editor, Image } from 'shared/ui';
 import { openConfirmModal } from '@mantine/modals';
 import { getImageUrl } from 'shared/lib';
 import { ToursKz } from './ToursKz';
 import dayjs from 'dayjs';
-import ReactQuill from 'react-quill';
 
 async function getResorts () {
   return await pb.collection('resorts_data').getFullList()
@@ -28,7 +27,7 @@ export const Tours = () => {
   const [headings, setHeadings] = React.useState({});
   const [text, setText] = React.useState({});
 
-  const [editor, setEditor] = React.useState('')
+  const [tourB, setTourB] = React.useState('')
   const [tour, setTour] = React.useState('')
   const [tours, setTours] = React.useState({})
 
@@ -134,7 +133,13 @@ export const Tours = () => {
   React.useEffect(() => {
     setChangedImages(images);
   }, [images]);
+  
+  const [html, setHtml] = React.useState('')
 
+  function getHTML (e) {
+    setHtml(e)
+  }
+  
   return (
     <Tabs
       defaultValue='ru'
@@ -260,12 +265,12 @@ export const Tours = () => {
                 >
                   {tours?.tours?.map((q, i) => {
                     return (
-                      <Accordion.Item value={`${i}`}>
+                      <Accordion.Item value={`${i}`} key={i}>
                         <Accordion.Control className='!text-xl !font-bold '>{i + 1}. 
                           <span className='text-primary-500'>{q?.name}</span>
                         </Accordion.Control>
-                        <Accordion.Panel className='p-4'>
-                          <div className='health-wrld' dangerouslySetInnerHTML={{__html: q?.desc ?? <></>}}/>
+                        <Accordion.Panel>
+                          <div className='accordion-body' dangerouslySetInnerHTML={{__html: q?.desc ?? <></>}}/>
                         </Accordion.Panel>
 
                         <Button
@@ -298,6 +303,9 @@ export const Tours = () => {
               </React.Fragment>
             )
           })}
+
+
+
           <div>          
             <TextInput
               className='max-w-md'
@@ -306,26 +314,17 @@ export const Tours = () => {
               onChange={e => setTour(e.currentTarget.value)}
             />
             <label>Описание</label>
-            <ReactQuill
-              value={editor}
-              theme='snow'
-              onChange={setEditor}
-              className='max-w-3xl'
-              modules={{
-                toolbar: [{'list': 'bullet'}]
-              }}
-            />
+            <Editor getHTML={getHTML}/>
             <Button
               onClick={async () => {
                 await pb.collection('tours_data').update(tours?.id, {
-                  tours: [...tours?.tours ?? [], {name: tour, desc: editor}]
+                  tours: [...tours?.tours ?? [], {name: tour, desc: html}]
                 })
                 .then(() => {
                   getTours()
                   .then(res => {
                     setTours(res?.[0])
                     setTour('')
-                    setEditor('')
                   })
                 })
               }}
@@ -333,6 +332,61 @@ export const Tours = () => {
             >
               Добавить тур
             </Button>
+          </div>
+
+          <div className='max-w-xl mt-4'>
+            <p>Тур (заявки)</p>
+            <TextInput
+              label='Название'
+              value={tourB}
+              onChange={e => setTourB(e.currentTarget.value)}
+            />
+            <Button
+              onClick={async () => {
+                await pb.collection('tours_data').update(tours?.id, {
+                  tours_bid: [...tours?.tours_bid ?? [], tourB]
+                })
+                .then(async () => {
+                  getTours()
+                  .then(res => {
+                    setTours(res?.[0])
+                  })
+                })
+              }}
+              className='mt-2'
+            >
+              Добавить
+            </Button>
+            <div className='mt-4'>
+              <p>Туры (заявки)</p>
+              <div className='mt-4'>
+                {tours?.tours_bid?.map((q, i) => {
+                  return (
+                    <div key={i} className='grid grid-cols-[70%_auto]'>
+                      {q}
+                      <Button
+                        variant='subtle'
+                        compact
+                        onClick={async () => {
+                          const newDogs = tours?.tours_bid?.filter(w => {return w !== q})
+                          await pb.collection('tours_data').update(tours?.id, {
+                            tours_bid: [...newDogs]
+                          })
+                          .then(async () => {
+                            getTours()
+                            .then(res => {
+                              setTours(res?.[0])
+                            })
+                          })
+                        }}
+                      >
+                        Удалить
+                      </Button>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </Tabs.Panel>

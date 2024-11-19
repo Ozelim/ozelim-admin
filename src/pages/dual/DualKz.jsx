@@ -463,7 +463,7 @@ export const DualKz = () => {
           {Array(3).fill(1).map((_, i) => {
             const index = i + 1
             return (
-              <div className="space-y-2">
+              <div className="space-y-2" key={i}>
                 <TextInput
                   label="Заголовок"
                   value={changedText?.[`label${index}`] ?? ""}

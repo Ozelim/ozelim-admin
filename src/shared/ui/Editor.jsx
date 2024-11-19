@@ -1,55 +1,47 @@
-import React, { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
+import React from 'react'
+import { useEditor } from '@tiptap/react';
 
-// Editor is an uncontrolled React component
-const Editor = forwardRef(
-  ({ readOnly, defaultValue, onTextChange, onSelectionChange }, ref) => {
-    const containerRef = useRef(null);
-    const defaultValueRef = useRef(defaultValue);
-    const onTextChangeRef = useRef(onTextChange);
-    const onSelectionChangeRef = useRef(onSelectionChange);
+import { RichTextEditor, Link } from '@mantine/tiptap';
+import StarterKit from '@tiptap/starter-kit';
+import { TextAlign } from '@tiptap/extension-text-align';
 
-    useLayoutEffect(() => {
-      onTextChangeRef.current = onTextChange;
-      onSelectionChangeRef.current = onSelectionChange;
-    });
+export const Editor = ({getHTML = () => {}}) => {
 
-    useEffect(() => {
-      ref.current?.enable(!readOnly);
-    }, [ref, readOnly]);
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Link,
+      TextAlign
+    ],
+    content: '',
+  });
 
-    useEffect(() => {
-      const container = containerRef.current;
-      const editorContainer = container.appendChild(
-        container.ownerDocument.createElement('div'),
-      );
-      const quill = new Quill(editorContainer, {
-        theme: 'snow',
-      });
+  React.useEffect(() => {
+    getHTML(editor?.getHTML())
+  }, [editor?.state])
 
-      ref.current = quill;
+  return (
+    <RichTextEditor editor={editor}>
+      <RichTextEditor.Toolbar sticky stickyOffset={60}>
+        <RichTextEditor.ControlsGroup>
+          <RichTextEditor.Bold />
+          <RichTextEditor.Italic />
+        </RichTextEditor.ControlsGroup>
 
-      if (defaultValueRef.current) {
-        quill.setContents(defaultValueRef.current);
-      }
+        <RichTextEditor.ControlsGroup>
+          <RichTextEditor.H1 />
+          <RichTextEditor.H2 />
+          <RichTextEditor.H3 />
+          <RichTextEditor.H4 />
+        </RichTextEditor.ControlsGroup>
 
-      quill.on(Quill.events.TEXT_CHANGE, (...args) => {
-        onTextChangeRef.current?.(...args);
-      });
+        <RichTextEditor.ControlsGroup>
+          <RichTextEditor.BulletList />
+          <RichTextEditor.OrderedList />
+        </RichTextEditor.ControlsGroup>
+      </RichTextEditor.Toolbar>
 
-      quill.on(Quill.events.SELECTION_CHANGE, (...args) => {
-        onSelectionChangeRef.current?.(...args);
-      });
-
-      return () => {
-        ref.current = null;
-        container.innerHTML = '';
-      };
-    }, [ref]);
-
-    return <div ref={containerRef}></div>;
-  },
-);
-
-Editor.displayName = 'Editor';
-
-export { Editor };
+      <RichTextEditor.Content/>
+    </RichTextEditor>  
+  )
+}

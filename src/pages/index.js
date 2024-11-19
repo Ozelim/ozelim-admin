@@ -48,8 +48,8 @@ export { DualKz } from './dual/DualKz'
 export { Tester } from './tester/Tester'
 export { ProfileCourses } from './profile-courses/ProfileCourses'
 
-// export { Agents } from './agents/Agents'
-// export { AgentsBids } from './agents/AgentsBids'
+export { Agents } from './agents/Agents'
+export { AgentsBids } from './agents/AgentsBids'
 
 export { Tourist } from './tourist/Tourist'
 

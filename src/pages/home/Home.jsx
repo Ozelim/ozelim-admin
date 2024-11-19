@@ -8,6 +8,14 @@ import { DatePickerInput } from '@mantine/dates';
 import dayjs from 'dayjs';
 import { AiFillCheckCircle, AiFillLock } from 'react-icons/ai';
 
+async function getDogs () {
+  return await pb.collection('dogs').getFullList()
+}
+
+async function getServices () {
+  return await pb.collection('home_data').getFullList()
+}
+
 export const Home = () => {
 
   const [foundUsers, setFoundUsers] = React.useState([])
@@ -19,6 +27,25 @@ export const Home = () => {
     from: new Date (),
     to: new Date()
   })
+
+
+  const [dogs, setDogs] = React.useState({})
+  const [dog, setDog] = React.useState('')
+
+  const [services, setServices] = React.useState({})
+  const [service, setService] = React.useState('')
+
+  React.useEffect(() => {
+    getDogs()
+    .then(res => {
+      setDogs(res?.[0])
+    })
+
+    getServices()
+    .then(res => {
+      setServices(res?.[0])
+    })
+  }, [])
 
   function handleDateChange (e, name) {
     setDate({...date, [name]: e})
@@ -130,7 +157,7 @@ export const Home = () => {
         />
         <div className='mt-8 grid grid-cols-3 gap-4'>
           <div>
-            <Image
+          <Image
               label={'Картинка'}
               onChange={handleImagesChange}
               record={about?.images}
@@ -347,54 +374,6 @@ export const Home = () => {
           />
         </div>
       </section>
-      {/* <div className='mt-8'>
-        <Image
-          label={'Картинка'}
-          onChange={handleImagesChange}
-          record={about?.images}
-          image={changedImages?.['6']}
-          onDelete={handleImageDelete}
-          index={6}
-        />
-        <div className='grid grid-cols-5 gap-4'>
-          <Textarea
-            label='Описание'
-            value={changedText?.[12] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='12'
-            autosize
-          />
-          <Textarea
-            label='Описание'
-            value={changedText?.[13] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='13'
-            autosize
-          />
-          <Textarea
-            label='Описание'
-            value={changedText?.[14] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='14'
-            autosize
-          />
-          <Textarea
-            label='Описание'
-            value={changedText?.[15] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='15'
-            autosize
-          />
-          <Textarea
-            label='Описание'
-            value={changedText?.[16] ?? ''}
-            onChange={(e) => handleAboutChange(e, 'text')}
-            name='16'
-            autosize
-          />
-        </div>
-      </div> */}
-
       <div className='max-w-xl mt-8'>
         <TextInput 
           label='Заголовок'
@@ -493,83 +472,6 @@ export const Home = () => {
           autosize
         />
       </div>
-      {/* <div className='grid grid-cols-3 gap-8'>
-        <Textarea 
-          label='Данные'
-          value={changedText?.[1] ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='1'
-          autosize
-        />
-        <Textarea 
-          label='Данные'
-          value={changedText?.[2] ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='2'
-          autosize
-        />
-        <Textarea 
-          label='Данные'
-          value={changedText?.[3] ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='3'
-          autosize
-        />
-      </div>
-      <div className='grid grid-cols-3 gap-8'>
-        <Textarea 
-          label='Описание'
-          value={changedText?.[4] ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='4'
-          autosize
-        />
-        <Textarea 
-          label='Описание'
-          value={changedText?.[5] ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='5'
-          autosize
-        />
-        <Textarea 
-          label='Описание'
-          value={changedText?.[6] ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='6'
-          autosize
-        />
-      </div>
-      <div className='mt-10'>
-        <TextInput 
-          label='Заголовок'
-          value={changedHeadings?.[2] ?? ''}
-          onChange={(e) => handleAboutChange(e, 'heading')}
-          name='2'
-        />
-        <div>
-        <Textarea 
-          label='Текст'
-          value={changedText?.z1 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='z1'
-          autosize
-        />        
-        <Textarea 
-          label='Текст'
-          value={changedText?.z2 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='z2'
-          autosize
-        />        
-        <Textarea 
-          label='Текст'
-          value={changedText?.z3 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='z3'
-          autosize
-        />
-        </div>
-      </div> */}
 
       <Button
         className='mt-5'
@@ -577,99 +479,215 @@ export const Home = () => {
       >
         Сохранить
       </Button>
-      <div className='flex gap-4 items-end mt-8'>
-        <DatePickerInput
-          value={date?.from}
-          name='from'
-          onChange={e => handleDateChange(e, 'from')}
-          label='От'
-          locale='ru'
-        />
-        <DatePickerInput
-          value={date?.to}
-          name='to'
-          onChange={e => handleDateChange(e, 'to')}
-          label='До'
-          locale='ru'
-        />
-        <Button onClick={searchUsers}>
-          Показать
-        </Button>
-        <div className='mt-4'>
-          Зарегистрировано: {foundUsers?.length}
+      <div className='grid grid-cols-2'>
+
+        <div className='max-w-xl mt-4'>
+          <p>Региональный директор</p>
+          <TextInput
+            label='Имя'
+            value={dog}
+            onChange={e => setDog(e.currentTarget.value)}
+          />
+          <Button
+            onClick={async () => {
+              await pb.collection('dogs').update(dogs?.id, {
+                dogs: [...dogs?.dogs ?? [], dog]
+              })
+              .then(async () => {
+                getDogs()
+                .then(res => {
+                  setDogs(res?.[0])
+                })
+              })
+            }}
+            className='mt-2'
+          >
+            Добавить
+          </Button>
+          <div className='mt-4'>
+            <p>Региональный директоры</p>
+            <div className='mt-4'>
+              {dogs?.dogs?.map((q, i) => {
+                return (
+                  <div key={i} className='grid grid-cols-[70%_auto]'>
+                    {q}
+                    <Button
+                      variant='subtle'
+                      compact
+                      onClick={async () => {
+                        const newDogs = dogs?.dogs?.filter(w => {return w !== q})
+                        await pb.collection('dogs').update(dogs?.id, {
+                          dogs: [...newDogs]
+                        })
+                        .then(async () => {
+                          getDogs()
+                          .then(res => {
+                            setDogs(res?.[0])
+                          })
+                        })
+                      }}
+                    >
+                      Удалить
+                    </Button>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
-        <div className='mt-4'>
-          Не верифицировано: {notVerifiedUsers?.length}
-        </div>
-        <div className='mt-4'>
-          Верифицировано: {verifiedUsers?.length}
+
+        <div className='max-w-xl mt-4'>
+          <p>Услуга</p>
+          <TextInput
+            label='Название'
+            value={service}
+            onChange={e => setService(e.currentTarget.value)}
+          />
+          <Button
+            onClick={async () => {
+              await pb.collection('home_data').update(services?.id, {
+                services: [...services?.services ?? [], service]
+              })
+              .then(async () => {
+                getServices()
+                .then(res => {
+                  setServices(res?.[0])
+                })
+              })
+            }}
+            className='mt-2'
+          >
+            Добавить
+          </Button>
+          <div className='mt-4'>
+            <p>Услуги</p>
+            <div className='mt-4'>
+              {services?.services?.map((q, i) => {
+                return (
+                  <div key={i} className='grid grid-cols-[70%_auto]'>
+                    {q}
+                    <Button
+                      variant='subtle'
+                      compact
+                      onClick={async () => {
+                        const newDogs = services?.services?.filter(w => {return w !== q})
+                        await pb.collection('home_data').update(services?.id, {
+                          services: [...newDogs]
+                        })
+                        .then(async () => {
+                          getServices()
+                          .then(res => {
+                            setServices(res?.[0])
+                          })
+                        })
+                      }}
+                    >
+                      Удалить
+                    </Button>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
-      {foundUsers?.length !== 0 && (
-        <div className='mt-5'>
-          <Table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th></th>
-                <th>Имя</th>
-                <th>Фамилия</th>
-                <th>Бинар</th>
-                <th>Уровень</th>
-                <th>Баланс</th>
-                <th>Почта</th>
-                <th>Телефон</th>
-                <th>Область</th>
-                <th>Адрес</th>
-                <th>Спонсор</th>
-                <th>Дата регистрации</th>
-              </tr>
-            </thead>
-            <tbody>
-              {foundUsers?.map((user, i) => {
-                return (
-                  <tr
-                    key={i}
-                  >
-                    <td>{user.id}</td>
-                    <td>
-                      {user?.verified ? (
-                        <Button compact variant={"subtle"} color={"green"}>
-                          <AiFillCheckCircle size={20} />
-                        </Button>
-                      ) : (
-                        <Button
-                          compact
-                          variant={"subtle"}
-                          color="yellow"
-                        >
-                          <AiFillLock size={20} />
-                        </Button>
-                      )}
-                    </td>
-                    <td>{user.name}</td>
-                    <td>{user.surname}</td>
-                    <td>{user.bin ? "Да" : "Нет"}</td>
-                    <td>
-                      {user?.level 
-                      ? (user?.level === '4.1' && '4.Путевка' || 
-                        user?.level === '4.2' && '4.Курса' || user?.level)
-                      : !user?.level && 0}
-                    </td>
-                    <td>{user.balance}</td>
-                    <td>{user.email}</td>
-                    <td>{user.phone}</td>
-                    <td>{user.region}</td>
-                    <td>{user.adress}</td>
-                    <td>{user.sponsor}</td>
-                    <td>{dayjs(user.created).format(`DD.MM.YY`)}</td>
+      <div className='mt-8'>
+        <div>
+          <div className='flex gap-4 items-end'>
+            <DatePickerInput
+              value={date?.from}
+              name='from'
+              onChange={e => handleDateChange(e, 'from')}
+              label='От'
+              locale='ru'
+            />
+            <DatePickerInput
+              value={date?.to}
+              name='to'
+              onChange={e => handleDateChange(e, 'to')}
+              label='До'
+              locale='ru'
+            />
+            <Button onClick={searchUsers}>
+              Показать
+            </Button>
+            <div className='mt-4'>
+              Зарегистрировано: {foundUsers?.length}
+            </div>
+            <div className='mt-4'>
+              Не верифицировано: {notVerifiedUsers?.length}
+            </div>
+            <div className='mt-4'>
+              Верифицировано: {verifiedUsers?.length}
+            </div>
+          </div>
+          {foundUsers?.length !== 0 && (
+            <div className='mt-5'>
+              <Table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th></th>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th>Бинар</th>
+                    <th>Уровень</th>
+                    <th>Баланс</th>
+                    <th>Почта</th>
+                    <th>Телефон</th>
+                    <th>Область</th>
+                    <th>Адрес</th>
+                    <th>Спонсор</th>
+                    <th>Дата регистрации</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </Table>
+                </thead>
+                <tbody>
+                  {foundUsers?.map((user, i) => {
+                    return (
+                      <tr
+                        key={i}
+                      >
+                        <td>{user.id}</td>
+                        <td>
+                          {user?.verified ? (
+                            <Button compact variant={"subtle"} color={"green"}>
+                              <AiFillCheckCircle size={20} />
+                            </Button>
+                          ) : (
+                            <Button
+                              compact
+                              variant={"subtle"}
+                              color="yellow"
+                            >
+                              <AiFillLock size={20} />
+                            </Button>
+                          )}
+                        </td>
+                        <td>{user.name}</td>
+                        <td>{user.surname}</td>
+                        <td>{user.bin ? "Да" : "Нет"}</td>
+                        <td>
+                          {user?.level 
+                          ? (user?.level === '4.1' && '4.Путевка' || 
+                            user?.level === '4.2' && '4.Курса' || user?.level)
+                          : !user?.level && 0}
+                        </td>
+                        <td>{user.balance}</td>
+                        <td>{user.email}</td>
+                        <td>{user.phone}</td>
+                        <td>{user.region}</td>
+                        <td>{user.adress}</td>
+                        <td>{user.sponsor}</td>
+                        <td>{dayjs(user.created).format(`DD.MM.YY`)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

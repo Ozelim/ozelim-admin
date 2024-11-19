@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal, Pagination, Table, Tabs, TextInput } from '@mantine/core'
+import { Button, Modal, Pagination, Table, Tabs, TextInput, clsx } from '@mantine/core'
 import { createBonusRecord, pb } from 'shared/api'
 import { formatNumber, getImageUrl } from 'shared/lib'
 
@@ -14,12 +14,13 @@ import dayjs from 'dayjs'
 
 import * as XLSX from 'xlsx';
 import { showNotification } from '@mantine/notifications'
+import { useSearchParams } from 'react-router-dom'
 
 async function getWithdraws () {
   return await pb.collection('withdraws').getFullList({
     filter: `status = 'created'`,
     sort: '-created',
-    expand: 'user',
+    expand: 'user, agent, dog',
   })
 }
 
@@ -27,14 +28,40 @@ async function getWithdrawsEnded (page = 1) {
   return await pb.collection('withdraws').getList(page, 20, {
     filter: `status != 'created'`,
     sort: '-created',
-    expand: 'user',
+    expand: 'user, agent, dog',
   })
+}
+
+async function getDogs () {
+  return await pb.collection('dogs').getFullList()
 }
 
 export const Withdraws = () => {
 
   const [withdraws, setWithdraws] = React.useState([])
   const [endedWithdraws, setEndedWithdraws] = React.useState({})
+
+  const [dogs, setDogs] = React.useState([])
+  const [dog, setDog] = React.useState({
+    name: '',
+    iin: '',
+    iban: '',
+  })
+
+  const [params, setParams] = useSearchParams() 
+
+  React.useEffect(() => {
+    getDogs()
+    .then(res => {
+      setDogs(res)
+      pb.collection('dogs').subscribe('*', () => {
+        pb.collection('dogs').getFullList()
+        .then(res => {
+          setDogs(res)
+        })
+      })
+    })
+  }, [])
 
   async function handleWithdraws (page) {
     getWithdrawsEnded(page)
@@ -50,8 +77,9 @@ export const Withdraws = () => {
     })
     .then(async res => {
       await createBonusRecord('withdraws', {
-        to: withdraw?.expand?.user?.id, 
-        who: withdraw?.expand?.user?.id, 
+        ...(withdraw?.agent 
+        ? {to: withdraw?.agent, who: withdraw?.agent} 
+        : {to: withdraw?.user, who: withdraw?.user}),
         sum: withdraw?.sum
       })
     })
@@ -62,9 +90,9 @@ export const Withdraws = () => {
       status: 'rejected'
     })
     .then(async () => {
-      const withdrawsUser = await pb.collection('users').getOne(withdraw?.user)
+      const withdrawsUser = await pb.collection(withdraw?.agent ? 'agents' : 'users').getOne(withdraw?.agent ? withdraw?.agent : withdraw?.user)
       console.log(withdrawsUser);
-      await pb.collection('users').update(withdraw?.user, {
+      await pb.collection(withdraw?.agent ? 'agents' : 'users').update(withdraw?.agent ? withdraw?.agent : withdraw?.user, {
         balance: withdrawsUser?.balance + Number(withdraw?.sum)
       })
     })
@@ -138,6 +166,34 @@ export const Withdraws = () => {
         ),
       }
     })
+    const worksheet = XLSX.utils.json_to_sheet(array);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+    saveAsExcelFile(excelBuffer, 'table_data.xlsx');
+  };
+
+  function exportToExcelDog () {
+    const array = withdraws?.filter(q => q?.dog == params.get('value'))?.map((withdraw) => {
+      return {
+        создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
+        пользователь: withdraw?.agent,
+        телефон: withdraw?.phone,
+        фио: withdraw?.fio,
+        сумма: withdraw?.sum,
+        город_пользователя: withdraw?.city,
+        владелец_карты: withdraw?.expand?.dog?.fio,
+        иин: withdraw?.expand?.dog?.iin,
+        IBAN: withdraw?.expand?.dog?.iban,
+        статус: (
+          (withdraw?.status === 'created' && 'Создан') ||
+          (withdraw?.status === 'paid' && 'Оплачен') ||
+          (withdraw?.status === 'rejected' && 'Отклонен')
+        ),
+      }
+    })
+    
     const worksheet = XLSX.utils.json_to_sheet(array);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
@@ -235,7 +291,213 @@ export const Withdraws = () => {
           <Tabs.List>
             <Tabs.Tab value='created'>Созданные</Tabs.Tab>
             <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
+            <Tabs.Tab value='directors'>Региональные директоры</Tabs.Tab>
           </Tabs.List>
+          <Tabs.Panel value='directors'>
+            <div className='grid grid-cols-[15%_auto] min-h-screen'>
+              <div className='bg-white border-r shadow-sm'>
+                <div 
+                  className={clsx('p-4 text-sm', {
+                    'bg-teal-600 text-white': params.get('value') == 0,
+                  })}
+                  onClick={() => {
+                    params.set('value', 0)
+                    setParams(params)
+                  }}
+                >
+                  <span className="cursor-pointer">
+                    Добавить директора
+                  </span>
+                </div>
+                {dogs?.map((q, i) => {
+                  return (
+                    <div 
+                      key={i} 
+                      className={clsx('p-4 text-sm', {
+                        'bg-teal-600 text-white': params.get('value') == q?.id,
+                      })}
+                      onClick={() => {
+                        params.set('value', q?.id)
+                        setParams(params)
+                      }}
+                    >
+                      <span className="cursor-pointer">
+                        {q?.name}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+
+              {params.get('value') == 0 && (
+                <div className='p-4'>
+                  {params.get('value') == 0 && (
+                    <div className='max-w-xs'>
+                      <p>Региональный директор</p>
+                      <TextInput
+                        label='ФИО'
+                        value={dog?.name}
+                        onChange={e => setDog({...dog, name: e.currentTarget.value})}
+                      />
+                      <TextInput
+                        label='ИИН'
+                        value={dog?.iin}
+                        onChange={e => setDog({...dog, iin: e.currentTarget.value})}
+                      />
+                      <TextInput
+                        label='Номер счета карты (IBAN)'
+                        value={dog?.iban}
+                        onChange={e => setDog({...dog, iban: e.currentTarget.value})}
+                      />
+                      <Button
+                        onClick={async () => {
+                          await pb.collection('dogs').create({
+                            ...dog
+                          })
+                          .then(async () => {
+                            getDogs()
+                            .then(res => {
+                              setDogs(res)
+                            })
+                          })
+                        }}
+                        className='mt-2'
+                      >
+                        Добавить
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+              {params.get('value') != 0 && (
+                <Tabs defaultValue='created'>
+                  <Tabs.List>
+                    <Tabs.Tab value='created'>Созданные</Tabs.Tab>
+                    <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
+                  </Tabs.List>
+                  <Tabs.Panel value='created'>
+                    <Button onClick={exportToExcelDog}>Скачать Excel</Button>
+                    <Table
+                      striped
+                      className='mt-4'
+                    >
+                      <thead>
+                        <tr>
+                          <th>Дата</th>
+                          <th>ID Пользователя</th>
+                          <th>Номер телефона</th>
+                          <th>ФИО</th>
+                          <th>Сумма</th>
+                          {/* <th>Владелец карты</th> */}
+                          {/* <th>ИИН</th> */}
+                          {/* <th>IBAN</th> */}
+                          <th>Город</th>
+                          <th>Статус</th>
+                          <th>Действие</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {withdraws?.filter(q => q?.dog == params.get('value'))?.map((withdraw, i) => {
+                          return (
+                            <tr 
+                              key={i}
+                            >
+                              <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
+                              <td 
+                                className='!text-lg'
+                                onClick={() => setUserData({modal: true, data: withdraw?.agent ? withdraw?.expand?.agent : withdraw?.expand?.user})}
+                              >
+                                <Button compact variant='outline'>
+                                  {withdraw?.user ? withdraw?.user : withdraw?.agent}
+                                </Button>
+                              </td>
+                              <td className='!text-lg whitespace-nowrap'>{withdraw?.phone}</td>
+                              <td className='!text-lg whitespace-nowrap'>{withdraw?.fio}</td>
+                              <td className='!text-lg whitespace-nowrap'>{formatNumber(withdraw?.sum)}</td>
+                              {/* <td className='!text-lg whitespace-nowrap'>{withdraw?.expand?.dog?.name}</td> */}
+                              {/* <td className='!text-lg whitespace-nowrap'>{withdraw?.expand?.dog?.iin}</td> */}
+                              {/* <td className='!text-lg whitespace-nowrap'>{withdraw?.expand?.dog?.iban}</td> */}
+                              <td className='!text-lg whitespace-nowrap'>{withdraw?.city}</td>
+                              <td className='!text-lg whitespace-nowrap'>
+                                {withdraw?.status === 'created' && 'Создан'}
+                                {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
+                                {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
+                              </td>
+                              <td className='flex gap-2 items-center'>
+                                {withdraw?.status === 'created' && (
+                                  <>
+                                    <BsCheckCircle 
+                                      size={30} 
+                                      color='green'
+                                      onClick={() => confirmWithdrawConfirm(withdraw)}
+                                      className='cursor-pointer hover:fill-yellow-500'
+                                    />
+                                    <CiCircleRemove 
+                                      size={35}
+                                      color='red'
+                                      onClick={() => removeWithdrawConfirm(withdraw)}
+                                      className='cursor-pointer hover:fill-yellow-500'
+                                    />
+                                  </>
+                                )}
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                    </Table>
+                  </Tabs.Panel>
+                  <Tabs.Panel value='ended'>
+                    <Table
+                      striped
+                      className='mt-4'
+                    >
+                      <thead>
+                        <tr>
+                          <th>Дата</th>
+                          <th>ID Пользователя</th>
+                          <th>Сумма</th>
+                          <th>Владелец карты</th>
+                          <th>ИИН</th>
+                          <th>IBAN</th>
+                          <th>Статус</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {endedWithdraws?.items?.filter(q => q?.dog == params.get('value'))?.map((withdraw, i) => {
+                          return (
+                            <tr 
+                              key={i}
+                            >
+                              <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
+                              <td 
+                                className='!text-lg'
+                                onClick={() => setUserData({modal: true, data: withdraw?.agent ? withdraw?.expand?.agent : withdraw?.expand?.user})}
+                              >
+                                <Button compact variant='outline'>
+                                  {withdraw?.user ? withdraw?.user : withdraw?.agent}
+                                </Button>
+                              </td>
+                              <td className='!text-lg whitespace-nowrap'>{formatNumber(withdraw?.sum)}</td>
+                              <td className='!text-lg whitespace-nowrap'>{withdraw?.expand?.dog?.name}</td>
+                              <td className='!text-lg whitespace-nowrap'>{withdraw?.expand?.dog?.iin}</td>
+                              <td className='!text-lg whitespace-nowrap'>{withdraw?.expand?.dog?.iban}</td>
+                              <td className='!text-lg whitespace-nowrap'>
+                                {withdraw?.status === 'created' && 'Создан'}
+                                {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
+                                {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                    </Table>
+                  </Tabs.Panel>
+                </Tabs>
+              )}
+
+            </div>
+          </Tabs.Panel>
           <Tabs.Panel value='created' pt='lg'>
             <Button onClick={exportToExcel}>Скачать Excel</Button>
             <Table
@@ -258,7 +520,7 @@ export const Withdraws = () => {
                 </tr>
               </thead>
               <tbody>
-                {sorted?.map((withdraw, i) => {
+                {sorted?.filter(q => !q?.dog)?.map((withdraw, i) => {
                   return (
                     <tr 
                       key={i}
@@ -266,13 +528,15 @@ export const Withdraws = () => {
                       <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
                       <td 
                         className='!text-lg'
-                        onClick={() => setUserData({modal: true, data: withdraw?.expand?.user})}
+                        onClick={() => setUserData({modal: true, data: withdraw?.agent ? withdraw?.expand?.agent : withdraw?.expand?.user})}
                       >
                         <Button compact variant='outline'>
-                          {withdraw?.user}
+                          {withdraw?.user ? withdraw?.user : withdraw?.agent}
                         </Button>
                       </td>
-                      <td className='!text-lg whitespace-nowrap'>{withdraw?.expand?.user?.name} {withdraw?.expand?.user?.surname}</td>
+                      <td className='!text-lg whitespace-nowrap'>
+                        {withdraw?.agent ? withdraw?.expand?.agent?.fio : {...withdraw?.expand?.user?.name, ...withdraw?.expand?.user?.surname} }
+                      </td>
                       <td className='!text-lg whitespace-nowrap'>
                         <span className='text-lg mr-2'>
                           {withdraw.expand.user?.level}
@@ -342,11 +606,10 @@ export const Withdraws = () => {
                   <th>ИИН</th>
                   <th>IBAN</th>
                   <th>Статус</th>
-                  {/* <th>Действие</th> */}
                 </tr>
               </thead>
               <tbody>
-                {endedWithdraws?.items?.map((withdraw, i) => {
+                {endedWithdraws?.items?.filter(q => !q?.dog)?.map((withdraw, i) => {
                   return (
                     <tr 
                       key={i}
@@ -364,24 +627,6 @@ export const Withdraws = () => {
                       {withdraw?.status === 'created' && 'Создан'}
                       {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
                       {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
-                      </td>
-                      <td className='flex gap-2 items-center'>
-                        {/* {withdraw?.status === 'created' && (
-                          <>
-                            <BsCheckCircle 
-                              size={30} 
-                              color='green'
-                              onClick={() => confirmWithdrawConfirm(withdraw?.id)}
-                              className='cursor-pointer hover:fill-yellow-500'
-                            />
-                            <CiCircleRemove 
-                              size={35}
-                              color='red'
-                              onClick={() => removeWithdrawConfirm(withdraw)}
-                              className='cursor-pointer hover:fill-yellow-500'
-                            />
-                          </>
-                        )} */}
                       </td>
                     </tr>
                   )
@@ -430,6 +675,10 @@ export const Withdraws = () => {
             <p>{userData?.data?.id}</p>
           </li>
           <li className='grid grid-cols-2'>
+            <p>ФИО:</p>
+            <p>{userData?.data?.fio}</p>
+          </li>
+          <li className='grid grid-cols-2'>
             <p>Имя:</p>
             <p>{userData?.data?.name}</p>
           </li>
@@ -448,6 +697,14 @@ export const Withdraws = () => {
           <li className='grid grid-cols-2'>
             <p>Партнеры:</p>
             <p>{userData?.data?.referals?.length}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Баланс:</p>
+            <p>{userData?.data?.balance}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>Бонусы:</p>
+            <p>{userData?.data?.bonuses}</p>
           </li>
           <li className='grid grid-cols-2'>
             <p>Бинар:</p>
