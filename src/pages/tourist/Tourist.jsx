@@ -91,14 +91,6 @@ export const Tourist = () => {
     setChangedImages(images)
   }, [images])
 
-  const [html, setHTML] = React.useState('')
-
-  function getHTML (e) {
-    setHTML(e)
-  }
-
-  console.log(changedText, 'aa');
-
   return (
     <div className='w-full'>
       <div className='flex gap-8 overflow-scroll'>
@@ -121,13 +113,13 @@ export const Tourist = () => {
           label='Заголовок'
           value={changedHeadings?.intro1 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
-          name='q1'
+          name='intro1'
         />
         <Textarea
           label='Описание'
           value={changedText?.intro2 ?? ''}
           onChange={(e) => handleAboutChange(e, 'text')}
-          name='q1'
+          name='intro2'
           autosize
         />
       </div>
@@ -286,13 +278,13 @@ export const Tourist = () => {
           label='Заголовок'
           value={changedHeadings?.dick1 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
-          name='q6'
+          name='dick1'
         />
         <Textarea
           label='Описание'
           value={changedText?.dick2 ?? ''}
           onChange={(e) => handleAboutChange(e, 'text')}
-          name='q10'
+          name='dick2'
           autosize
         />
       </section>
@@ -309,13 +301,13 @@ export const Tourist = () => {
           label='Заголовок'
           value={changedHeadings?.agent1 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
-          name='q8'
+          name='agent1'
         />
         <TextInput
           label='Подзаголовок'
           value={changedHeadings?.agent2 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
-          name='fund2'
+          name='agent2'
         />
         {Array(12).fill(1).map((_, i) => {
           return (

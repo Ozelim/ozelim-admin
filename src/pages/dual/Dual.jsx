@@ -495,7 +495,7 @@ export const Dual = () => {
         />
       </div>
 
-      <div className="flex justify-center mt-60">
+      <div className="flex justify-center mt-10">
         <Button onClick={saveCourses}>
           Сохранить
         </Button>
