@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, TextInput, Textarea } from '@mantine/core'
 import { getData, pb } from 'shared/api'
-import { Image } from 'shared/ui'
+import { Editor, Image } from 'shared/ui'
 import { openConfirmModal } from '@mantine/modals'
 
 async function getTypes() {
@@ -91,6 +91,14 @@ export const Tourist = () => {
     setChangedImages(images)
   }, [images])
 
+  const [html, setHTML] = React.useState('')
+
+  function getHTML (e) {
+    setHTML(e)
+  }
+
+  console.log(changedText, 'aa');
+
   return (
     <div className='w-full'>
       <div className='flex gap-8 overflow-scroll'>
@@ -111,13 +119,13 @@ export const Tourist = () => {
       <div className='max-w-xl mt-10'>
         <TextInput 
           label='Заголовок'
-          value={changedHeadings?.q1 ?? ''}
+          value={changedHeadings?.intro1 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
           name='q1'
         />
         <Textarea
           label='Описание'
-          value={changedText?.q1 ?? ''}
+          value={changedText?.intro2 ?? ''}
           onChange={(e) => handleAboutChange(e, 'text')}
           name='q1'
           autosize
@@ -125,81 +133,66 @@ export const Tourist = () => {
       </div>
         
       <div className='max-w-xl mt-10'>
-        <TextInput
-          label='Заголовок'
-          value={changedHeadings?.q2 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'heading')}
-          name='q2'
-        />
-        <Textarea 
-          label='Описание'
-          value={changedText?.q2 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q2'
-          autosize
-        />
-        <Textarea 
-          label='Описание'
-          value={changedText?.q3 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q3'
-          autosize
-        />
-        <Textarea 
-          label='Описание'
-          value={changedText?.q4 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q4'
-          autosize
-        />
-        <Textarea 
-          label='Описание'
-          value={changedText?.q5 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q5'
-          autosize
-        />
-        <Textarea 
-          label='Описание'
-          value={changedText?.q6 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q6'
-          autosize
-        />
-        <Textarea 
-          label='Описание'
-          value={changedText?.q7 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q7'
-          autosize
-        />
         <Image
           label={'Картинка'}
           onChange={handleImagesChange}
           record={about?.images}
-          image={changedImages?.['6']}
+          image={changedImages?.[6]}
           onDelete={handleImageDelete}
           index={6}
+          className='w-full h-auto'
         />  
         <TextInput
           label='Заголовок'
-          value={changedHeadings?.q3 ?? ''}
+          value={changedHeadings?.info1 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
-          name='q3'
+          name='info1'
         />
-        <TextInput
-          label='Заголовок'
-          value={changedHeadings?.q4 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'heading')}
-          name='q4'
+        <Textarea 
+          label='Подзаголовок'
+          value={changedText?.info2 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='info2'
+          autosize
         />
         <Textarea 
           label='Описание'
-          value={changedText?.q8 ?? ''}
+          value={changedText?.info3 ?? ''}
           onChange={(e) => handleAboutChange(e, 'text')}
-          name='q8'
+          name='info3'
           autosize
         />
+        <Textarea 
+          label='Подзаголовок'
+          value={changedText?.info4 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='info4'
+          autosize
+        />
+        <Textarea 
+          label='Описание'
+          value={changedText?.info5 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='info5'
+          autosize
+        />
+        <Textarea 
+          label='Подзаголовок'
+          value={changedText?.info6 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='info6'
+          autosize
+        />
+        <Textarea 
+          label='Описание'
+          value={changedText?.info7 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='info7'
+          autosize
+        />
+      </div>
+
+      <section>
         <Image
           label={'Картинка'}
           onChange={handleImagesChange}
@@ -210,19 +203,46 @@ export const Tourist = () => {
         />  
         <TextInput
           label='Заголовок'
-          value={changedHeadings?.q5 ?? ''}
+          value={changedHeadings?.memo1 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
-          name='q5'
+          name='memo1'
         />
+
         <Textarea 
           label='Описание'
-          value={changedText?.q9 ?? ''}
+          value={changedText?.memo2 ?? ''}
           onChange={(e) => handleAboutChange(e, 'text')}
-          name='q9'
+          name='memo2'
           autosize
         />
-      </div>
-      <section className='max-w-xl mt-10'>
+      </section>
+      <section className='max-w-4xl mt-10'>
+        <TextInput
+          label='Заголовок'
+          value={changedHeadings?.services1 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='services1'
+        />
+        <TextInput
+          label='Подзаголовок'
+          value={changedHeadings?.services2 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='services2'
+        />
+        {Array(12).fill(1).map((_, i) => {
+          return (
+            <Textarea 
+              label='Описание'
+              value={changedText?.[`services${i + 3}`] ?? ''}
+              onChange={(e) => handleAboutChange(e, 'text')}
+              name={`services${i + 3}`  }
+              autosize
+            />
+          )
+        })}
+      </section>
+      
+      <section>
         <Image
           label={'Картинка'}
           onChange={handleImagesChange}
@@ -233,102 +253,26 @@ export const Tourist = () => {
         />  
         <TextInput
           label='Заголовок'
-          value={changedHeadings?.q6 ?? ''}
+          value={changedHeadings?.fund1 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
-          name='q6'
+          name='fund1'
         />
         <TextInput
-          label='Заголовок'
-          value={changedHeadings?.q7 ?? ''}
+          label='Подзаголовок'
+          value={changedHeadings?.fund2 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
-          name='q7'
+          name='fund2'
         />
-        <Textarea
+        <Textarea 
           label='Описание'
-          value={changedText?.q10 ?? ''}
+          value={changedText?.fund3 ?? ''}
           onChange={(e) => handleAboutChange(e, 'text')}
-          name='q10'
+          name='fund3'
           autosize
         />
-        <Textarea
-          label='Описание'
-          value={changedText?.q11 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q11'
-          autosize
-        />
-        <Textarea
-          label='Описание'
-          value={changedText?.q12 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q12'
-          autosize
-        />
-        <Textarea
-          label='Описание'
-          value={changedText?.q13 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q13'
-          autosize
-        />
-        <Textarea
-          label='Описание'
-          value={changedText?.q14 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q14'
-          autosize
-        />
-        <Textarea
-          label='Описание'
-          value={changedText?.q15 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q15'
-          autosize
-        />
-        <Textarea
-          label='Описание'
-          value={changedText?.q16 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q16'
-          autosize
-        />
-        <Textarea
-          label='Описание'
-          value={changedText?.q17 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q17'
-          autosize
-        />
-        <Textarea
-          label='Описание'
-          value={changedText?.q18 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q18'
-          autosize
-        />
-        <Textarea
-          label='Описание'
-          value={changedText?.q19 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q19'
-          autosize
-        />
-        <Textarea
-          label='Описание'
-          value={changedText?.q20 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q20'
-          autosize
-        /> 
-        <Textarea
-          label='Описание'
-          value={changedText?.q21 ?? ''}
-          onChange={(e) => handleAboutChange(e, 'text')}
-          name='q21'
-          autosize
-        />
-
       </section>
+
+
       <section className='max-w-xl mt-10'>
         <Image
           label={'Картинка'}
@@ -340,10 +284,50 @@ export const Tourist = () => {
         />  
         <TextInput
           label='Заголовок'
-          value={changedHeadings?.q8 ?? ''}
+          value={changedHeadings?.dick1 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='q6'
+        />
+        <Textarea
+          label='Описание'
+          value={changedText?.dick2 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'text')}
+          name='q10'
+          autosize
+        />
+      </section>
+      <section className='max-w-xl mt-10'>
+        <Image
+          label={'Картинка'}
+          onChange={handleImagesChange}
+          record={about?.images}
+          image={changedImages?.['10']}
+          onDelete={handleImageDelete}
+          index={10}
+        />  
+        <TextInput
+          label='Заголовок'
+          value={changedHeadings?.agent1 ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
           name='q8'
         />
+        <TextInput
+          label='Подзаголовок'
+          value={changedHeadings?.agent2 ?? ''}
+          onChange={(e) => handleAboutChange(e, 'heading')}
+          name='fund2'
+        />
+        {Array(12).fill(1).map((_, i) => {
+          return (
+            <Textarea 
+              label='Описание'
+              value={changedText?.[`agent${i + 3}`] ?? ''}
+              onChange={(e) => handleAboutChange(e, 'text')}
+              name={`agent${i + 3}`  }
+              autosize
+            />
+          )
+        })}
       </section>
       <div className='flex justify-center'>
         <Button 
