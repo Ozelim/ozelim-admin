@@ -1,8 +1,9 @@
 import React from 'react'
-import { Button, TextInput, Textarea } from '@mantine/core'
+import { Button, FileInput, TextInput, Textarea } from '@mantine/core'
 import { getData, pb } from 'shared/api'
 import { Editor, Image } from 'shared/ui'
 import { openConfirmModal } from '@mantine/modals'
+import { compress, getImageUrl } from 'shared/lib'
 
 async function getTypes() {
   return await pb.collection('tourist_data').getFullList()
@@ -60,7 +61,7 @@ export const Tourist = () => {
     for (const index in changedImages) {
       if (!isNaN(index)) {
         const formData = new FormData()
-        formData.append([`${index}`], changedImages?.[index])
+        formData.append(`${index}`, changedImages?.[index])
         await pb.collection('images').update(about?.images?.id, formData)
         .then(res => {
           console.log(res);
@@ -89,11 +90,103 @@ export const Tourist = () => {
 
   React.useEffect(() => {
     setChangedImages(images)
+    setPics(images?.[`11`])
+
   }, [images])
+
+  const [pics, setPics] = React.useState([])
+  const [deletedPics, setDeletedPics] = React.useState([])
+
+  async function upload () {
+
+    const formData = new FormData()
+
+    pics.map(async q => {
+      if (q instanceof File || q instanceof Blob) {
+        await compress(q, {quality: 0.5, maxWidth: 1500, maxHeight: 1500})
+        .then(async res => {
+          const file = new File([res], crypto.randomUUID())
+          formData.append(`11`, file, crypto.randomUUID())
+          await pb.collection('images').update(about?.images?.id, formData)
+          .then(res => {
+            console.log(res, 'res');
+          })
+      
+        })
+      }
+    })
+    
+    await pb.collection('images').update(about?.images?.id, {
+      '11-': [...deletedPics]
+    })
+  }
 
   return (
     <div className='w-full'>
-      <div className='flex gap-8 overflow-scroll'>
+      <div className='flex gap-4 items-end'>
+        <FileInput 
+          onChange={e => setPics([...pics, e])}  
+          label='Добавить фото'
+          w={150}
+          variant='filled'
+        />
+
+        <Button
+          onClick={upload}
+        >
+          Сохранить
+        </Button>
+      </div>
+
+      <div className='w-[1280px] overflow-x-scroll mt-8'>
+        <div className='flex gap-4'>
+          {pics?.map((q, i) => {
+            if (q instanceof File) {
+              return (
+                <div className='w-80 shrink-0 grow-1' key={i}>
+                  <img src={q && URL.createObjectURL(q)} alt="" className='w-80'/>
+                  <div className="text-center">
+                    <Button
+                      onClick={e => {
+                        const newPics = pics.filter(w => q !== w)
+                        const delPics = pics.filter(w => q == w)
+                        setPics(newPics)
+                        setDeletedPics([...deletedPics, ...delPics])
+                      }} 
+                    compact
+                    variant='subtle'
+                  >
+                    Удалить
+                    </Button>
+                  </div>
+                </div>
+              )
+            } else {
+              return (
+                <div className='w-80 shrink-0 grow-1' key={i}>
+                  <img src={getImageUrl(images, q)} alt="" className='w-80'/>
+                  <div className="text-center">
+
+                    <Button
+                      onClick={e => {
+                        const newPics = pics.filter(w => q !== w)
+                        const delPics = pics.filter(w => q == w)
+                        setPics(newPics)
+                        setDeletedPics([...deletedPics, ...delPics])
+                      }} 
+                      compact
+                      variant='subtle'
+                    >
+                      Удалить
+                    </Button>
+                  </div>
+                </div>
+              )
+            }
+          })}
+        </div>
+      </div>
+      {/* <div className='flex gap-8 overflow-scroll'>
         {Array(5).fill(1).map((q, i) => {
           return (
             <Image
@@ -107,7 +200,7 @@ export const Tourist = () => {
             />  
           )
         })}
-      </div>
+      </div> */}
       <div className='max-w-xl mt-10'>
         <TextInput 
           label='Заголовок'
