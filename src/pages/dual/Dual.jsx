@@ -430,6 +430,20 @@ export const Dual = () => {
             name="x1"
             autosize
           />
+          <Textarea
+            label="текст"
+            value={changedText?.x2 ?? ""}
+            onChange={(e) => handleCourseChange(e, "text")}
+            name="x2"
+            autosize
+          />
+          <Textarea
+            label="текст"
+            value={changedText?.x3 ?? ""}
+            onChange={(e) => handleCourseChange(e, "text")}
+            name="x3"
+            autosize
+          />
         </div>
       </section>
 

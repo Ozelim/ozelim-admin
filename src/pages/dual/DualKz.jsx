@@ -1,10 +1,9 @@
 import React from "react";
-import { Button, TextInput, Textarea } from "@mantine/core";
+import { Accordion, Button, Table, Tabs, TextInput, Textarea } from "@mantine/core";
 import { getData, pb } from "shared/api";
-import { Image } from "shared/ui";
-import ReactQuill from "react-quill";
+import { Editor, Image } from "shared/ui";
 
-export const DualKz = () => {
+export const Dual = () => {
 
   const [course, setCourse] = React.useState({});
 
@@ -393,6 +392,20 @@ export const DualKz = () => {
             name="x1"
             autosize
           />
+          <Textarea
+            label="текст"
+            value={changedText?.x2 ?? ""}
+            onChange={(e) => handleCourseChange(e, "text")}
+            name="x2"
+            autosize
+          />
+          <Textarea
+            label="текст"
+            value={changedText?.x3 ?? ""}
+            onChange={(e) => handleCourseChange(e, "text")}
+            name="x3"
+            autosize
+          />
         </div>
       </section>
 
@@ -458,42 +471,7 @@ export const DualKz = () => {
         />
       </div>
 
-      <div>
-        <div className="grid grid-cols-3 gap-4 mt-20">
-          {Array(3).fill(1).map((_, i) => {
-            const index = i + 1
-            return (
-              <div className="space-y-2" key={i}>
-                <TextInput
-                  label="Заголовок"
-                  value={changedText?.[`label${index}`] ?? ""}
-                  name={`label${index}`}
-                  onChange={(e) =>
-                    handleCourseChange(e, "text")
-                  }
-                />
-                <TextInput
-                  label="Цена"
-                  value={changedText?.[`cost${index}`] ?? ""}
-                  name={`cost${index}`}
-                  onChange={(e) =>
-                    handleCourseChange(e, "text")
-                  }
-                />
-                <ReactQuill
-                  value={changedText?.[`editor${index}`] ?? ""}
-                  onChange={(e) => {
-                    setChangedText({ ...changedText, [`editor${index}`]: e});
-                  }}
-                  className="h-full"
-                  name={`editor${index}`}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <div className="flex justify-center mt-60">
+      <div className="flex justify-center mt-10">
         <Button onClick={saveCourses}>
           Сохранить
         </Button>
