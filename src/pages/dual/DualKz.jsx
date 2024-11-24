@@ -3,7 +3,7 @@ import { Accordion, Button, Table, Tabs, TextInput, Textarea } from "@mantine/co
 import { getData, pb } from "shared/api";
 import { Editor, Image } from "shared/ui";
 
-export const Dual = () => {
+export const DualKz = () => {
 
   const [course, setCourse] = React.useState({});
 
