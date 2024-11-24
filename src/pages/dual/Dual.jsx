@@ -339,9 +339,9 @@ export const Dual = () => {
         <div className="mt-10">
           <Textarea
             label="Заголовок"
-            value={changedText?.grid_head4 ?? ""}
+            value={changedText?.grid_main2 ?? ""}
             onChange={(e) => handleCourseChange(e, "text")}
-            name="grid_head4"
+            name="grid_main2"
             autosize
           />
         </div>
