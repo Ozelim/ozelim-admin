@@ -291,12 +291,12 @@ export const Dual = () => {
       <section className="mt-10 ">
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <TextInput
+            {/* <TextInput
               label="Заголовок"
               value={changedHeadings?.grid_head1 ?? ""}
               onChange={(e) => handleCourseChange(e, "heading")}
               name="grid_head1"
-            />
+            /> */}
             <Textarea
               label="Описание"
               value={changedText?.grid_p1 ?? ""}
@@ -306,12 +306,12 @@ export const Dual = () => {
             />
           </div>
           <div>
-            <TextInput
+            {/* <TextInput
               label="Заголовок"
               value={changedHeadings?.grid_head2 ?? ""}
               onChange={(e) => handleCourseChange(e, "heading")}
               name="grid_head2"
-            />
+            /> */}
             <Textarea
               label="Описание"
               value={changedText?.grid_p2 ?? ""}
@@ -321,12 +321,12 @@ export const Dual = () => {
             />
           </div>
           <div>
-            <TextInput
+            {/* <TextInput
               label="Заголовок"
               value={changedHeadings?.grid_head3 ?? ""}
               onChange={(e) => handleCourseChange(e, "heading")}
               name="grid_head3"
-            />
+            /> */}
             <Textarea
               label="Описание"
               value={changedText?.grid_p3 ?? ""}
@@ -337,10 +337,10 @@ export const Dual = () => {
           </div>
         </div>
         <div className="mt-10">
-          <Textarea
+          <TextInput
             label="Заголовок"
-            value={changedText?.grid_main2 ?? ""}
-            onChange={(e) => handleCourseChange(e, "text")}
+            value={changedHeadings?.grid_main2 ?? ""}
+            onChange={(e) => handleCourseChange(e, "heading")}
             name="grid_main2"
             autosize
           />
