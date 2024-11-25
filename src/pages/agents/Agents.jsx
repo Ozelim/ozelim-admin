@@ -236,8 +236,8 @@ export const Agents = () => {
               <thead>
                 <tr>
                   <th>Дата</th>
-                  <th>ID агента</th>
                   <th>Фото</th>
+                  <th>ID агента</th>
                   <th>ФИО</th>
                   <th>Линии</th>
                 </tr>
@@ -247,10 +247,10 @@ export const Agents = () => {
                   return (
                     <tr key={i}>
                       <td>{dayjs(q.created).format(`DD.MM.YY, HH:mm`)}</td>
-                      <td>{q?.agent}</td>
                       <td>
                         <img src={getImageUrl(q?.expand?.agent, q?.expand?.agent?.avatar)} alt="" className='rounded-full w-20' />
                       </td>
+                      <td>{q?.agent}</td>
                       <td>{q?.expand?.agent?.fio}</td>
                       <td>
                         <Button
