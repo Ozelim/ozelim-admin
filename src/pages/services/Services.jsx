@@ -15,7 +15,7 @@ async function getServices () {
 }
 
 async function getServiceBids () {
-  return await pb.collection('service_bids').getFullList({expand: 'user', sort: `-created`}) 
+  return await pb.collection('service_bids').getFullList({expand: 'user, agent', sort: `-created`}) 
 }
 
 export const Services = () => {
@@ -294,10 +294,10 @@ export const Services = () => {
                     <th>{dayjs(q?.created).format(`DD.MM.YY`)}</th>
                     <td 
                       className='cursor-pointer' 
-                      onClick={() => setUserData({modal: true, data: q?.expand?.user})}
+                      onClick={() => setUserData({modal: true, data: q?.expand?.user ?? q?.expand?.agent})}
                     >
                       <Button compact variant='outline'>
-                        {q?.user}
+                        {q?.user ?? q?.agent}
                       </Button>
                     </td>
                     <td>{q.name}</td>
@@ -360,7 +360,7 @@ export const Services = () => {
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
-                    <td>{q.user}</td>
+                    <td>{q?.user ?? q?.agent}</td>
                     <td>{q.name}</td>
                     <td>{q.total_cost}</td>
                     <td>
@@ -412,7 +412,7 @@ export const Services = () => {
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
-                    <td>{q.user}</td>
+                    <td>{q?.user ?? q?.agent}</td>
                     <td>{q.name}</td>
                     <td>{q.total_cost} тг</td>
                     <td>
@@ -455,7 +455,7 @@ export const Services = () => {
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
-                    <td>{q.user}</td>
+                    <td>{q?.user ?? q?.agent}</td>
                     <td>{q.name}</td>
                     <td>
                       <Button
@@ -501,7 +501,7 @@ export const Services = () => {
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
-                    <td>{q.user}</td>
+                    <td>{q?.user ?? q?.agent}</td>
                     <td>{q.name}</td>
                     <td>
                       <Button
@@ -678,6 +678,10 @@ export const Services = () => {
           <li className='grid grid-cols-2'>
             <p>Фамилия:</p>
             <p>{userData?.data?.surname}</p>
+          </li>
+          <li className='grid grid-cols-2'>
+            <p>ФИО:</p>
+            <p>{userData?.data?.fio}</p>
           </li>
           <li className='grid grid-cols-2'>
             <p>Телефон:</p>
