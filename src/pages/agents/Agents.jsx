@@ -248,7 +248,7 @@ export const Agents = () => {
                     <tr key={i}>
                       <td>{dayjs(q.created).format(`DD.MM.YY, HH:mm`)}</td>
                       <td>
-                        <img src={getImageUrl(q?.expand?.agent, q?.expand?.agent?.avatar)} alt="" className='rounded-full w-20' />
+                        <img src={getImageUrl(q?.expand?.agent, q?.expand?.agent?.avatar)} alt="" className='rounded-full w-20 h-20' />
                       </td>
                       <td>{q?.agent}</td>
                       <td>{q?.expand?.agent?.fio}</td>
