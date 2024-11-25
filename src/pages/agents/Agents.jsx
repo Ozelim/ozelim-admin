@@ -237,6 +237,7 @@ export const Agents = () => {
                 <tr>
                   <th>Дата</th>
                   <th>ID агента</th>
+                  <th>Фото</th>
                   <th>ФИО</th>
                   <th>Линии</th>
                 </tr>
@@ -247,6 +248,7 @@ export const Agents = () => {
                     <tr key={i}>
                       <td>{dayjs(q.created).format(`DD.MM.YY, HH:mm`)}</td>
                       <td>{q?.agent}</td>
+                      <td>{getImageUrl(q?.expand?.agent, q?.expand?.agent?.avatar)}</td>
                       <td>{q?.expand?.agent?.fio}</td>
                       <td>
                         <Button

@@ -277,7 +277,7 @@ export const Tourist = () => {
         />
       </div>
 
-      <section>
+      <section className='max-w-4xl mt-8'>
         <Image
           label={'Картинка'}
           onChange={handleImagesChange}
@@ -327,7 +327,7 @@ export const Tourist = () => {
         })}
       </section>
       
-      <section>
+      <section className='max-w-4xl mt-8'>
         <Image
           label={'Картинка'}
           onChange={handleImagesChange}
