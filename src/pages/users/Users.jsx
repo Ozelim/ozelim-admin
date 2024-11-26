@@ -150,8 +150,15 @@ export const Users = () => {
           </Button>
 
           <div className="mx-4 flex items-center gap-2">
-            <p>Количество: </p>
-            <p>{users?.length}</p>
+            <div className="space-x-2">
+              Количество: {users?.length}
+            </div>
+            <div>
+              Верифицировано: {users?.filter(q => q?.verified)?.length}
+            </div>
+            <div>
+              Не верифицированы: {users?.filter(q => !q?.verified)?.length}
+            </div>
           </div>
         </div>
         <Table className="mt-4">
