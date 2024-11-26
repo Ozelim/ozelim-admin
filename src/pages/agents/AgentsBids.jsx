@@ -115,7 +115,8 @@ export const AgentsBids = () => {
               })
               .then(async res => {
                 await pb.collection('agents').update(bid?.agent, {
-                  agent: true
+                  agent: true,
+                  agent_date: new Date()
                 })
                 modalHandler.close()
                 showNotification({
