@@ -213,6 +213,7 @@ export const Bids = () => {
 
     getAgentsBids()
     .then(res => {
+      console.log(res, 'res');
       setABids(res)
     })
 
