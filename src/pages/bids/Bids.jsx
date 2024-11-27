@@ -14,7 +14,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 
 async function getAgentsBids () {
-  return await pb.collection('agents_bids').getFullList({expand: 'agent', sort: '-creted'})
+  return await pb.collection('agents_bids').getFullList({expand: 'agent', sort: '-created'})
 }
 
 async function getAnswers () {
