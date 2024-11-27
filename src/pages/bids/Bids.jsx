@@ -66,10 +66,6 @@ async function getTouristBids () {
   return await pb.collection('tourist_bids').getFullList()
 }
 
-async function getAgentBids () {
-  return await pb.collection('agent_bids').getFullList()
-}
-
 async function getRightsbids () {
   return await pb.collection('rights_bids').getFullList()
 }
@@ -143,13 +139,6 @@ export const Bids = () => {
       setQ(res?.filter(w => w?.status === ''))
       setQs(res?.filter(w => w?.status === 'succ'))
       setQr(res?.filter(w => w?.status === 'ref'))
-    })
-
-    getAgentBids()
-    .then(res => {
-      setA(res?.filter(w => w?.status === ''))
-      setAs(res?.filter(w => w?.status === 'succ'))
-      setAr(res?.filter(w => w?.status === 'ref'))
     })
 
     getTouristBids()
