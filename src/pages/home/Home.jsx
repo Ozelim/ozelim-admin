@@ -7,6 +7,7 @@ import { Image } from 'shared/ui'
 import { DatePickerInput } from '@mantine/dates';
 import dayjs from 'dayjs';
 import { AiFillCheckCircle, AiFillLock } from 'react-icons/ai';
+import { showNotification } from '@mantine/notifications';
 
 async function getDogs () {
   return await pb.collection('dogs').getFullList()
@@ -100,7 +101,20 @@ export const Home = () => {
           formData.append([`${index}`], changedImages?.[index])
           await pb.collection('images').update(about?.images?.id, formData)
           .then(res => {
+            showNotification({
+              title: 'Изображение',
+              message: 'Изожрабение загружено успешно!',
+              color: 'green'
+            })
             console.log(res);
+          })
+          .catch(err => {
+            showNotification({
+              title: 'Изображение',
+              message: 'Не удалось загрузить изображение',
+              color: 'red'
+            })
+            console.log(err, 'err');
           })
       }
     }
