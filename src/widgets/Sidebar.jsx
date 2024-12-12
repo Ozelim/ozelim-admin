@@ -1,6 +1,6 @@
 import React from 'react'
 import { clsx } from '@mantine/core'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { useAuth } from 'shared/hooks'
 import { useLangContext } from 'app/langContext'
 
@@ -9,21 +9,14 @@ export const Sidebar = () => {
   const {lang} = useLangContext()
 
   const array = [
-
     
     {path: '/partners', labelru: 'Партнеры'},
 
     {path: '/users', labelru: 'Пользователи', labelkz: 'Пользователи', mng: true},
     {path: '/agents', labelru: 'Агенты', labelkz: 'Пользователи', mng: true},
-    // {path: '/agents-bids', labelru: 'Заявки агентов', labelkz: 'Заявки агентов', mng: true},
-
 
     {path: '/construct', labelru: 'Конструктор туров'},
-    // {path: '/about', labelru: 'О компании', labelkz: 'Компания туралы'},
-    // {path: '/health', labelru: 'Твое здоровье', labelkz: 'Сенің денсаулығың'},
-    // {path: '/courses', labelru: 'Курсы по туризму', labelkz: 'Туристік курстар'},
     {path: '/resorts', labelru: 'Санатории', labelkz: 'Санаториялар'},
-    // {path: '/partners', labelru: 'Наши туристы', labelkz: `Наши туристы`},
     {path: '/price', labelru: 'Услуги (страница)'},
     {path: '/program', labelru: 'Партнерская программа', labelkz: 'Агенттік бағдарлама'},
     {path: '/our-team', labelru: 'Наша команда'},
@@ -33,7 +26,6 @@ export const Sidebar = () => {
     {path: '/levels', labelru: 'Уровни'},
     {path: '/binary', labelru: 'Бинар'},
     {path: '/bids', labelru: 'Заявки'},
-    // {path: '/money-flow', labelru: 'Движение средтв'},
     {path: '/withdraws', labelru: 'Выводы', buhgalter: true},
     {path: '/services', labelru: 'Услуги', labelkz: 'Қызметтер', tur: true},
     {path: '/replenish', labelru: 'Пополнения', labelkz: 'Пополнения'},
@@ -47,10 +39,41 @@ export const Sidebar = () => {
     {path: '/tourist', labelru: 'Пользователь', labelkz: 'Пользователь', mng: true},
     {path: '/dual', labelru: 'Дуальное обучение', labelkz: 'Дуальное обучение', mng: true},
   ]
+  const array2 = [
+    {path: '/market/shops', labelru: 'Магазины'},
+    {path: '/market/categories', labelru: 'Категории'},
+    {path: '/market/users', labelru: 'Пользователи'},
+  ]
 
-  const { pathname } = useLocation()
+  const {pathname} = useLocation()
 
   const {user} = useAuth()
+
+  if (pathname.includes('market')) {
+    return (
+      <div className='grid grid-cols-1'>
+        {array2.map((page, i) => {
+            return (
+              <Link key={i} to={page.path}>
+                <div 
+                  key={i} 
+                  className={clsx('p-4 text-sm', {
+                    'bg-teal-600 text-white': pathname === page.path,
+                  })}
+                >
+                    <span>
+                      {lang === 'kz' 
+                        ? page.labelkz ?? page.labelru
+                        : page.labelru
+                      }
+                    </span>
+                  </div>
+              </Link>
+            )
+        })}
+      </div>
+    )
+  }
 
   return (
     <div className='grid grid-cols-1'>

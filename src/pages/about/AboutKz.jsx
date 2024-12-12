@@ -27,7 +27,6 @@ export const AboutKz = () => {
     setChangedText({...changedText, [name]: value})
     return 
   }
-
   
   function handleImagesChange (val, index) {
     setChangedImages({...changedImages, [`${index}`]: val})

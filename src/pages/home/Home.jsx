@@ -148,23 +148,23 @@ export const Home = () => {
       </div>
 
       <div className='mt-8'>
-        <TextInput 
+        {/* <TextInput 
           label='Заголовок'
           value={changedHeadings?.[1] ?? ''}
           onChange={(e) => handleAboutChange(e, 'heading')}
           name='1'
           className='max-w-xl '
-        />
+        /> */}
         <div className='mt-8 grid grid-cols-3 gap-4'>
           <div>
-          <Image
+          {/* <Image
               label={'Картинка'}
               onChange={handleImagesChange}
               record={about?.images}
               image={changedImages?.['1']}
               onDelete={handleImageDelete}
               index={1}
-            />  
+            />   */}
             <Textarea
               label='Описание'
               value={changedText?.[1] ?? ''}
@@ -174,14 +174,14 @@ export const Home = () => {
             />
           </div>
           <div>
-            <Image
+            {/* <Image
               label={'Картинка'}
               onChange={handleImagesChange}
               record={about?.images}
               image={changedImages?.['2']}
               onDelete={handleImageDelete}
               index={2}
-            />  
+            />   */}
             <Textarea
               label='Описание'
               value={changedText?.[2] ?? ''}
@@ -191,14 +191,14 @@ export const Home = () => {
             />
           </div>
           <div>
-            <Image
+            {/* <Image
               label={'Картинка'}
               onChange={handleImagesChange}
               record={about?.images}
               image={changedImages?.['3']}
               onDelete={handleImageDelete}
               index={3}
-            />  
+            />   */}
             <Textarea
               label='Описание'
               value={changedText?.[3] ?? ''}
@@ -212,14 +212,14 @@ export const Home = () => {
 
       <div className='mt-8'>
         <div className='grid grid-cols-2 gap-4'>
-          <Image
+          {/* <Image
             label={'Картинка'}
             onChange={handleImagesChange}
             record={about?.images}
             image={changedImages?.['4']}
             onDelete={handleImageDelete}
             index={4}
-          />  
+          />   */}
           <TextInput 
             label='Заголовок'
             value={changedHeadings?.[2] ?? ''}
@@ -313,14 +313,14 @@ export const Home = () => {
             onChange={(e) => handleAboutChange(e, 'heading')}
             name='3'
           />
-          <Image
+          {/* <Image
             label={'Картинка'}
             onChange={handleImagesChange}
             record={about?.images}
             image={changedImages?.['5']}
             onDelete={handleImageDelete}
             index={5}
-          />
+          /> */}
         </div>
         <div className='grid grid-cols-3 gap-4'>
           <Textarea

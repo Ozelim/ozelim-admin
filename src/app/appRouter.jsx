@@ -41,7 +41,10 @@ import {
   Agents,
   AgentsBids,
   Tourist,
-  Partners
+  Partners,
+  Marketsers,
+  Shops,
+  Categories
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -81,6 +84,12 @@ const appRouter = createBrowserRouter([
       { path: "/agents-bids", element: <AgentsBids /> },
       { path: "/dual", element: <SwitchLayout ru={<Dual />} kz={<DualKz/>} /> },
       { path: "*", element: <NotFound /> },
+      
+      { path: '/market', children: [
+        { path: 'users', element: <Marketsers/>},
+        { path: 'shops', element: <Shops/>},
+        { path: 'categories', element: <Categories/>},
+      ]}
     ],
   },
 ]);

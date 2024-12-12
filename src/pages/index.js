@@ -54,3 +54,8 @@ export { AgentsBids } from './agents/AgentsBids'
 export { Tourist } from './tourist/Tourist'
 
 export { Users } from './users/Users'
+
+export { Market } from './market/market'
+export { Users as Marketsers } from './market/users'
+export { Shops } from './market/shops'
+export { Categories } from './market/categories'

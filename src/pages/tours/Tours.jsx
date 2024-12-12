@@ -151,9 +151,9 @@ export const Tours = () => {
         <Tabs.Tab value='kz'>
           Казахский
         </Tabs.Tab>
-        <Tabs.Tab value='bids'>
+        {/* <Tabs.Tab value='bids'>
           Заявки
-        </Tabs.Tab>
+        </Tabs.Tab> */}
         <Tabs.Tab value='resorts'>
           Курортные зоны
         </Tabs.Tab>
@@ -390,7 +390,7 @@ export const Tours = () => {
           </div>
         </div>
       </Tabs.Panel>
-      <Tabs.Panel value='bids' pt={20}>
+      {/* <Tabs.Panel value='bids' pt={20}>
         <Table>
           <thead>
             <tr>
@@ -446,7 +446,7 @@ export const Tours = () => {
             })}
           </tbody>
         </Table>
-      </Tabs.Panel>
+      </Tabs.Panel> */}
       <Tabs.Panel value='resorts' pt={20}>
         {resorts?.map((q, i) => {
           return (
