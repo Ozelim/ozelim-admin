@@ -395,7 +395,7 @@ export const Fund = () => {
       </div>
       {types?.services?.map((q, i) => {
         return (
-          <>
+          <React.Fragment key={i}>
             <p className='text-lg'>{q}</p>
             <Button
               variant='subtle'
@@ -403,10 +403,11 @@ export const Fund = () => {
                 openConfirmModal({
                   centered: true,
                   labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                  
                   onConfirm: async () => {
-                    const newTypes = types?.types?.filter(w => w !== q)
+                    const newTypes = types?.services?.filter(w => w !== q)
                     await pb.collection('fund_data').update(types?.id, {
-                      services: [...newTypes]
+                      services: newTypes
                     })
                     .then(res => {
                       getTypes()
@@ -420,7 +421,7 @@ export const Fund = () => {
             >
               Удалить 
             </Button>
-          </>
+          </React.Fragment>
         )
       })}
       <div>          
