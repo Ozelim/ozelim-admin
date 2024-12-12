@@ -96,29 +96,29 @@ export const Home = () => {
   async function saveAbout () {
     
     const formData = new FormData()
-    
+
     for (const index in changedImages) {
       if (!isNaN(index)) {
         formData.append([`${index}`], changedImages?.[index])
       }
-      await pb.collection('images').update(about?.images?.id, formData)
-      .then(res => {
-        showNotification({
-          title: 'Изображение',
-          message: 'Изожрабение загружено успешно!',
-          color: 'green'
-        })
-        console.log(res);
-      })
-      .catch(err => {
-        showNotification({
-          title: 'Изображение',
-          message: 'Не удалось загрузить изображение',
-          color: 'red'
-        })
-        console.log(err, 'err');
-      })
     }
+    await pb.collection('images').update(about?.images?.id, formData)
+    .then(res => {
+      showNotification({
+        title: 'Изображение',
+        message: 'Изожрабение загружено успешно!',
+        color: 'green'
+      })
+      console.log(res);
+    })
+    .catch(err => {
+      showNotification({
+        title: 'Изображение',
+        message: 'Не удалось загрузить изображение (возможно файл слишком тяжелый)',
+        color: 'red'
+      })
+      console.log(err, 'err');
+    })
     await pb.collection('text').update(about?.text?.id, {
       headings: changedHeadings, 
       text: changedText
