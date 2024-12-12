@@ -255,56 +255,48 @@ export const Tours = () => {
       <Tabs.Panel value='tours' pt={20}>
         <div>
           <p>Туры:</p>
-          {tours?.tours?.map((q, i) => {
-            return (
-              <React.Fragment key={i}>
-                <Accordion
-                  variant='separated'
-                  className='my-10'
-                  defaultValue='0'
-                >
-                  {tours?.tours?.map((q, i) => {
-                    return (
-                      <Accordion.Item value={`${i}`} key={i}>
-                        <Accordion.Control className='!text-xl !font-bold '>{i + 1}. 
-                          <span className='text-primary-500'>{q?.name}</span>
-                        </Accordion.Control>
-                        <Accordion.Panel>
-                          <div className='accordion-body' dangerouslySetInnerHTML={{__html: q?.desc ?? <></>}}/>
-                        </Accordion.Panel>
+            <Accordion
+              variant='separated'
+              className='my-10'
+              defaultValue='0'
+            >
+              {tours?.tours?.map((q, i) => {
+                return (
+                  <Accordion.Item value={`${i}`} key={i}>
+                    <Accordion.Control className='!text-xl !font-bold '>{i + 1}. 
+                      <span className='text-primary-500'>{q?.name}</span>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <div className='accordion-body' dangerouslySetInnerHTML={{__html: q?.desc ?? <></>}}/>
+                    </Accordion.Panel>
 
-                        <Button
-                          variant='subtle'
-                          onClick={() => {
-                            openConfirmModal({
-                              centered: true,
-                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                              onConfirm: async () => {
-                                const newTypes = tours?.tours?.filter(w => w !== q)
-                                await pb.collection('tours_data').update(tours?.id, {
-                                  tours: [...newTypes]
-                                })
-                                .then(res => {
-                                  getTours()
-                                  .then((res) => {
-                                    setTours(res?.[0])
-                                  })
-                                })
-                              }
+                    <Button
+                      variant='subtle'
+                      onClick={() => {
+                        openConfirmModal({
+                          centered: true,
+                          labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                          onConfirm: async () => {
+                            const newTypes = tours?.tours?.filter(w => w !== q)
+                            await pb.collection('tours_data').update(tours?.id, {
+                              tours: [...newTypes]
                             })
-                          }}
-                        >
-                          Удалить 
-                        </Button>
-                      </Accordion.Item>
-                    )
-                  })}
-                </Accordion>
-              </React.Fragment>
-            )
-          })}
-
-
+                            .then(res => {
+                              getTours()
+                              .then((res) => {
+                                setTours(res?.[0])
+                              })
+                            })
+                          }
+                        })
+                      }}
+                    >
+                      Удалить 
+                    </Button>
+                  </Accordion.Item>
+                )
+              })}
+            </Accordion>
 
           <div>          
             <TextInput

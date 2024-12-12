@@ -368,54 +368,48 @@ export const HealthWorld = () => {
         </div>
         <div>
           <p>Санатории:</p>
-          {resorts?.resorts?.map((q, i) => {
-            return (
-              <React.Fragment key={i}>
-                <Accordion
-                  variant='separated'
-                  className='my-10'
-                  defaultValue='0'
-                >
-                  {resorts?.resorts?.map((q, i) => {
-                    return (
-                      <Accordion.Item value={`${i}`}>
-                        <Accordion.Control className='!text-xl !font-bold '>{i + 1}. 
-                          <span className='text-primary-500'>{q?.name}</span>
-                        </Accordion.Control>
-                        <Accordion.Panel>
-                          <div className='accordion-body' dangerouslySetInnerHTML={{__html: q?.desc ?? <></>}}/>
-                        </Accordion.Panel>
+            <Accordion
+              variant='separated'
+              className='my-10'
+              defaultValue='0'
+            >
+              {resorts?.resorts?.map((q, i) => {
+                return (
+                  <Accordion.Item value={`${i}`}>
+                    <Accordion.Control className='!text-xl !font-bold '>{i + 1}. 
+                      <span className='text-primary-500'>{q?.name}</span>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <div className='accordion-body' dangerouslySetInnerHTML={{__html: q?.desc ?? <></>}}/>
+                    </Accordion.Panel>
 
-                        <Button
-                          variant='subtle'
-                          onClick={() => {
-                            openConfirmModal({
-                              centered: true,
-                              labels: {confirm: 'Удалить', cancel: 'Отмена'},
-                              onConfirm: async () => {
-                                const newTypes = resorts?.resorts?.filter(w => w !== q)
-                                await pb.collection('health_data').update(resorts?.id, {
-                                  resorts: [...newTypes]
-                                })
-                                .then(res => {
-                                  getResorts()
-                                  .then((res) => {
-                                    setResorts(res?.[0])
-                                  })
-                                })
-                              }
+                    <Button
+                      variant='subtle'
+                      onClick={() => {
+                        openConfirmModal({
+                          centered: true,
+                          labels: {confirm: 'Удалить', cancel: 'Отмена'},
+                          onConfirm: async () => {
+                            const newTypes = resorts?.resorts?.filter(w => w !== q)
+                            await pb.collection('health_data').update(resorts?.id, {
+                              resorts: [...newTypes]
                             })
-                          }}
-                        >
-                          Удалить 
-                        </Button>
-                      </Accordion.Item>
-                    )
-                  })}
-                </Accordion>
-              </React.Fragment>
-            )
-          })}
+                            .then(res => {
+                              getResorts()
+                              .then((res) => {
+                                setResorts(res?.[0])
+                              })
+                            })
+                          }
+                        })
+                      }}
+                    >
+                      Удалить 
+                    </Button>
+                  </Accordion.Item>
+                )
+              })}
+            </Accordion>
           <div>          
             <TextInput
               className='max-w-md'

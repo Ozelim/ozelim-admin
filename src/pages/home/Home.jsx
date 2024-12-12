@@ -94,10 +94,11 @@ export const Home = () => {
   }
 
   async function saveAbout () {
-
+    
+    const formData = new FormData()
+    
     for (const index in changedImages) {
       if (!isNaN(index)) {
-        const formData = new FormData()
         formData.append([`${index}`], changedImages?.[index])
       }
       await pb.collection('images').update(about?.images?.id, formData)

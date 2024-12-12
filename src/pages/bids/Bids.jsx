@@ -35,7 +35,9 @@ async function getAnswers() {
 }
 
 async function get123() {
-  return await pb.collection('123').getFullList()
+  return await pb.collection('123').getFullList({
+    sort: '-created'
+  })
 }
 
 async function getQuestions() {
@@ -49,39 +51,57 @@ async function getBids() {
 }
 
 async function getDualBids() {
-  return await pb.collection('dual_bids').getFullList()
+  return await pb.collection('dual_bids').getFullList({
+    sort: '-created'
+  })
 }
 
 async function getInsuranceBids() {
-  return await pb.collection('insurance_bids').getFullList()
+  return await pb.collection('insurance_bids').getFullList({
+    sort: '-created'
+  })
 }
 
 async function getVacaBids() {
-  return await pb.collection('vaca_bids').getFullList()
+  return await pb.collection('vaca_bids').getFullList({
+    sort: '-created'
+  })
 }
 
 async function getHealthBids() {
-  return await pb.collection('health_bids').getFullList()
+  return await pb.collection('health_bids').getFullList({
+    sort: '-created'
+  })
 }
 
 async function getToursBids() {
-  return await pb.collection('tours_bids2').getFullList()
+  return await pb.collection('tours_bids2').getFullList({
+    sort: '-created'
+  })
 }
 
 async function getToursBids2() {
-  return await pb.collection('tours_bids').getFullList()
+  return await pb.collection('tours_bids').getFullList({
+    sort: '-created'
+  })
 }
 
 async function getFundBids() {
-  return await pb.collection('fund_bids').getFullList()
+  return await pb.collection('fund_bids').getFullList({
+    sort: '-created'
+  })
 }
 
 async function getTouristBids() {
-  return await pb.collection('tourist_bids').getFullList()
+  return await pb.collection('tourist_bids').getFullList({
+    sort: '-created'
+  })
 }
 
 async function getRightsbids() {
-  return await pb.collection('rights_bids').getFullList()
+  return await pb.collection('rights_bids').getFullList({
+    sort: '-created'
+  })
 }
 
 export const Bids = () => {
@@ -143,10 +163,12 @@ export const Bids = () => {
   const [br, setBr] = React.useState([])
 
   const [r, setR] = React.useState([])
+  const [rs, setRs] = React.useState([])
 
   React.useEffect(() => {
     getRightsbids().then((res) => {
-      setR(res)
+      setR(res?.filter((w) => w?.status === ''))
+      setRs(res?.filter((w) => w?.status === 'succ'))
     })
 
     getToursBids2().then((res) => {
@@ -288,7 +310,7 @@ export const Bids = () => {
     { label: 'Туры с Ozelim', value: 'tours-ozelim' },
     { label: 'Фонд', value: 'fund-bids' },
     { label: 'Правовая защита', value: 'rights-bids' },
-    { label: 'Пользователь', value: 'user-bids' },
+    // { label: 'Пользователь', value: 'user-bids' },
   ]
 
   return (
@@ -515,6 +537,7 @@ export const Bids = () => {
           >
             <Tabs.List grow>
               <Tabs.Tab value="bids">Заявки</Tabs.Tab>
+              <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
             </Tabs.List>
 
             <Tabs.Panel value="bids">
@@ -534,7 +557,44 @@ export const Bids = () => {
                         <td>{w?.name}</td>
                         <td>{w?.phone}</td>
                         <td>{w?.type}</td>
-                        <td>
+                        <td className='flex gap-2'>
+
+                          <BsCheckCircle
+                            size={30}
+                            color="green"
+                            // onClick={() => handleConfirmBid(q)}
+                            onClick={async () => {
+                              openConfirmModal({
+                                labels: {
+                                  cancel: 'Назад',
+                                  confirm: 'Одобрить',
+                                },
+                                centered: true,
+                                onConfirm: async () => {
+                                  await pb
+                                    .collection('rights_bids')
+                                    .update(w?.id, {
+                                      status: 'succ',
+                                      comment: w?.comment,
+                                    })
+                                    .then(() => {
+                                      getRightsbids().then((res) => {
+                                        setR(
+                                          res?.filter((w) => w?.status === '')
+                                        )
+                                        setRs(
+                                          res?.filter(
+                                            (w) => w?.status === 'succ'
+                                          )
+                                        )
+                                      })
+                                    })
+                                },
+                              })
+                            }}
+                            className="cursor-pointer hover:fill-yellow-500"
+                          />
+
                           <Button
                             onClick={() => {
                               openConfirmModal({
@@ -549,7 +609,14 @@ export const Bids = () => {
                                     .delete(w?.id)
                                     .then(() => {
                                       getRightsbids().then((res) => {
-                                        setR(res)
+                                        setR(
+                                          res?.filter((w) => w?.status === '')
+                                        )
+                                        setRs(
+                                          res?.filter(
+                                            (w) => w?.status === 'succ'
+                                          )
+                                        )
                                       })
                                     })
                                 },
@@ -560,7 +627,32 @@ export const Bids = () => {
                           >
                             Удалить
                           </Button>
+
+
                         </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+            </Tabs.Panel>
+            <Tabs.Panel value="succ">
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Название</th>
+                    <th>Номер телефона</th>
+                    <th>Тип</th>
+                    <th>Действие</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rs?.map((w) => {
+                    return (
+                      <tr key={w?.id}>
+                        <td>{w?.name}</td>
+                        <td>{w?.phone}</td>
+                        <td>{w?.type}</td>
                       </tr>
                     )
                   })}
@@ -1088,7 +1180,7 @@ export const Bids = () => {
                                 openConfirmModal({
                                   labels: {
                                     cancel: 'Назад',
-                                    confirm: 'Одобрить',
+                                    confirm: 'Отклонить',
                                   },
                                   centered: true,
                                   onConfirm: async () => {
@@ -1099,7 +1191,7 @@ export const Bids = () => {
                                         comment: w?.comment,
                                       })
                                       .then(() => {
-                                        getToursBids().then((res) => {
+                                        getDualBids().then((res) => {
                                           setD(
                                             res?.filter((w) => w?.status === '')
                                           )
@@ -1249,7 +1341,7 @@ export const Bids = () => {
                                         comment: w?.comment,
                                       })
                                       .then(() => {
-                                        getDualBids().then((res) => {
+                                        getInsuranceBids().then((res) => {
                                           setS(
                                             res?.filter((w) => w?.status === '')
                                           )
@@ -1277,7 +1369,7 @@ export const Bids = () => {
                                 openConfirmModal({
                                   labels: {
                                     cancel: 'Назад',
-                                    confirm: 'Одобрить',
+                                    confirm: 'Отклонить',
                                   },
                                   centered: true,
                                   onConfirm: async () => {
@@ -1288,7 +1380,7 @@ export const Bids = () => {
                                         comment: w?.comment,
                                       })
                                       .then(() => {
-                                        getToursBids().then((res) => {
+                                        getInsuranceBids().then((res) => {
                                           setS(
                                             res?.filter((w) => w?.status === '')
                                           )
@@ -1629,7 +1721,7 @@ export const Bids = () => {
                                         comment: w?.comment,
                                       })
                                       .then(() => {
-                                        getVacaBids().then((res) => {
+                                        getHealthBids().then((res) => {
                                           setH(
                                             res?.filter((w) => w?.status === '')
                                           )
@@ -1657,7 +1749,7 @@ export const Bids = () => {
                                 openConfirmModal({
                                   labels: {
                                     cancel: 'Назад',
-                                    confirm: 'Одобрить',
+                                    confirm: 'Отклонить',
                                   },
                                   centered: true,
                                   onConfirm: async () => {
@@ -1668,7 +1760,7 @@ export const Bids = () => {
                                         comment: w?.comment,
                                       })
                                       .then(() => {
-                                        getVacaBids().then((res) => {
+                                        getHealthBids().then((res) => {
                                           setH(
                                             res?.filter((w) => w?.status === '')
                                           )
@@ -1845,12 +1937,12 @@ export const Bids = () => {
                                 openConfirmModal({
                                   labels: {
                                     cancel: 'Назад',
-                                    confirm: 'Одобрить',
+                                    confirm: 'Отклонить',
                                   },
                                   centered: true,
                                   onConfirm: async () => {
                                     await pb
-                                      .collection('123')
+                                      .collection('tours_bids2')
                                       .update(w?.id, {
                                         status: 'ref',
                                         comment: w?.comment,
@@ -2028,27 +2120,27 @@ export const Bids = () => {
                                 openConfirmModal({
                                   labels: {
                                     cancel: 'Назад',
-                                    confirm: 'Одобрить',
+                                    confirm: 'Отклонить',
                                   },
                                   centered: true,
                                   onConfirm: async () => {
                                     await pb
-                                      .collection('123')
+                                      .collection('fund_bids')
                                       .update(w?.id, {
                                         status: 'ref',
                                         comment: w?.comment,
                                       })
                                       .then(() => {
-                                        get123().then((res) => {
-                                          setQ(
+                                        getFundBids().then((res) => {
+                                          setF(
                                             res?.filter((w) => w?.status === '')
                                           )
-                                          setQs(
+                                          setFs(
                                             res?.filter(
                                               (w) => w?.status === 'succ'
                                             )
                                           )
-                                          setQr(
+                                          setFr(
                                             res?.filter(
                                               (w) => w?.status === 'ref'
                                             )
@@ -2074,7 +2166,6 @@ export const Bids = () => {
                   <tr>
                     <th>Дата</th>
                     <th>Наименование орг.</th>
-                    <th>Эл. почта</th>
                     <th>Номер телефона</th>
                     <th>Действие</th>
                   </tr>
@@ -2085,7 +2176,6 @@ export const Bids = () => {
                       <tr key={w?.id}>
                         <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
                         <td>{w?.name}</td>
-                        <td>{w?.email}</td>
                         <td>{w?.phone}</td>
                         <td>{w?.comment}</td>
                       </tr>
@@ -2100,7 +2190,6 @@ export const Bids = () => {
                   <tr>
                     <th>Дата</th>
                     <th>Наименование орг.</th>
-                    <th>Эл. почта</th>
                     <th>Номер телефона</th>
                     <th>Действие</th>
                   </tr>
@@ -2111,7 +2200,6 @@ export const Bids = () => {
                       <tr key={w?.id}>
                         <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
                         <td>{w?.name}</td>
-                        <td>{w?.email}</td>
                         <td>{w?.phone}</td>
                         <td>{w?.comment}</td>
                       </tr>
