@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
 import { Image } from 'shared/ui';
+import { openConfirmModal } from '@mantine/modals';
 
 async function getTypes() {
   return await pb.collection('fund_data').getFullList()
