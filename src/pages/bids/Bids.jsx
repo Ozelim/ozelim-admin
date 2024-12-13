@@ -344,6 +344,8 @@ export const Bids = () => {
           >
             <Tabs.List grow>
               <Tabs.Tab value="bids">Заявки</Tabs.Tab>
+              <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
+              <Tabs.Tab value="ref">Отклоненные</Tabs.Tab>
             </Tabs.List>
 
             <Tabs.Panel value="bids">
@@ -378,32 +380,160 @@ export const Bids = () => {
                         <td>{w?.phone}</td>
                         <td>{w?.resort?.name}</td>
                         <td>
-                          <Button
-                            onClick={() => {
+                          <BsCheckCircle
+                            size={30}
+                            color="green"
+                            // onClick={() => handleConfirmBid(q)}
+                            onClick={async () => {
                               openConfirmModal({
                                 labels: {
-                                  confirm: 'Удалить',
-                                  cancel: 'Отмена',
+                                  cancel: 'Назад',
+                                  confirm: 'Одобрить',
                                 },
                                 centered: true,
                                 onConfirm: async () => {
                                   await pb
-                                    .collection('tours_bids')
-                                    .delete(w?.id)
+                                    .collection('tours_bids2')
+                                    .update(w?.id, {
+                                      status: 'succ',
+                                      comment: w?.comment,
+                                    })
                                     .then(() => {
-                                      getToursBids2().then((res) => {
-                                        setTours(res)
+                                      getToursBids().then((res) => {
+                                        setTours(
+                                          res?.filter((w) => w?.status === '')
+                                        )
+                                        setToursS(
+                                          res?.filter(
+                                            (w) => w?.status === 'succ'
+                                          )
+                                        )
+                                        setToursR(
+                                          res?.filter(
+                                            (w) => w?.status === 'ref'
+                                          )
+                                        )
                                       })
                                     })
                                 },
                               })
                             }}
-                            compact
-                            variant="light"
-                          >
-                            Удалить
-                          </Button>
+                            className="cursor-pointer hover:fill-yellow-500"
+                          />
+                          <CiCircleRemove
+                            size={35}
+                            color="red"
+                            onClick={async () => {
+                              openConfirmModal({
+                                labels: {
+                                  cancel: 'Назад',
+                                  confirm: 'Отклонить',
+                                },
+                                centered: true,
+                                onConfirm: async () => {
+                                  await pb
+                                    .collection('tours_bids2')
+                                    .update(w?.id, {
+                                      status: 'ref',
+                                      comment: w?.comment,
+                                    })
+                                    .then(() => {
+                                      getToursBids().then((res) => {
+                                        setTours(
+                                          res?.filter((w) => w?.status === '')
+                                        )
+                                        setToursS(
+                                          res?.filter(
+                                            (w) => w?.status === 'succ'
+                                          )
+                                        )
+                                        setToursR(
+                                          res?.filter(
+                                            (w) => w?.status === 'ref'
+                                          )
+                                        )
+                                      })
+                                    })
+                                },
+                              })
+                            }}
+                            className="cursor-pointer hover:fill-yellow-500"
+                          />
                         </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+            </Tabs.Panel>
+            <Tabs.Panel value="succ">
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Дата</th>
+                    <th>Категория</th>
+                    <th>Дата</th>
+                    <th>Взрослых</th>
+                    <th>Детей</th>
+                    <th>Телефон</th>
+                    <th>Курорт</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tours?.map((w) => {
+                    return (
+                      <tr key={w?.id}>
+                        <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                        <td>
+                          {w?.category === 'standart' && 'Стандарт'}
+                          {w?.category === 'eco' && 'Эконом'}
+                          {w?.category === 'vip' && 'Вип'}
+                        </td>
+                        <td>
+                          с {dayjs(w?.date_picked?.[0]).format('YY-MM-DD')} по{' '}
+                          {dayjs(w?.date_picked?.[1]).format('YY-MM-DD')}
+                        </td>
+                        <td>{w?.adults}</td>
+                        <td>{w?.child}</td>
+                        <td>{w?.phone}</td>
+                        <td>{w?.resort?.name}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+            </Tabs.Panel>
+            <Tabs.Panel value="ref">
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Дата</th>
+                    <th>Категория</th>
+                    <th>Дата</th>
+                    <th>Взрослых</th>
+                    <th>Детей</th>
+                    <th>Телефон</th>
+                    <th>Курорт</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tours?.map((w) => {
+                    return (
+                      <tr key={w?.id}>
+                        <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                        <td>
+                          {w?.category === 'standart' && 'Стандарт'}
+                          {w?.category === 'eco' && 'Эконом'}
+                          {w?.category === 'vip' && 'Вип'}
+                        </td>
+                        <td>
+                          с {dayjs(w?.date_picked?.[0]).format('YY-MM-DD')} по{' '}
+                          {dayjs(w?.date_picked?.[1]).format('YY-MM-DD')}
+                        </td>
+                        <td>{w?.adults}</td>
+                        <td>{w?.child}</td>
+                        <td>{w?.phone}</td>
+                        <td>{w?.resort?.name}</td>
                       </tr>
                     )
                   })}
