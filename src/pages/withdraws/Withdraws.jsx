@@ -570,7 +570,7 @@ export const Withdraws = () => {
               </tbody>
             </Table>
 
-          </Tabs.Panel>
+          </Tabs.Panel> 
           {/* <Tabs.Panel value='ended'>
             <div className="flex items-end">
               <TextInput
