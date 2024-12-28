@@ -569,7 +569,7 @@ export const Withdraws = () => {
             </Table>
 
           </Tabs.Panel>
-          {/* <Tabs.Panel value='ended'>
+          <Tabs.Panel value='ended'>
             <div className="flex items-end">
               <TextInput
                 label="Поиск"
@@ -583,7 +583,7 @@ export const Withdraws = () => {
                 Поиск
               </Button>
             </div>
-            <Table
+            {/* <Table
               striped
               className='mt-4'
             >
@@ -623,7 +623,7 @@ export const Withdraws = () => {
                   )
                 })}
               </tbody>
-            </Table>
+            </Table> */}
           <div className='flex justify-center'>
             <Pagination
               value={endedWithdraws?.page}
@@ -631,7 +631,7 @@ export const Withdraws = () => {
               onChange={e => handleWithdraws(e)}
             />
           </div>
-          </Tabs.Panel> */}
+          </Tabs.Panel>
         </Tabs>
       </div>
 
