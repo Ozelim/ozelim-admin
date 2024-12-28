@@ -569,8 +569,8 @@ export const Withdraws = () => {
             </Table>
 
           </Tabs.Panel>
-          <Tabs.Panel value='ended'>
-            {/* <div className="flex items-end">
+          {/* <Tabs.Panel value='ended'>
+            <div className="flex items-end">
               <TextInput
                 label="Поиск"
                 value={search}
@@ -582,8 +582,8 @@ export const Withdraws = () => {
               >
                 Поиск
               </Button>
-            </div> */}
-            {/* <Table
+            </div>
+            <Table
               striped
               className='mt-4'
             >
@@ -630,8 +630,8 @@ export const Withdraws = () => {
               total={endedWithdraws?.totalPages}
               onChange={e => handleWithdraws(e)}
             />
-          </div> */}
-          </Tabs.Panel>
+          </div>
+          </Tabs.Panel> */}
         </Tabs>
       </div>
 
