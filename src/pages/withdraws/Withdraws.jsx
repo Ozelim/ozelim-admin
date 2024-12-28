@@ -490,7 +490,7 @@ export const Withdraws = () => {
 
             </div>
           </Tabs.Panel>
-          {/* <Tabs.Panel value='created' pt='lg'>
+          <Tabs.Panel value='created' pt='lg'>
             <Button onClick={exportToExcel}>Скачать Excel</Button>
             <Table
               striped
@@ -568,8 +568,8 @@ export const Withdraws = () => {
               </tbody>
             </Table>
 
-          </Tabs.Panel> */}
-          <Tabs.Panel value='ended'>
+          </Tabs.Panel>
+          {/* <Tabs.Panel value='ended'>
             <div className="flex items-end">
               <TextInput
                 label="Поиск"
@@ -631,7 +631,7 @@ export const Withdraws = () => {
               onChange={e => handleWithdraws(e)}
             />
           </div>
-          </Tabs.Panel>
+          </Tabs.Panel> */}
         </Tabs>
       </div>
 
