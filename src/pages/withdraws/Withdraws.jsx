@@ -624,13 +624,13 @@ export const Withdraws = () => {
                 })}
               </tbody>
             </Table> */}
-          <div className='flex justify-center'>
+          {/* <div className='flex justify-center'>
             <Pagination
               value={endedWithdraws?.page}
               total={endedWithdraws?.totalPages}
               onChange={e => handleWithdraws(e)}
             />
-          </div>
+          </div> */}
           </Tabs.Panel>
         </Tabs>
       </div>
