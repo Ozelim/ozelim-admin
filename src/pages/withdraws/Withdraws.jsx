@@ -284,8 +284,7 @@ export const Withdraws = () => {
 
   return (
     <>
-
-<div className='w-full bg-white'>
+      <div className='w-full bg-white'>
         <Tabs defaultValue='created'>
           <Tabs.List>
             <Tabs.Tab value='created'>Созданные</Tabs.Tab>
@@ -308,7 +307,7 @@ export const Withdraws = () => {
                     Добавить директора
                   </span>
                 </div>
-                {dogs?.map((q, i) => {
+                {/* {dogs?.map((q, i) => {
                   return (
                     <div 
                       key={i} 
@@ -325,7 +324,7 @@ export const Withdraws = () => {
                       </span>
                     </div>
                   )
-                })}
+                })} */}
               </div>
 
               {params.get('value') == 0 && (
@@ -635,6 +634,7 @@ export const Withdraws = () => {
           </Tabs.Panel>
         </Tabs>
       </div>
+
       {/* <Modal 
         opened={confirmModal}
         onClose={() => setConfirmModal(false)}
