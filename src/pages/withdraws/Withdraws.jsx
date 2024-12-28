@@ -282,6 +282,8 @@ export const Withdraws = () => {
     }
   }
 
+  console.log(dogs, sorted, );
+
   return (
     <>
       <div className='w-full bg-white'>
