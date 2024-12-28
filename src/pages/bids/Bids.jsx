@@ -75,13 +75,13 @@ async function getHealthBids() {
 }
 
 async function getToursBids() {
-  return await pb.collection('tours_bids2').getFullList({
+  return await pb.collection('tours_bids').getFullList({
     sort: '-created'
   })
 }
 
 async function getToursBids2() {
-  return await pb.collection('tours_bids').getFullList({
+  return await pb.collection('tours_bids2').getFullList({
     sort: '-created'
   })
 }
@@ -171,7 +171,7 @@ export const Bids = () => {
       setRs(res?.filter((w) => w?.status === 'succ'))
     })
 
-    getToursBids2().then((res) => {
+    getToursBids().then((res) => {
       setTours(res?.filter((w) => w?.status === ''))
       setToursS(res?.filter((w) => w?.status === 'succ'))
       setToursR(res?.filter((w) => w?.status === 'ref'))
@@ -221,7 +221,7 @@ export const Bids = () => {
       setQuestions(res)
     })
 
-    getToursBids().then((res) => {
+    getToursBids2().then((res) => {
       setT(res?.filter((w) => w?.status === ''))
       setTs(res?.filter((w) => w?.status === 'succ'))
       setTr(res?.filter((w) => w?.status === 'ref'))
@@ -480,7 +480,7 @@ export const Bids = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {tours?.map((w) => {
+                  {toursS?.map((w) => {
                     return (
                       <tr key={w?.id}>
                         <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
@@ -517,7 +517,7 @@ export const Bids = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {tours?.map((w) => {
+                  {toursR?.map((w) => {
                     return (
                       <tr key={w?.id}>
                         <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
@@ -2039,7 +2039,7 @@ export const Bids = () => {
                                         comment: w?.comment,
                                       })
                                       .then(() => {
-                                        getToursBids().then((res) => {
+                                        getToursBids2().then((res) => {
                                           setT(
                                             res?.filter((w) => w?.status === '')
                                           )
@@ -2078,7 +2078,7 @@ export const Bids = () => {
                                         comment: w?.comment,
                                       })
                                       .then(() => {
-                                        getToursBids().then((res) => {
+                                        getToursBids2().then((res) => {
                                           setT(
                                             res?.filter((w) => w?.status === '')
                                           )
