@@ -583,7 +583,7 @@ export const Withdraws = () => {
                 Поиск
               </Button>
             </div> */}
-            <Table
+            {/* <Table
               striped
               className='mt-4'
             >
@@ -630,7 +630,7 @@ export const Withdraws = () => {
               total={endedWithdraws?.totalPages}
               onChange={e => handleWithdraws(e)}
             />
-          </div>
+          </div> */}
           </Tabs.Panel>
         </Tabs>
       </div>
