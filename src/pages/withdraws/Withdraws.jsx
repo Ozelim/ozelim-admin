@@ -529,16 +529,16 @@ export const Withdraws = () => {
                 {withdraws?.map((withdraw, i) => {
                   return (
                     <tr 
-                      key={i}
+                      key={withdraw?.id}
                     >
                       <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
                       <td 
                         className='!text-lg'
                         onClick={() => setUserData({modal: true, data: withdraw?.agent ? withdraw?.expand?.agent : withdraw?.expand?.user})}
                       >
-                        <Button compact variant='outline'>
+                        {/* <Button compact variant='outline'>
                           {withdraw?.user ? withdraw?.user : withdraw?.agent}
-                        </Button>
+                        </Button> */}
                       </td>
                       <td className='!text-lg whitespace-nowrap'>
                         {withdraw?.agent ? withdraw?.expand?.agent?.fio : {...withdraw?.expand?.user?.name, ...withdraw?.expand?.user?.surname} }
