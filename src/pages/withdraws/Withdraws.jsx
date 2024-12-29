@@ -525,7 +525,7 @@ export const Withdraws = () => {
                 </tr>
               </thead>
               <tbody>
-                {sorted?.filter(q => !q?.dog)?.map((withdraw, i) => {
+                {/* {sorted?.filter(q => !q?.dog)?.map((withdraw, i) => {
                   return (
                     <tr 
                       key={i}
@@ -577,7 +577,7 @@ export const Withdraws = () => {
                       </td>
                     </tr>
                   )
-                })}
+                })} */}
               </tbody>
             </Table>
           </Tabs.Panel> 
