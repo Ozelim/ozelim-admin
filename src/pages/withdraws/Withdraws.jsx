@@ -291,7 +291,7 @@ export const Withdraws = () => {
             <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
             <Tabs.Tab value='directors'>Региональные директоры</Tabs.Tab>
           </Tabs.List>
-          <Tabs.Panel value='directors'>
+          {/* <Tabs.Panel value='directors'>
             <div className='grid grid-cols-[15%_auto] min-h-screen'>
               <div className='bg-white border-r shadow-sm'>
                 <div 
@@ -631,7 +631,7 @@ export const Withdraws = () => {
               onChange={e => handleWithdraws(e)}
             />
           </div>
-          </Tabs.Panel>
+          </Tabs.Panel> */}
         </Tabs>
       </div>
 
