@@ -524,7 +524,7 @@ export const Withdraws = () => {
                 </tr>
               </thead>
               <tbody>
-                {withdraws?.map((withdraw, i) => {
+                {/* {withdraws?.map((withdraw, i) => {
                   return (
                     <tr 
                       key={i}
@@ -576,7 +576,7 @@ export const Withdraws = () => {
                       </td>
                     </tr>
                   )
-                })}
+                })} */}
               </tbody>
             </Table>
           </Tabs.Panel> 
