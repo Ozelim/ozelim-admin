@@ -673,7 +673,7 @@ export const Withdraws = () => {
           alt="" 
           className='w-[150px] h-[150px] object-cover rounded-full mx-auto mb-5'
         />
-        <ul className='space-y-2'>
+        {/* <ul className='space-y-2'>
           <li className='grid grid-cols-2'>
             <p>ID:</p>
             <p>{userData?.data?.id}</p>
@@ -722,7 +722,7 @@ export const Withdraws = () => {
             <p>Дата рег:</p>
             <p>{dayjs(userData?.data?.created).format('DD.MM.YY')}</p>
           </li>
-        </ul>
+        </ul> */}
       </Modal>
     </>
   )
