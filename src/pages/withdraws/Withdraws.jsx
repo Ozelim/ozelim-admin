@@ -504,7 +504,7 @@ export const Withdraws = () => {
 
             </div>
           </Tabs.Panel>
-          <Tabs.Panel value='withdraws'>
+          {/* <Tabs.Panel value='withdraws'>
             <Button onClick={exportToExcel}>Скачать Excel</Button>
             <Table
               className='mt-4'
@@ -525,7 +525,7 @@ export const Withdraws = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* {sorted?.filter(q => !q?.dog)?.map((withdraw, i) => {
+                {sorted?.filter(q => !q?.dog)?.map((withdraw, i) => {
                   return (
                     <tr 
                       key={i}
@@ -577,10 +577,10 @@ export const Withdraws = () => {
                       </td>
                     </tr>
                   )
-                })} */}
+                })}
               </tbody>
             </Table>
-          </Tabs.Panel> 
+          </Tabs.Panel>  */}
           <Tabs.Panel value='ended'>
             <div className="flex items-end">
               <TextInput
