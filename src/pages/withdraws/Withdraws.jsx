@@ -7,11 +7,9 @@ import { BsCheckCircle } from 'react-icons/bs'
 import { CiCircleRemove } from 'react-icons/ci'
 import { openConfirmModal } from '@mantine/modals'
 
-
-
 import dayjs from 'dayjs'
 
-import * as XLSX from 'xlsx';
+// import * as XLSX from 'xlsx';
 import { useSearchParams } from 'react-router-dom'
 
 async function getWithdraws () {
@@ -147,68 +145,68 @@ export const Withdraws = () => {
   }, [])
 
   function exportToExcel () {
-    const array = withdraws?.map((withdraw) => {
-      return {
-        создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
-        пользователь: withdraw?.user,
-        фио: `${withdraw?.expand?.user?.name} ${withdraw?.expand?.user?.surname}`,
-        банк: withdraw?.bank, 
-        сумма: withdraw?.sum,
-        владелец_карты: withdraw?.owner,
-        иин: withdraw?.iin,
-        IBAN: withdraw?.iban,
-        статус: (
-          (withdraw?.status === 'created' && 'Создан') ||
-          (withdraw?.status === 'paid' && 'Оплачен') ||
-          (withdraw?.status === 'rejected' && 'Отклонен')
-        ),
-      }
-    })
-    const worksheet = XLSX.utils.json_to_sheet(array);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    // const array = withdraws?.map((withdraw) => {
+    //   return {
+    //     создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
+    //     пользователь: withdraw?.user,
+    //     фио: `${withdraw?.expand?.user?.name} ${withdraw?.expand?.user?.surname}`,
+    //     банк: withdraw?.bank, 
+    //     сумма: withdraw?.sum,
+    //     владелец_карты: withdraw?.owner,
+    //     иин: withdraw?.iin,
+    //     IBAN: withdraw?.iban,
+    //     статус: (
+    //       (withdraw?.status === 'created' && 'Создан') ||
+    //       (withdraw?.status === 'paid' && 'Оплачен') ||
+    //       (withdraw?.status === 'rejected' && 'Отклонен')
+    //     ),
+    //   }
+    // })
+    // const worksheet = XLSX.utils.json_to_sheet(array);
+    // const workbook = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    // const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-    saveAsExcelFile(excelBuffer, 'table_data.xlsx');
+    // saveAsExcelFile(excelBuffer, 'table_data.xlsx');
   };
 
   function exportToExcelDog () {
-    const array = withdraws?.filter(q => q?.dog == params.get('value'))?.map((withdraw) => {
-      return {
-        создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
-        пользователь: withdraw?.agent,
-        телефон: withdraw?.phone,
-        фио: withdraw?.fio,
-        сумма: withdraw?.sum,
-        город_пользователя: withdraw?.city,
-        владелец_карты: withdraw?.expand?.dog?.fio,
-        иин: withdraw?.expand?.dog?.iin,
-        IBAN: withdraw?.expand?.dog?.iban,
-        статус: (
-          (withdraw?.status === 'created' && 'Создан') ||
-          (withdraw?.status === 'paid' && 'Оплачен') ||
-          (withdraw?.status === 'rejected' && 'Отклонен')
-        ),
-      }
-    })
+    // const array = withdraws?.filter(q => q?.dog == params.get('value'))?.map((withdraw) => {
+    //   return {
+    //     создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
+    //     пользователь: withdraw?.agent,
+    //     телефон: withdraw?.phone,
+    //     фио: withdraw?.fio,
+    //     сумма: withdraw?.sum,
+    //     город_пользователя: withdraw?.city,
+    //     владелец_карты: withdraw?.expand?.dog?.fio,
+    //     иин: withdraw?.expand?.dog?.iin,
+    //     IBAN: withdraw?.expand?.dog?.iban,
+    //     статус: (
+    //       (withdraw?.status === 'created' && 'Создан') ||
+    //       (withdraw?.status === 'paid' && 'Оплачен') ||
+    //       (withdraw?.status === 'rejected' && 'Отклонен')
+    //     ),
+    //   }
+    // })
     
-    const worksheet = XLSX.utils.json_to_sheet(array);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    // const worksheet = XLSX.utils.json_to_sheet(array);
+    // const workbook = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    // const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-    saveAsExcelFile(excelBuffer, 'table_data.xlsx');
+    // saveAsExcelFile(excelBuffer, 'table_data.xlsx');
   };
 
   function saveAsExcelFile (buffer, fileName) {
-    const data = new Blob([buffer], { type: 'application/octet-stream' });
-    const url = URL.createObjectURL(data);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', fileName);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // const data = new Blob([buffer], { type: 'application/octet-stream' });
+    // const url = URL.createObjectURL(data);
+    // const link = document.createElement('a');
+    // link.href = url;
+    // link.setAttribute('download', fileName);
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
   };
 
   const banks = [
@@ -291,7 +289,7 @@ export const Withdraws = () => {
             <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
             <Tabs.Tab value='directors'>Региональные директоры</Tabs.Tab>
           </Tabs.List>
-          {/* <Tabs.Panel value='directors'>
+          <Tabs.Panel value='directors'>
             <div className='grid grid-cols-[15%_auto] min-h-screen'>
               <div className='bg-white border-r shadow-sm'>
                 <div 
@@ -568,8 +566,8 @@ export const Withdraws = () => {
               </tbody>
             </Table>
 
-          </Tabs.Panel>  */}
-          {/* <Tabs.Panel value='ended'>
+          </Tabs.Panel> 
+          <Tabs.Panel value='ended'>
             <div className="flex items-end">
               <TextInput
                 label="Поиск"
@@ -631,11 +629,11 @@ export const Withdraws = () => {
               onChange={e => handleWithdraws(e)}
             />
           </div>
-          </Tabs.Panel> */}
+          </Tabs.Panel>
         </Tabs>
       </div>
 
-      {/* <Modal 
+      <Modal 
         opened={confirmModal}
         onClose={() => setConfirmModal(false)}
         centered
@@ -650,8 +648,8 @@ export const Withdraws = () => {
             Отмена
           </Button>
         </div>
-      </Modal> */}
-      {/* <Modal
+      </Modal>
+      <Modal
         opened={userData.modal}
         onClose={() => setUserData({data: null, modal: false})}
         centered
@@ -711,7 +709,7 @@ export const Withdraws = () => {
             <p>{dayjs(userData?.data?.created).format('DD.MM.YY')}</p>
           </li>
         </ul>
-      </Modal> */}
+      </Modal>
     </>
   )
 }
