@@ -299,7 +299,9 @@ export const Withdraws = () => {
   return (
     <>
       <div className='w-full bg-white'>
-        <Tabs defaultValue='created'>
+        <Tabs
+          defaultValue='withdraws'
+        >
           <Tabs.List>
             <Tabs.Tab value='created'>Созданные</Tabs.Tab>
             <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
@@ -504,8 +506,8 @@ export const Withdraws = () => {
 
             </div>
           </Tabs.Panel>
-          <Tabs.Panel value='created'>
-            {/* <Button onClick={exportToExcel}>Скачать Excel</Button> */}
+          <Tabs.Panel value='withdraws'>
+            <Button onClick={exportToExcel}>Скачать Excel</Button>
             <Table
               striped
               className='mt-4'
