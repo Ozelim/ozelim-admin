@@ -295,6 +295,8 @@ export const Withdraws = () => {
     }
   }
 
+  console.log(withdraws, 'withdraws');
+
   return (
     <>
       <div className='w-full bg-white'>
