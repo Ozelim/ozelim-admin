@@ -277,8 +277,10 @@ export const Withdraws = () => {
     }
     const foundUsers = await pb.collection("withdraws").getFullList({
       filter: `
-        user.id = '${search}' ||
-        user.name ?~ '${search}'
+        (user.id = '${search}' ||
+        user.name ?~ '${search}') && (
+          status = 'ended'
+        )
       `,
     });
 
