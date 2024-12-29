@@ -540,25 +540,25 @@ export const Withdraws = () => {
                           {withdraw?.user ? withdraw?.user : withdraw?.agent}
                         </Button> */}
                       </td>
-                      <td className='!text-lg whitespace-nowrap'>
+                      {/* <td className='!text-lg whitespace-nowrap'>
                         {withdraw?.agent ? withdraw?.expand?.agent?.fio : {...withdraw?.expand?.user?.name, ...withdraw?.expand?.user?.surname} }
-                      </td>
-                      <td className='!text-lg whitespace-nowrap'>
+                      </td> */}
+                      {/* <td className='!text-lg whitespace-nowrap'>
                         <span className='text-lg mr-2'>
                           {withdraw.expand.user?.level}
                         </span>
-                      </td>
+                      </td> */}
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.bank}</td>
-                      <td className='!text-lg whitespace-nowrap'>{formatNumber(withdraw?.sum)}</td>
+                      {/* <td className='!text-lg whitespace-nowrap'>{formatNumber(withdraw?.sum)}</td> */}
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.owner}</td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.iin}</td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.iban}</td>
                       <td className='!text-lg whitespace-nowrap'>
-                      {withdraw?.status === 'created' && 'Создан'}
+                      {withdraw?.status === 'created' && <span>Создан</span>}
                       {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
                       {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
                       </td>
-                      <td className='flex gap-2 items-center'>
+                      {/* <td className='flex gap-2 items-center'>
                         {withdraw?.status === 'created' && (
                           <>
                             <BsCheckCircle 
@@ -575,7 +575,7 @@ export const Withdraws = () => {
                             />
                           </>
                         )}
-                      </td>
+                      </td> */}
                     </tr>
                   )
                 })}
