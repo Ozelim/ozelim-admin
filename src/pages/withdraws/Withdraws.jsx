@@ -507,7 +507,6 @@ export const Withdraws = () => {
           <Tabs.Panel value='withdraws'>
             <Button onClick={exportToExcel}>Скачать Excel</Button>
             <Table
-              striped
               className='mt-4'
             >
               <thead>
@@ -526,7 +525,7 @@ export const Withdraws = () => {
                 </tr>
               </thead>
               <tbody>
-                {sorted?.filter(q => !q?.dog)?.map((withdraw, i) => {
+                {/* {sorted?.filter(q => !q?.dog)?.map((withdraw, i) => {
                   return (
                     <tr 
                       key={i}
@@ -578,7 +577,7 @@ export const Withdraws = () => {
                       </td>
                     </tr>
                   )
-                })}
+                })} */}
               </tbody>
             </Table>
           </Tabs.Panel> 
