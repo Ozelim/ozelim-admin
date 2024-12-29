@@ -9,7 +9,7 @@ import { openConfirmModal } from '@mantine/modals'
 
 import dayjs from 'dayjs'
 
-// import * as XLSX from 'xlsx';
+import xlsx from 'xlsx';
 import { useSearchParams } from 'react-router-dom'
 
 async function getWithdraws () {
@@ -145,68 +145,68 @@ export const Withdraws = () => {
   }, [])
 
   function exportToExcel () {
-    // const array = withdraws?.map((withdraw) => {
-    //   return {
-    //     создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
-    //     пользователь: withdraw?.user,
-    //     фио: `${withdraw?.expand?.user?.name} ${withdraw?.expand?.user?.surname}`,
-    //     банк: withdraw?.bank, 
-    //     сумма: withdraw?.sum,
-    //     владелец_карты: withdraw?.owner,
-    //     иин: withdraw?.iin,
-    //     IBAN: withdraw?.iban,
-    //     статус: (
-    //       (withdraw?.status === 'created' && 'Создан') ||
-    //       (withdraw?.status === 'paid' && 'Оплачен') ||
-    //       (withdraw?.status === 'rejected' && 'Отклонен')
-    //     ),
-    //   }
-    // })
-    // const worksheet = XLSX.utils.json_to_sheet(array);
-    // const workbook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    // const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const array = withdraws?.map((withdraw) => {
+      return {
+        создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
+        пользователь: withdraw?.user,
+        фио: `${withdraw?.expand?.user?.name} ${withdraw?.expand?.user?.surname}`,
+        банк: withdraw?.bank, 
+        сумма: withdraw?.sum,
+        владелец_карты: withdraw?.owner,
+        иин: withdraw?.iin,
+        IBAN: withdraw?.iban,
+        статус: (
+          (withdraw?.status === 'created' && 'Создан') ||
+          (withdraw?.status === 'paid' && 'Оплачен') ||
+          (withdraw?.status === 'rejected' && 'Отклонен')
+        ),
+      }
+    })
+    const worksheet = XLSX.utils.json_to_sheet(array);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-    // saveAsExcelFile(excelBuffer, 'table_data.xlsx');
+    saveAsExcelFile(excelBuffer, 'table_data.xlsx');
   };
 
   function exportToExcelDog () {
-    // const array = withdraws?.filter(q => q?.dog == params.get('value'))?.map((withdraw) => {
-    //   return {
-    //     создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
-    //     пользователь: withdraw?.agent,
-    //     телефон: withdraw?.phone,
-    //     фио: withdraw?.fio,
-    //     сумма: withdraw?.sum,
-    //     город_пользователя: withdraw?.city,
-    //     владелец_карты: withdraw?.expand?.dog?.fio,
-    //     иин: withdraw?.expand?.dog?.iin,
-    //     IBAN: withdraw?.expand?.dog?.iban,
-    //     статус: (
-    //       (withdraw?.status === 'created' && 'Создан') ||
-    //       (withdraw?.status === 'paid' && 'Оплачен') ||
-    //       (withdraw?.status === 'rejected' && 'Отклонен')
-    //     ),
-    //   }
-    // })
+    const array = withdraws?.filter(q => q?.dog == params.get('value'))?.map((withdraw) => {
+      return {
+        создано: dayjs(withdraw?.created).format('YY/MM/DD, HH:mm'),
+        пользователь: withdraw?.agent,
+        телефон: withdraw?.phone,
+        фио: withdraw?.fio,
+        сумма: withdraw?.sum,
+        город_пользователя: withdraw?.city,
+        владелец_карты: withdraw?.expand?.dog?.fio,
+        иин: withdraw?.expand?.dog?.iin,
+        IBAN: withdraw?.expand?.dog?.iban,
+        статус: (
+          (withdraw?.status === 'created' && 'Создан') ||
+          (withdraw?.status === 'paid' && 'Оплачен') ||
+          (withdraw?.status === 'rejected' && 'Отклонен')
+        ),
+      }
+    })
     
-    // const worksheet = XLSX.utils.json_to_sheet(array);
-    // const workbook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    // const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const worksheet = XLSX.utils.json_to_sheet(array);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-    // saveAsExcelFile(excelBuffer, 'table_data.xlsx');
+    saveAsExcelFile(excelBuffer, 'table_data.xlsx');
   };
 
   function saveAsExcelFile (buffer, fileName) {
-    // const data = new Blob([buffer], { type: 'application/octet-stream' });
-    // const url = URL.createObjectURL(data);
-    // const link = document.createElement('a');
-    // link.href = url;
-    // link.setAttribute('download', fileName);
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
+    const data = new Blob([buffer], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(data);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const banks = [
