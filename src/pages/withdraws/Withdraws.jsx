@@ -303,7 +303,7 @@ export const Withdraws = () => {
             <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
             <Tabs.Tab value='directors'>Региональные директоры</Tabs.Tab>
           </Tabs.List>
-          <Tabs.Panel value='directors'>
+          {/* <Tabs.Panel value='directors'>
             <div className='grid grid-cols-[15%_auto] min-h-screen'>
               <div className='bg-white border-r shadow-sm'>
                 <div 
@@ -501,7 +501,7 @@ export const Withdraws = () => {
               )}
 
             </div>
-          </Tabs.Panel>
+          </Tabs.Panel> */}
           <Tabs.Panel value='created' pt='lg'>
             <Button onClick={exportToExcel}>Скачать Excel</Button>
             <Table
@@ -673,7 +673,7 @@ export const Withdraws = () => {
           alt="" 
           className='w-[150px] h-[150px] object-cover rounded-full mx-auto mb-5'
         />
-        {/* <ul className='space-y-2'>
+        <ul className='space-y-2'>
           <li className='grid grid-cols-2'>
             <p>ID:</p>
             <p>{userData?.data?.id}</p>
@@ -722,7 +722,7 @@ export const Withdraws = () => {
             <p>Дата рег:</p>
             <p>{dayjs(userData?.data?.created).format('DD.MM.YY')}</p>
           </li>
-        </ul> */}
+        </ul>
       </Modal>
     </>
   )
