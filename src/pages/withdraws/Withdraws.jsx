@@ -68,7 +68,6 @@ export const Withdraws = () => {
 
   const [search, setSearch] = React.useState("");
 
-
   React.useEffect(() => {
     getDogs()
     .then(res => {
@@ -525,7 +524,7 @@ export const Withdraws = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* {sorted?.filter(q => !q?.dog)?.map((withdraw, i) => {
+                {withdraws?.filter(q => !q?.dog)?.map((withdraw, i) => {
                   return (
                     <tr 
                       key={i}
@@ -577,7 +576,7 @@ export const Withdraws = () => {
                       </td>
                     </tr>
                   )
-                })} */}
+                })}
               </tbody>
             </Table>
           </Tabs.Panel> 
