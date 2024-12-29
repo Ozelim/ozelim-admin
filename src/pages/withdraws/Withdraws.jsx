@@ -24,9 +24,6 @@ startOfNowadays.setDate(now.getDate() - 7); // Adjust the range as needed
 
 // Convert the dates to ISO strings
 const startOfLastMonth = firstDayOfLastMonth.toISOString();
-const endOfLastMonth = lastDayOfLastMonth.toISOString();
-const startOfNowadaysISO = startOfNowadays.toISOString();
-const endOfTodayISO = now.toISOString(); // Current moment
 
 async function getWithdraws () {
   return await pb.collection('withdraws').getFullList({
@@ -50,6 +47,8 @@ async function getDogs () {
 
 export const Withdraws = () => {
 
+  const [params, setParams] = useSearchParams() 
+
   const [withdraws, setWithdraws] = React.useState([])
   const [endedWithdraws, setEndedWithdraws] = React.useState({})
 
@@ -60,7 +59,15 @@ export const Withdraws = () => {
     iban: '',
   })
 
-  const [params, setParams] = useSearchParams() 
+  const [confirmModal, setConfirmModal] = React.useState(false)
+
+  const [userData, setUserData] = React.useState({
+    modal: false,
+    data: null
+  })
+
+  const [search, setSearch] = React.useState("");
+
 
   React.useEffect(() => {
     getDogs()
@@ -186,8 +193,6 @@ export const Withdraws = () => {
     saveAsExcelFile(excelBuffer, 'table_data.xlsx');
   };
 
-  
-
   function exportToExcelDog () {
     const array = withdraws?.filter(q => q?.dog == params.get('value'))?.map((withdraw) => {
       return {
@@ -265,16 +270,7 @@ export const Withdraws = () => {
   }
 
   const sorted = withdraws?.sort(customSort)
-
-  const [confirmModal, setConfirmModal] = React.useState(false)
-
-  const [userData, setUserData] = React.useState({
-    modal: false,
-    data: null
-  })
-
-  const [search, setSearch] = React.useState("");
-
+  
   async function searchByValue() {
     if (!search) {
       return;
@@ -290,11 +286,11 @@ export const Withdraws = () => {
       setEndedWithdraws({
         items: [...foundUsers]
       })
-      // showNotification({
-      //   title: 'Поиск',
-      //   message: 'Не найдено',
-      //   color: 'teal'
-      // })
+      showNotification({
+        title: 'Поиск',
+        message: `Найдено ${foundUsers.length} выводов`,
+        color: 'teal'
+      })
     }
   }
 
@@ -506,7 +502,7 @@ export const Withdraws = () => {
 
             </div>
           </Tabs.Panel>
-          <Tabs.Panel value='created' pt='lg'>
+          {/* <Tabs.Panel value='created' pt='lg'>
             <Button onClick={exportToExcel}>Скачать Excel</Button>
             <Table
               striped
@@ -584,7 +580,7 @@ export const Withdraws = () => {
               </tbody>
             </Table>
 
-          </Tabs.Panel> 
+          </Tabs.Panel>  */}
           <Tabs.Panel value='ended'>
             <div className="flex items-end">
               <TextInput
