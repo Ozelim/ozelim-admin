@@ -524,7 +524,7 @@ export const Withdraws = () => {
                 </tr>
               </thead>
               <tbody>
-                {withdraws?.filter(q => {return !q?.dog})?.map((withdraw, i) => {
+                {withdraws?.map((withdraw, i) => {
                   return (
                     <tr 
                       key={i}
