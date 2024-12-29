@@ -9,7 +9,7 @@ import { openConfirmModal } from '@mantine/modals'
 
 import dayjs from 'dayjs'
 
-import xlsx from 'xlsx';
+import { utils, write } from 'xlsx';
 import { useSearchParams } from 'react-router-dom'
 
 async function getWithdraws () {
@@ -162,13 +162,15 @@ export const Withdraws = () => {
         ),
       }
     })
-    const worksheet = XLSX.utils.json_to_sheet(array);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const worksheet = utils.json_to_sheet(array);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const excelBuffer = write(workbook, { bookType: 'xlsx', type: 'array' });
 
     saveAsExcelFile(excelBuffer, 'table_data.xlsx');
   };
+
+  
 
   function exportToExcelDog () {
     const array = withdraws?.filter(q => q?.dog == params.get('value'))?.map((withdraw) => {
@@ -190,10 +192,10 @@ export const Withdraws = () => {
       }
     })
     
-    const worksheet = XLSX.utils.json_to_sheet(array);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const worksheet = utils.json_to_sheet(array);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const excelBuffer = write(workbook, { bookType: 'xlsx', type: 'array' });
 
     saveAsExcelFile(excelBuffer, 'table_data.xlsx');
   };
