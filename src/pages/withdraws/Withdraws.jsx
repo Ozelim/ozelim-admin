@@ -12,6 +12,22 @@ import dayjs from 'dayjs'
 import { utils, write } from 'xlsx';
 import { useSearchParams } from 'react-router-dom'
 
+const now = new Date();
+
+// Calculate the first and last days of the previous month
+const firstDayOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+const lastDayOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+
+// Calculate the "nowadays" period (e.g., last 7 days)
+const startOfNowadays = new Date(now);
+startOfNowadays.setDate(now.getDate() - 7); // Adjust the range as needed
+
+// Convert the dates to ISO strings
+const startOfLastMonth = firstDayOfLastMonth.toISOString();
+const endOfLastMonth = lastDayOfLastMonth.toISOString();
+const startOfNowadaysISO = startOfNowadays.toISOString();
+const endOfTodayISO = now.toISOString(); // Current moment
+
 async function getWithdraws () {
   return await pb.collection('withdraws').getFullList({
     filter: `status = 'created'`,
@@ -22,7 +38,7 @@ async function getWithdraws () {
 
 async function getWithdrawsEnded (page = 1) {
   return await pb.collection('withdraws').getList(page, 20, {
-    filter: `status != 'created'`,
+    filter: `status != 'created' && created >= '${startOfLastMonth}'`,
     sort: '-created',
     expand: 'user, agent, dog',
   })
