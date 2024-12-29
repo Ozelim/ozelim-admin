@@ -504,7 +504,7 @@ export const Withdraws = () => {
 
             </div>
           </Tabs.Panel> */}
-          <Tabs.Panel value='created' pt='lg'>
+          {/* <Tabs.Panel value='created' pt='lg'>
             <Button onClick={exportToExcel}>Скачать Excel</Button>
             <Table
               striped
@@ -582,7 +582,7 @@ export const Withdraws = () => {
               </tbody>
             </Table>
 
-          </Tabs.Panel> 
+          </Tabs.Panel>  */}
           <Tabs.Panel value='ended'>
             <div className="flex items-end">
               <TextInput
@@ -629,7 +629,7 @@ export const Withdraws = () => {
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.iin}</td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.iban}</td>
                       <td className='!text-lg whitespace-nowrap'>
-                      {withdraw?.status === 'created' &&  <span>'Создан'</span>}
+                      {withdraw?.status === 'created' &&  <span>Создан</span>}
                       {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
                       {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
                       </td>
