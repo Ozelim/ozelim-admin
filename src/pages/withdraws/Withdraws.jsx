@@ -299,11 +299,9 @@ export const Withdraws = () => {
   return (
     <>
       <div className='w-full bg-white'>
-        <Tabs
-          defaultValue='withdraws'
-        >
+        <Tabs>
           <Tabs.List>
-            <Tabs.Tab value='created'>Созданные</Tabs.Tab>
+            <Tabs.Tab value='withdraws'>Созданные</Tabs.Tab>
             <Tabs.Tab value='ended'>Завершенные</Tabs.Tab>
             <Tabs.Tab value='directors'>Региональные директоры</Tabs.Tab>
           </Tabs.List>
