@@ -505,7 +505,7 @@ export const Withdraws = () => {
             </div>
           </Tabs.Panel>
           <Tabs.Panel value='created'>
-            <Button onClick={exportToExcel}>Скачать Excel</Button>
+            {/* <Button onClick={exportToExcel}>Скачать Excel</Button> */}
             <Table
               striped
               className='mt-4'
@@ -581,7 +581,6 @@ export const Withdraws = () => {
                 })}
               </tbody>
             </Table>
-
           </Tabs.Panel> 
           <Tabs.Panel value='ended'>
             <div className="flex items-end">
