@@ -57,13 +57,14 @@ export const Agents = () => {
         phone ?~ '${search}' ||
         city ?~ '${search}'
       `,
+      sort: '-created'
     })
 
     if (foundUsers.length !== 0) {
       setUsers(foundUsers)
       showNotification({
         title: 'Поиск',
-        message: 'Не найдено',
+        message: `Найдено ${foundUsers.length} пользователей`,
         color: 'teal',
       })
     }
@@ -169,6 +170,7 @@ export const Agents = () => {
     report?.data?.['2'],
     report?.data?.['3']
   )
+
 
   return (
     <>

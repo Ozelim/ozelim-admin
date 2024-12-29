@@ -36,6 +36,7 @@ export const Users = () => {
         phone ?~ '${search}' ||
         city ?~ '${search}'
       `,
+      sort: '-created',
     });
 
     if (foundUsers.length !== 0) {
