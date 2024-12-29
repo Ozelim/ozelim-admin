@@ -268,7 +268,7 @@ export const Withdraws = () => {
     return 0;
   }
 
-  const sorted = withdraws?.sort(customSort)
+  // const sorted = withdraws?.sort(customSort)
   
   async function searchByValue() {
     if (!search) {
@@ -524,7 +524,7 @@ export const Withdraws = () => {
                 </tr>
               </thead>
               <tbody>
-                {withdraws?.filter(q => !q?.dog)?.map((withdraw, i) => {
+                {withdraws?.filter(q => {return !q?.dog})?.map((withdraw, i) => {
                   return (
                     <tr 
                       key={i}
