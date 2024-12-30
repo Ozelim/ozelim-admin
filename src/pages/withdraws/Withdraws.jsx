@@ -549,7 +549,7 @@ export const Withdraws = () => {
                         </span>
                       </td> */}
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.bank}</td>
-                      {/* <td className='!text-lg whitespace-nowrap'>{formatNumber(withdraw?.sum)}</td> */}
+                      <td className='!text-lg whitespace-nowrap'>{formatNumber(withdraw?.sum)}</td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.owner}</td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.iin}</td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.iban}</td>

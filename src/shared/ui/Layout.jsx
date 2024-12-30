@@ -21,7 +21,7 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
 
   async function login () {
     if (!val?.email || !val?.password) return setErr('Заполните поля')
-    await pb.admins.authWithPassword(val?.email, val?.password)
+    await pb.collection('_superusers').authWithPassword(val?.email, val?.password)
     .then(() => {
       window.location.reload()
     })
@@ -46,7 +46,6 @@ export const Layout = ({sidebarSlot,  headerSlot, footerSlot}) => {
     };
   }, []);
 
-  console.log(user?.email === 'kurama.zxc@mail.ru', 'user');
   console.log(user?.email, 'user');
 
   return (user?.email === "ozelim.pv@gmail.com" ||

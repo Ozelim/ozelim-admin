@@ -7,13 +7,13 @@ async function getUser (userId) {
 
 export const useAuth = () => {
 
-  const [user, setUser] = React.useState(pb.authStore.model)
+  const [user, setUser] = React.useState(pb.authStore.record)
 
   // const user = pb.authStore.model 
   // const token = pb.authStore.token
 
   React.useEffect(() => {
-    getUser(pb.authStore?.model?.id)
+    getUser(pb.authStore?.record?.id)
     .then(res => {
       setUser(res)
     })
