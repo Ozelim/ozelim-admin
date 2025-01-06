@@ -536,12 +536,12 @@ export const Withdraws = () => {
                         className='!text-lg'
                         onClick={() => setUserData({modal: true, data: withdraw?.agent ? withdraw?.expand?.agent : withdraw?.expand?.user})}
                       >
-                        {/* <Button compact variant='outline'>
+                        <Button compact variant='outline'>
                           {withdraw?.user ? withdraw?.user : withdraw?.agent}
-                        </Button> */}
+                        </Button>
                       </td>
                       <td className='!text-lg whitespace-nowrap'>
-                        {withdraw?.agent ? withdraw?.expand?.agent?.fio : `${withdraw?.expand?.user?.name, withdraw?.expand?.user?.surname}`}
+                        {withdraw?.agent ? withdraw?.expand?.agent?.fio : `${withdraw?.expand?.user?.name} ${withdraw?.expand?.user?.surname}`}
                       </td>
                       <td className='!text-lg whitespace-nowrap'>
                         <span className='text-lg mr-2'>
