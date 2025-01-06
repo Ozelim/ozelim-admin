@@ -541,7 +541,7 @@ export const Withdraws = () => {
                         </Button> */}
                       </td>
                       <td className='!text-lg whitespace-nowrap'>
-                        {withdraw?.agent ? withdraw?.expand?.agent?.fio : {...withdraw?.expand?.user?.name, ...withdraw?.expand?.user?.surname} }
+                        {withdraw?.agent ? withdraw?.expand?.agent?.fio : `${withdraw?.expand?.user?.name, withdraw?.expand?.user?.surname}`}
                       </td>
                       <td className='!text-lg whitespace-nowrap'>
                         <span className='text-lg mr-2'>
