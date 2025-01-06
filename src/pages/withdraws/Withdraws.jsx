@@ -558,7 +558,7 @@ export const Withdraws = () => {
                       {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
                       {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
                       </td>
-                      {/* <td className='flex gap-2 items-center'>
+                      <td className='flex gap-2 items-center'>
                         {withdraw?.status === 'created' && (
                           <>
                             <BsCheckCircle 
@@ -575,7 +575,7 @@ export const Withdraws = () => {
                             />
                           </>
                         )}
-                      </td> */}
+                      </td>
                     </tr>
                   )
                 })}
