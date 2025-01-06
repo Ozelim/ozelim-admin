@@ -522,6 +522,7 @@ export const Withdraws = () => {
                   <th>ИИН</th>
                   <th>IBAN</th>
                   <th>Статус</th>
+                  <th>Агент</th>
                   <th>Действие</th>
                 </tr>
               </thead>
@@ -558,6 +559,7 @@ export const Withdraws = () => {
                       {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
                       {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
                       </td>
+                      <td className='!text-lg whitespace-nowrap'>{withdraw?.agent ? 'Да' : 'Нет'}</td>
                       <td className='flex gap-2 items-center'>
                         {withdraw?.status === 'created' && (
                           <>
