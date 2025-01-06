@@ -540,9 +540,9 @@ export const Withdraws = () => {
                           {withdraw?.user ? withdraw?.user : withdraw?.agent}
                         </Button> */}
                       </td>
-                      {/* <td className='!text-lg whitespace-nowrap'>
+                      <td className='!text-lg whitespace-nowrap'>
                         {withdraw?.agent ? withdraw?.expand?.agent?.fio : {...withdraw?.expand?.user?.name, ...withdraw?.expand?.user?.surname} }
-                      </td> */}
+                      </td>
                       <td className='!text-lg whitespace-nowrap'>
                         <span className='text-lg mr-2'>
                           {withdraw.expand.user?.level}
