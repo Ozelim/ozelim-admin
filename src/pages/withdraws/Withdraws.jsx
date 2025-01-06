@@ -531,7 +531,7 @@ export const Withdraws = () => {
                     <tr 
                       key={withdraw?.id}
                     >
-                      <td className='!text-lg'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
+                      <td className='!text-lg whitespace-nowrap'>{dayjs(withdraw?.created).format('YY-MM-DD, HH:mm')}</td>
                       <td 
                         className='!text-lg'
                         onClick={() => setUserData({modal: true, data: withdraw?.agent ? withdraw?.expand?.agent : withdraw?.expand?.user})}
