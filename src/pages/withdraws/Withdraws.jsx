@@ -543,11 +543,11 @@ export const Withdraws = () => {
                       {/* <td className='!text-lg whitespace-nowrap'>
                         {withdraw?.agent ? withdraw?.expand?.agent?.fio : {...withdraw?.expand?.user?.name, ...withdraw?.expand?.user?.surname} }
                       </td> */}
-                      {/* <td className='!text-lg whitespace-nowrap'>
+                      <td className='!text-lg whitespace-nowrap'>
                         <span className='text-lg mr-2'>
                           {withdraw.expand.user?.level}
                         </span>
-                      </td> */}
+                      </td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.bank}</td>
                       <td className='!text-lg whitespace-nowrap'>{formatNumber(withdraw?.sum)}</td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.owner}</td>
