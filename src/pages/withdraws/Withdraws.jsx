@@ -515,13 +515,11 @@ export const Withdraws = () => {
                   <th>Дата</th>
                   <th>ID Пользователя</th>
                   <th>ФИО</th>
-                  <th>Ур.</th>
                   <th>Банк</th>
                   <th>Сумма</th>
                   <th>Владелец карты</th>
                   <th>ИИН</th>
                   <th>IBAN</th>
-                  <th>Статус</th>
                   <th>Аккаунт</th>
                   <th>Действие</th>
                 </tr>
@@ -544,21 +542,11 @@ export const Withdraws = () => {
                       <td className='!text-lg whitespace-nowrap'>
                         {withdraw?.agent ? withdraw?.expand?.agent?.fio : `${withdraw?.expand?.user?.name} ${withdraw?.expand?.user?.surname}`}
                       </td>
-                      <td className='!text-lg whitespace-nowrap'>
-                        <span className='text-lg mr-2'>
-                          {withdraw.expand.user?.level}
-                        </span>
-                      </td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.bank}</td>
                       <td className='!text-lg whitespace-nowrap'>{formatNumber(withdraw?.sum)}</td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.owner}</td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.iin}</td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.iban}</td>
-                      <td className='!text-lg whitespace-nowrap'>
-                      {withdraw?.status === 'created' && <span>Создан</span>}
-                      {withdraw?.status === 'paid' && <span className='text-green-500'>Оплачен</span>}
-                      {withdraw?.status === 'rejected' && <span className='text-red-500'>Отклонен</span>}
-                      </td>
                       <td className='!text-lg whitespace-nowrap'>{withdraw?.agent ? 'Агент' : 'Партнер'}</td>
                       <td className='flex gap-2 items-center'>
                         {withdraw?.status === 'created' && (
