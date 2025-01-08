@@ -1,13 +1,13 @@
 /// <reference path="../pb_data/types.d.ts" />
 migrate((app) => {
-  const collection = app.findCollectionByNameOrId("pbc_3527180448")
+  const collection = app.findCollectionByNameOrId("678z0dkzx1dzf73")
 
   // add field
   collection.fields.addAt(3, new Field({
     "hidden": false,
-    "id": "json4270793276",
+    "id": "json2876557598",
     "maxSize": 0,
-    "name": "pay",
+    "name": "dates",
     "presentable": false,
     "required": false,
     "system": false,
@@ -16,10 +16,10 @@ migrate((app) => {
 
   return app.save(collection)
 }, (app) => {
-  const collection = app.findCollectionByNameOrId("pbc_3527180448")
+  const collection = app.findCollectionByNameOrId("678z0dkzx1dzf73")
 
   // remove field
-  collection.fields.removeById("json4270793276")
+  collection.fields.removeById("json2876557598")
 
   return app.save(collection)
 })

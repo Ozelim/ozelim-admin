@@ -166,11 +166,8 @@ export const Agents = () => {
     bonuses: {},
   })
 
-  const allLinesPeriod = report?.data?.['1']?.concat(
-    report?.data?.['2'],
-    report?.data?.['3']
-  )
-
+  const allLinesPeriod = report?.data?.allLineVerified
+  const allLinesPeriodAgents = report?.data?.allLineAgents
 
   return (
     <>
@@ -241,6 +238,7 @@ export const Agents = () => {
                   <th>Фото</th>
                   <th>ID агента</th>
                   <th>ФИО</th>
+                  <th>За период</th>
                   <th>Линии</th>
                 </tr>
               </thead>
@@ -254,6 +252,7 @@ export const Agents = () => {
                       </td>
                       <td>{q?.agent}</td>
                       <td>{q?.expand?.agent?.fio}</td>
+                      <td>{dayjs(q?.dates?.from).format('DD/MM/YYYY')} - {dayjs(q?.dates?.to).format('DD/MM/YYYY')}</td>
                       <td>
                         <Button
                           onClick={() => {
@@ -286,23 +285,20 @@ export const Agents = () => {
           <li className='grid grid-cols-[20%_auto]'><span className='text-slate-500'>Телефон:</span> {report?.expand?.agent?.phone}</li>
         </ul>
         <div className="flex justify-end gap-1">
-          Общее:
-          <span className="font-bold text-primary-500">
-            {allLinesPeriod?.length ?? 0}
-          </span>
+          Общее: верифиц - <span className='font-bold text-primary-500'>{allLinesPeriod?? 0}</span> / 
+          <span className='font-bold text-primary-500'>{allLinesPeriodAgents ?? 0}</span> - агентов 
         </div>
         <p className="text-sm">
-          Первая линия:{' '}
-          <span className="text-primary-500 font-bold">
-            {report?.data?.['1']?.length ?? 0}
-          </span>
+            1-я линия: верифиц - <span className='text-primary-500 font-bold'> {report?.data?.fistLineVerified ?? 0} 
+            </span> / <span className='text-primary-500 font-bold'>
+              {report?.data?.fistLineAgents ?? 0}
+             </span> - агентов 
         </p>
         {report?.data?.['1']?.length !== 0 && (
           <>
             <Table>
               <thead>
                 <tr>
-                  <th>Фото</th>
                   <th>ФИО</th>
                   <th>ID</th>
                   <th>ID спонсора</th>
@@ -313,17 +309,6 @@ export const Agents = () => {
                 {report?.data?.['1']?.map((q, i) => {
                   return (
                     <tr key={i}>
-                      <td className="text-center font-bold">
-                        {q?.avatar ? (
-                          <img
-                            src={getImageUrl(q, q?.avatar)}
-                            className="w-12 h-12 rounded-full"
-                            alt=""
-                          />
-                        ) : (
-                          '-'
-                        )}
-                      </td>
                       <td>{q?.fio}</td>
                       <td>{q?.id}</td>
                       <td>{q?.sponsor}</td>
@@ -336,17 +321,16 @@ export const Agents = () => {
           </>
         )}
         <p className="mt-6 text-sm">
-          Вторая линия:{' '}
-          <span className="text-primary-500 font-bold">
-            {report?.data?.['2']?.length ?? 0}
-          </span>
+          2-я линия: верифиц - <span className='text-primary-500 font-bold'> {report?.data?.secondLineVerified ?? 0} 
+            </span> / <span className='text-primary-500 font-bold'>
+              {report?.data?.secondLineAgents ?? 0}
+             </span> - агентов 
         </p>
         {report?.data?.['2']?.length !== 0 && (
           <>
             <Table>
               <thead>
                 <tr>
-                  <th>Фото</th>
                   <th>ФИО</th>
                   <th>ID</th>
                   <th>ID спонсора</th>
@@ -357,17 +341,6 @@ export const Agents = () => {
                 {report?.data?.['2']?.map((q, i) => {
                   return (
                     <tr key={i}>
-                      <td className="text-center font-bold">
-                        {q?.avatar ? (
-                          <img
-                            src={getImageUrl(q, q?.avatar)}
-                            className="w-12 h-12 rounded-full"
-                            alt=""
-                          />
-                        ) : (
-                          '-'
-                        )}
-                      </td>
                       <td>{q?.fio}</td>
                       <td>{q?.id}</td>
                       <td>{q?.sponsor}</td>
@@ -380,17 +353,16 @@ export const Agents = () => {
           </>
         )}
         <p className="mt-6 text-sm">
-          Третья линия:{' '}
-          <span className="text-primary-500 font-bold">
-            {report?.data?.['3']?.length ?? 0}
-          </span>
+          3-я линия: верифиц - <span className='text-primary-500 font-bold'> {report?.data?.thirdVerified ?? 0} 
+            </span> / <span className='text-primary-500 font-bold'>
+              {report?.data?.thirdAgents ?? 0}
+             </span> - агентов 
         </p>
         {report?.data?.['3']?.length !== 0 && (
           <>
             <Table>
               <thead>
                 <tr>
-                  <th>Фото</th>
                   <th>ФИО</th>
                   <th>ID</th>
                   <th>ID спонсора</th>
@@ -401,17 +373,6 @@ export const Agents = () => {
                 {report?.data?.['3']?.map((q, i) => {
                   return (
                     <tr key={i}>
-                      <td className="text-center font-bold">
-                        {q?.avatar ? (
-                          <img
-                            src={getImageUrl(q, q?.avatar)}
-                            className="w-12 h-12 rounded-full"
-                            alt=""
-                          />
-                        ) : (
-                          '-'
-                        )}
-                      </td>
                       <td>{q?.fio}</td>
                       <td>{q?.id}</td>
                       <td>{q?.sponsor}</td>
