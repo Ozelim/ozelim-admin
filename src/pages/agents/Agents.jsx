@@ -252,7 +252,7 @@ export const Agents = () => {
                       </td>
                       <td>{q?.agent}</td>
                       <td>{q?.expand?.agent?.fio}</td>
-                      <td>{dayjs(q?.dates?.from).format('DD/MM/YYYY')} - {dayjs(q?.dates?.to).format('DD/MM/YYYY')}</td>
+                      <td>{dayjs(q?.dates?.from).format('DD.MM.YYYY')} - {dayjs(q?.dates?.to).format('DD.MM.YYYY')}</td>
                       <td>
                         <Button
                           onClick={() => {
@@ -283,7 +283,7 @@ export const Agents = () => {
           <li className='grid grid-cols-[20%_auto]'><span className='text-slate-500'>ID:</span> {report?.expand?.agent?.id}</li>
           <li className='grid grid-cols-[20%_auto]'><span className='text-slate-500'>Email:</span> {report?.expand?.agent?.email}</li>
           <li className='grid grid-cols-[20%_auto]'><span className='text-slate-500'>Телефон:</span> {report?.expand?.agent?.phone}</li>
-          <li className='grid grid-cols-[20%_auto]'><span className='text-slate-500'>За период:</span> {dayjs(report?.dates?.from).format('DD/MM/YYYY')} - {dayjs(report?.dates?.to).format('DD/MM/YYYY')}</li>
+          <li className='grid grid-cols-[20%_auto]'><span className='text-slate-500'>За период:</span> {dayjs(report?.dates?.from).format('DD.MM.YYYY')} - {dayjs(report?.dates?.to).format('DD.MM.YYYY')}</li>
         </ul>
         <div className="flex justify-end gap-1">
           Общее: верифиц - <span className='font-bold text-primary-500'>{allLinesPeriod?? 0}</span> / 
@@ -313,7 +313,7 @@ export const Agents = () => {
                       <td>{q?.fio}</td>
                       <td>{q?.id}</td>
                       <td>{q?.sponsor}</td>
-                      <td>{dayjs(q?.agent_date).format('DD/MM/YYYY')}</td>
+                      <td>{dayjs(q?.agent_date).format('DD.MM.YYYY')}</td>
                     </tr>
                   )
                 })}
@@ -345,7 +345,7 @@ export const Agents = () => {
                       <td>{q?.fio}</td>
                       <td>{q?.id}</td>
                       <td>{q?.sponsor}</td>
-                      <td>{dayjs(q?.agent_date).format('DD/MM/YYYY')}</td>
+                      <td>{dayjs(q?.agent_date).format('DD.MM.YYYY')}</td>
                     </tr>
                   )
                 })}
@@ -377,7 +377,7 @@ export const Agents = () => {
                       <td>{q?.fio}</td>
                       <td>{q?.id}</td>
                       <td>{q?.sponsor}</td>
-                      <td>{dayjs(q?.agent_date).format('DD/MM/YYYY')}</td>
+                      <td>{dayjs(q?.agent_date).format('DD.MM.YYYY')}</td>
                     </tr>
                   )
                 })}
@@ -408,7 +408,7 @@ export const Agents = () => {
                 return (
                   <tr key={i} className="text">
                     <td className="whitespace-nowrap">
-                      {dayjs(q?.created).format('YY-MM-DD, hh:mm')}
+                      {dayjs(q?.created).format('YY.MM.DD, hh:mm')}
                     </td>
                     <td className="text-black">Система</td>
                     <td>{q?.referal}</td>
@@ -420,7 +420,7 @@ export const Agents = () => {
                 return (
                   <tr key={i} className="text">
                     <td className="whitespace-nowrap">
-                      {dayjs(q?.created).format('YY-MM-DD, hh:mm')}
+                      {dayjs(q?.created).format('YY.MM.DD, hh:mm')}
                     </td>
                     <td className="text-black">Бонус</td>
                     <td>-</td>
@@ -432,7 +432,7 @@ export const Agents = () => {
                 return (
                   <tr key={i} className="text">
                     <td className="whitespace-nowrap">
-                      {dayjs(q?.created).format('YY-MM-DD, hh:mm')}
+                      {dayjs(q?.created).format('YY.MM.DD, hh:mm')}
                     </td>
                     <td className="text-black">Пополнение</td>
                     <td>-</td>
@@ -444,7 +444,7 @@ export const Agents = () => {
                 return (
                   <tr key={i} className="text">
                     <td className="whitespace-nowrap">
-                      {dayjs(q?.created).format('YY-MM-DD, hh:mm')}
+                      {dayjs(q?.created).format('YY.MM.DD, hh:mm')}
                     </td>
                     <td className="text-black">Вывод</td>
                     <td>-</td>
@@ -456,7 +456,7 @@ export const Agents = () => {
                 return (
                   <tr key={i} className="text">
                     <td className="whitespace-nowrap">
-                      {dayjs(q?.created).format('YY-MM-DD, hh:mm')}
+                      {dayjs(q?.created).format('YY.MM.DD, hh:mm')}
                     </td>
                     <td className="text-black">Услуга</td>
                     <td>-</td>
