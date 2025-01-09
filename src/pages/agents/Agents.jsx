@@ -283,8 +283,8 @@ export const Agents = () => {
           <li className='grid grid-cols-[20%_auto]'><span className='text-slate-500'>ID:</span> {report?.expand?.agent?.id}</li>
           <li className='grid grid-cols-[20%_auto]'><span className='text-slate-500'>Email:</span> {report?.expand?.agent?.email}</li>
           <li className='grid grid-cols-[20%_auto]'><span className='text-slate-500'>Телефон:</span> {report?.expand?.agent?.phone}</li>
+          <li className='grid grid-cols-[20%_auto]'><span className='text-slate-500'>За период:</span> {dayjs(report?.dates?.from).format('DD/MM/YYYY')} - {dayjs(report?.dates?.to).format('DD/MM/YYYY')}</li>
         </ul>
-        <div className='mt-2'>За период {dayjs(report?.dates?.from).format('DD/MM/YYYY')} - {dayjs(report?.dates?.to).format('DD/MM/YYYY')}</div>
         <div className="flex justify-end gap-1">
           Общее: верифиц - <span className='font-bold text-primary-500'>{allLinesPeriod?? 0}</span> / 
           <span className='font-bold text-primary-500'>{allLinesPeriodAgents ?? 0}</span> - агентов 
