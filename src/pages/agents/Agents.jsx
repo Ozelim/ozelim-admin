@@ -169,7 +169,7 @@ export const Agents = () => {
   const allLinesPeriod = report?.data?.allLineVerified
   const allLinesPeriodAgents = report?.data?.allLineAgents
 
-  return (
+return (
     <>
       <div className="w-full">
         <Tabs defaultValue="agents">

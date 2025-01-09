@@ -313,6 +313,64 @@ export const Bids = () => {
     // { label: 'Пользователь', value: 'user-bids' },
   ]
 
+  async function makeAgent (id) {
+
+    await pb.collection('agents').update(bid?.agent, {
+      agent: true,
+      agent_date: new Date(),
+    })
+    .then(async (response) => {
+
+      const sponsor = await pb.collection('agents').getOne(response?.sponsor)
+  
+      await pb.collection('agents').update(sponsor?.id, {
+        'balance+': 3000
+      })
+      .then(async res => {
+        await pb.collection('agents').update(res?.sponsor, {
+          'balance+': 2000
+        })
+        .catch(() => {
+          modalHandler.close()
+          showNotification({
+            title: 'Заявка',
+            message: 'Пользователь теперь агент!',
+            color: 'green',
+          })
+        })
+        .then(async q => {
+          await pb.collection('agents').update(q?.sponsor, {
+            'balance+': 1000
+          })
+        })
+        .catch(() => {
+          modalHandler.close()
+          showNotification({
+            title: 'Заявка',
+            message: 'Пользователь теперь агент!',
+            color: 'green',
+          })
+        })
+      })
+      .catch(() => {
+        modalHandler.close()
+        showNotification({
+          title: 'Заявка',
+          message: 'Пользователь теперь агент!',
+          color: 'green',
+        })
+      })
+  
+      modalHandler.close()
+      showNotification({
+        title: 'Заявка',
+        message: 'Пользователь теперь агент!',
+        color: 'green',
+      })
+    })
+    
+  }
+
   return (
     <>
       <div className="w-full grid grid-cols-[10%_91%] gap-4 -mx-4 -my-4">
@@ -2529,8 +2587,6 @@ export const Bids = () => {
           </Tabs>
         )}
 
-        {params.get('value') === 'agents-bids' && <></>}
-
         {/* <h2 className="text-center text-2xl text-primary-600">
           Заявки на консультацию
         </h2>
@@ -2611,16 +2667,7 @@ export const Bids = () => {
                   status: 'confirmed',
                 })
                 .then(async (res) => {
-                  await pb.collection('agents').update(bid?.agent, {
-                    agent: true,
-                    agent_date: new Date(),
-                  })
-                  modalHandler.close()
-                  showNotification({
-                    title: 'Заявка',
-                    message: 'Пользователь теперь агент!',
-                    color: 'green',
-                  })
+                  await makeAgent(bid?.agent)
                 })
             }}
             disabled={comment}
