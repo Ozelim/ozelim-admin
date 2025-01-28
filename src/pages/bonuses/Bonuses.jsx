@@ -55,7 +55,7 @@ export const Bonuses = () => {
       })
       setBonuses({...bonuses, [id]: ''})
     })
-  }) 
+  })
 
   const takeBonuses = (id) => openConfirmModal({
     title: 'Подтвердите действие',
@@ -68,7 +68,7 @@ export const Bonuses = () => {
     .then(() => {
       setTakenBonuses({...takenBonuses, [id]: ''})
     })
-  }) 
+  })
 
   return (
     <div>

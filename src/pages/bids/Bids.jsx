@@ -327,8 +327,38 @@ export const Bids = () => {
         'balance+': 3000
       })
       .then(async res => {
+        await pb.collection('user_bonuses').getOne(sponsor?.id)
+        .then(async (response) => {
+          await pb.collection('user_bonuses').update(response, {
+            referals: [
+              ...response?.referals ?? [],
+              {
+                id: crypto.randomUUID(),
+                created: new Date(),
+                referal: id, 
+                sum: 3000,
+              }
+            ]
+          })
+        })
         await pb.collection('agents').update(res?.sponsor, {
           'balance+': 2000
+        })
+        .then(async q => {
+          await pb.collection('user_bonuses').getOne(q?.sponsor)
+          .then(async (response) => {
+            await pb.collection('user_bonuses').update(response, {
+              referals: [
+                ...response?.referals ?? [],
+                {
+                  id: crypto.randomUUID(),
+                  created: new Date(),
+                  referal: id, 
+                  sum: 2000,
+                }
+              ]
+            })
+          })
         })
         .catch(() => {
           modalHandler.close()
@@ -405,7 +435,6 @@ export const Bids = () => {
               <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
               <Tabs.Tab value="ref">Отклоненные</Tabs.Tab>
             </Tabs.List>
-
             <Tabs.Panel value="bids">
               <Table>
                 <thead>
