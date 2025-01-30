@@ -289,8 +289,6 @@ export const Services = () => {
               </thead>
               <tbody>
               {createdServices.map((q, i) => {
-                console.log(q, 'q');
-                
                 return (
                   <tr key={i}>
                     <th>{dayjs(q?.created).format(`DD.MM.YY`)}</th>
@@ -303,7 +301,7 @@ export const Services = () => {
                       </Button>
                     </td>
                     <td>{q.name}</td>
-                    <td>{q.total_cost}</td>
+                    <td>{q.total_cost} тг</td>
                     <td>
                       <Button
                         variant='outline'
@@ -349,8 +347,8 @@ export const Services = () => {
                 <tr>
                   <th>Дата</th>
                   <th>Пользователь</th>
-                  <th>Стоимость</th>
                   <th>ФИО</th>
+                  <th>Стоимость</th>
                   <th>Услуга</th>
                   <th>Тип</th>
                   <th>Комментарий</th>
@@ -363,8 +361,8 @@ export const Services = () => {
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
                     <td>{q?.user === "" ? q?.agent : q?.user}</td>
-                    <td>{q.total_cost} тг</td>
                     <td>{q.name}</td>
+                    <td>{q.total_cost} тг</td>
                     <td>
                       <Button
                         variant='outline'
@@ -468,7 +466,7 @@ export const Services = () => {
                         Услуги
                       </Button>
                     </td>
-                    <td>{q.total_cost}</td>
+                    <td>{q.total_cost} тг</td>
                     <td>
                       {q?.pay && `Карта`}
                       {q?.bonuses && `Бонусы`}
