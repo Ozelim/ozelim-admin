@@ -15,7 +15,23 @@ async function getServices () {
 }
 
 async function getServiceBids () {
-  return await pb.collection('service_bids').getFullList({expand: 'user, agent', sort: `-created`}) 
+  return await pb.collection('service_bids').getFullList({expand: 'user, agent', sort: `-created`, filter: `status != 'succ'`}) 
+}
+
+// Get the 1st day of the last month at 00:00:00
+const startDate = new Date();
+startDate.setDate(1); // Set to 1st of current month
+startDate.setMonth(startDate.getMonth() - 1); // Subtract 1 month
+startDate.setHours(0, 0, 0, 0); // Reset time to midnight
+
+// Format for PocketBase (ISO string)
+const startDateISO = startDate.toISOString();
+
+async function getSuccServices () {
+  return await pb.collection('service_bids').getFullList({
+    expand: 'user, agent', sort: `-created`, 
+    filter: `status = 'succ' && created >= "${startDateISO}`
+  }) 
 }
 
 export const Services = () => {
@@ -31,8 +47,10 @@ export const Services = () => {
   const [services, setServices] = React.useState([])
   const [bids, setBids] = React.useState([])
 
+  const [succServices, setSuccServices] = React.useState([])
+
   const createdServices = bids.filter(q => q.status === 'created')
-  const succServices = bids.filter(q => q.status === 'succ')
+  // const succServices = bids.filter(q => q.status === 'succ')
   const rejectedServeces = bids.filter(q => q.status === 'rejected')
   const cancelledServices = bids.filter(q => q.status === 'cancelled')
   const refundedServices = bids.filter(q => q.status === 'refunded')
@@ -94,7 +112,7 @@ export const Services = () => {
             'bonuses+': bid?.costs?.bonuses
           })
           .then(res => {
-            // window.location.reload()
+            window.location.reload()
           })
         }
       else if (bid?.bonuses) {
@@ -125,6 +143,10 @@ export const Services = () => {
     await getServiceBids()
     .then(res => {
       setBids(res)
+    })
+    getSuccServices()
+    .then(res => {
+      setSuccServices(res)
     })
   }
 
