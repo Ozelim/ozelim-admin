@@ -80,14 +80,16 @@ export const Services = () => {
     .then(async () => {
       if (!bid?.pay && !bid?.bonuses) {
         await pb.collection(bid?.agent ? 'agents' : 'users').update(bid?.agent ? bid?.agent : bid?.user, {
-          'balance+': bid?.total_cost
+          'balance+': bid?.costs?.balance,
+          'bonuses': bid?.costs?.bonuses
         })
         .then(res => {
           setRejectModal({...rejectModal, modal: false})
         })
       } else if (rejectModal.payback) {
           await pb.collection(bid?.agent ? 'agents' : 'users').update(bid?.agent ? bid?.agent : bid?.user, {
-            'balance+': bid?.total_cost
+            'balance+': bid?.total_cost,
+            'bonuses': bid?.costs?.bonuses
           })
           .then(res => {
             window.location.reload()
