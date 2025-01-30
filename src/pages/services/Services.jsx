@@ -656,7 +656,7 @@ export const Services = () => {
                 })
                 .then(async () => {
                   await pb.collection('users').update(refund?.bid?.user === "" ? refund?.bid?.agent : refund?.bid?.user, {
-                    'balance+': refund?.bid?.costs?.bonuses
+                    'bonuses+': refund?.bid?.costs?.bonuses
                   })
                   .then(() => {
                     window.location.reload()
