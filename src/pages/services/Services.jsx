@@ -306,7 +306,7 @@ export const Services = () => {
                     <td>
                       {q?.pay && q?.costs?.card} 
                       {(!q?.pay && !q?.bonuses) && q?.costs?.balance}
-                      ({q?.pay_bounses && q?.costs?.bonuses}) тг
+                      ({q?.pay_bonuses && q?.costs?.bonuses}) тг
                     </td>
                     <td>
                       <Button
