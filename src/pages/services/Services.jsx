@@ -207,7 +207,7 @@ export const Services = () => {
         <Tabs defaultValue='services'>
           <Tabs.List>
             <Tabs.Tab value='services' disabled={user?.email === "ozelim-tur@mail.ru"}>Услуги</Tabs.Tab>
-            <Tabs.Tab value='created'>Созданые</Tabs.Tab>
+            <Tabs.Tab value='created'>Созданные</Tabs.Tab>
             <Tabs.Tab value='refunded'>Возврат</Tabs.Tab>
             <Tabs.Tab value='succ'>Подтвержденные</Tabs.Tab>
             <Tabs.Tab value='rejected'>Отклоненные</Tabs.Tab>
@@ -305,8 +305,7 @@ export const Services = () => {
                     <td>{q.total_cost} тг</td>
                     <td>
                       {q?.pay && q?.costs?.card} 
-                      {(!q?.pay && !q?.bonuses) && q?.costs?.balance}
-                      ({q?.pay_bonuses && q?.costs?.bonuses}) тг
+                      {(!q?.pay && !q?.bonuses) && q?.costs?.balance} ({q?.pay_bonuses && `${q?.costs?.bonuses} бонусы`}) тг
                     </td>
                     <td>
                       <Button
