@@ -627,6 +627,8 @@ export const Services = () => {
         <p>IBAN: {refund?.bid?.refund_data?.iban}</p>
         <p>ФИО: {refund?.bid?.refund_data?.fio}</p>
         <p>ИИН: {refund?.bid?.refund_data?.iin}</p>
+        <p>Карта: {refund?.bid?.costs?.card}</p>
+        <p>Бонусы: {refund?.bid?.costs?.bonuses}</p>
         <NumberInput
           label='Возвращаемая сумма'
           hideControls
