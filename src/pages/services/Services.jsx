@@ -655,7 +655,7 @@ export const Services = () => {
                   refunded_sum: refundSum,
                 })
                 .then(async () => {
-                  await pb.collection('users').update(refund?.bid?.user === "" ? refund?.bid?.agent : refund?.bid?.user, {
+                  await pb.collection(refund?.bid?.user === "" ? 'agents' : 'users').update(refund?.bid?.user === "" ? refund?.bid?.agent : refund?.bid?.user, {
                     'bonuses+': refund?.bid?.costs?.bonuses
                   })
                   .then(() => {
