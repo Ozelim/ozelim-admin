@@ -21,11 +21,11 @@ export const Header = () => {
             OZELIM ADMIN PANEL
           </Link>
         </p>
-        <p className='justify-start font-head font-bold ml-4'>
+        {/* <p className='justify-start font-head font-bold ml-4'>
           <Link to={'/market'}>
             OZELIM DUKEN
           </Link>
-        </p>
+        </p> */}
         <div className='ml-auto flex gap-4'>
           <Switch
             label='Казахский'
