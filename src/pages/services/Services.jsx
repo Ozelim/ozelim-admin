@@ -454,6 +454,8 @@ export const Services = () => {
               </thead>
               <tbody>
               {refundedServices.map((q, i) => {
+                console.log(q, 'refunded q');
+                
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
