@@ -299,7 +299,7 @@ export const Services = () => {
                       onClick={() => setUserData({modal: true, data: q?.expand?.user ?? q?.expand?.agent})}
                     >
                       <Button compact variant='outline'>
-                        {q?.user ?? q?.agent}
+                        {q?.user === "" ? q?.agent : q?.user}
                       </Button>
                     </td>
                     <td>{q.name}</td>
@@ -362,7 +362,7 @@ export const Services = () => {
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
-                    <td>{q?.user ?? q?.agent}</td>
+                    <td>{q?.user === "" ? q?.agent : q?.user}</td>
                     <td>{q.name}</td>
                     <td>{q.total_cost}</td>
                     <td>
@@ -414,7 +414,7 @@ export const Services = () => {
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
-                    <td>{q?.user ?? q?.agent}</td>
+                    <td>{q?.user === '' ? q?.agent : q?.user}</td>
                     <td>{q.name}</td>
                     <td>{q.total_cost} тг</td>
                     <td>
@@ -457,7 +457,7 @@ export const Services = () => {
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
-                    <td>{q?.user ?? q?.agent}</td>
+                    <td>{q?.user === '' ? q?.agent : q?.user}</td>
                     <td>{q.name}</td>
                     <td>
                       <Button
