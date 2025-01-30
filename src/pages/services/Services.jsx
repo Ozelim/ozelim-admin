@@ -363,8 +363,8 @@ export const Services = () => {
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
                     <td>{q?.user === "" ? q?.agent : q?.user}</td>
+                    <td>{q.total_cost} тг</td>
                     <td>{q.name}</td>
-                    <td>{q.total_cost}</td>
                     <td>
                       <Button
                         variant='outline'
@@ -432,7 +432,7 @@ export const Services = () => {
                       {(!q?.pay && !q?.bonuses)  && `Баланс`}
                     </td>
                     <td>{q?.comment}</td>
-                    <td>{q?.refunded_sum === 0 ? q.total_cost : q?.refunded_sum}</td>
+                    <td>{q?.refunded_sum === 0 ? q.total_cost : q?.refunded_sum} тг</td>
                   </tr>
                 )
               })}
@@ -454,8 +454,6 @@ export const Services = () => {
               </thead>
               <tbody>
               {refundedServices.map((q, i) => {
-                console.log(q, 'refunded q');
-                
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
@@ -516,13 +514,13 @@ export const Services = () => {
                         Услуги
                       </Button>
                     </td>
-                    <td>{q.total_cost}</td>
+                    <td>{q.total_cost} тг</td>
                     <td>
                       {q?.pay && `Карта`}
                       {q?.bonuses && `Бонусы`}
                       {(!q?.pay && !q?.bonuses)  && `Баланс`}
                     </td>
-                    <td>{q?.refunded_sum}</td>
+                    <td>{q?.refunded_sum} тг</td>
                   </tr>
                 )
               })}
