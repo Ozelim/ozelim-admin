@@ -281,6 +281,7 @@ export const Services = () => {
                   <th>Пользователь</th>
                   <th>ФИО</th>
                   <th>Стоимость (тг)</th>
+                  <th>Оплачено (тг)</th>
                   <th>Услуга</th>
                   <th>Тип</th>
                   <th>Комментарий</th>
@@ -302,6 +303,11 @@ export const Services = () => {
                     </td>
                     <td>{q.name}</td>
                     <td>{q.total_cost} тг</td>
+                    <td>
+                      {q?.pay && q?.costs?.card} 
+                      {(!q?.pay && !q?.bonuses) && q?.costs?.balance}
+                      ({q?.pay_bounses && q?.costs?.bonuses}) тг
+                    </td>
                     <td>
                       <Button
                         variant='outline'
