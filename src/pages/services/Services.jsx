@@ -289,6 +289,8 @@ export const Services = () => {
               </thead>
               <tbody>
               {createdServices.map((q, i) => {
+                console.log(q, 'q');
+                
                 return (
                   <tr key={i}>
                     <th>{dayjs(q?.created).format(`DD.MM.YY`)}</th>

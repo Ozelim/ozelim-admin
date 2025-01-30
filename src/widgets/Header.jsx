@@ -15,33 +15,31 @@ export const Header = () => {
 
   return (
     <div className='w-full py-4'>
-      <div className="container">
-        <div className='flex'>
-          <p className='justify-start font-head font-bold'>
-            <Link to={'/'}>
-              OZELIM ADMIN PANEL
-            </Link>
-          </p>
-          {/* <p className='justify-start font-head font-bold ml-4'>
-            <Link to={'/market'}>
-              OZELIM DUKEN
-            </Link>
-          </p> */}
-          <div className='ml-auto flex gap-4'>
-            <Switch
-              label='Казахский'
-              onChange={handleLang}
-              checked={lang === 'kz'}
-              // checked={lang === 'kz'}
-            />
-            <Button
-              compact
-              variant={'subtle'}
-              onClick={logOut}
-            >
-              Выйти
-            </Button>
-          </div>
+      <div className='flex px-4'>
+        <p className='justify-start font-head font-bold'>
+          <Link to={'/'}>
+            OZELIM ADMIN PANEL
+          </Link>
+        </p>
+        <p className='justify-start font-head font-bold ml-4'>
+          <Link to={'/market'}>
+            OZELIM DUKEN
+          </Link>
+        </p>
+        <div className='ml-auto flex gap-4'>
+          <Switch
+            label='Казахский'
+            onChange={handleLang}
+            checked={lang === 'kz'}
+            // checked={lang === 'kz'}
+          />
+          <Button
+            compact
+            variant={'subtle'}
+            onClick={logOut}
+          >
+            Выйти
+          </Button>
         </div>
       </div>
     </div>
