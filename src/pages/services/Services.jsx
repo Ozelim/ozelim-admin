@@ -30,7 +30,7 @@ const startDateISO = startDate.toISOString();
 async function getSuccServices () {
   return await pb.collection('service_bids').getFullList({
     expand: 'user, agent', sort: `-created`, 
-    filter: `status = 'succ' && created >= "${startDateISO}"`
+    filter: `status = 'succ' && created >= '${startDateISO}'`
   }) 
 }
 
