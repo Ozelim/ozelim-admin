@@ -73,26 +73,28 @@ export const Services = () => {
     })
   }
   
-  async function deleteBid (bid) {
+  async function  deleteBid (bid) {
     await pb.collection('service_bids').update(bid?.id, {
       status: 'rejected'
     })
     .then(async () => {
+      console.log(bid, 'bid');
+      
       if (!bid?.pay && !bid?.bonuses) {
         await pb.collection(bid?.agent ? 'agents' : 'users').update(bid?.agent ? bid?.agent : bid?.user, {
           'balance+': bid?.costs?.balance,
-          'bonuses': bid?.costs?.bonuses
+          'bonuses+': bid?.costs?.bonuses
         })
         .then(res => {
           setRejectModal({...rejectModal, modal: false})
         })
       } else if (rejectModal.payback) {
           await pb.collection(bid?.agent ? 'agents' : 'users').update(bid?.agent ? bid?.agent : bid?.user, {
-            'balance+': bid?.total_cost,
-            'bonuses': bid?.costs?.bonuses
+            'balance+': bid?.costs?.balance,
+            'bonuses+': bid?.costs?.bonuses
           })
           .then(res => {
-            window.location.reload()
+            // window.location.reload()
           })
         }
       else if (bid?.bonuses) {
@@ -115,7 +117,6 @@ export const Services = () => {
   const handleServices = async () => {
     await getServices()
     .then(res => {
-      console.log(res, 'res');
       setServices(res)
     })
   } 
@@ -123,7 +124,6 @@ export const Services = () => {
   const handleBids = async () => {
     await getServiceBids()
     .then(res => {
-      console.log(res, 'res');
       setBids(res)
     })
   }
