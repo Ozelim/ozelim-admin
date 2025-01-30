@@ -449,8 +449,9 @@ export const Services = () => {
                   <th>Дата</th>
                   <th>Пользователь</th>
                   <th>ФИО</th>
-                  <th>Услуга</th>
                   <th>Стоимость</th>
+                  <th>Возврат</th>
+                  <th>Услуга</th>
                   <th>Тип</th>
                   <th>Действие</th>
                 </tr>
@@ -462,6 +463,8 @@ export const Services = () => {
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
                     <td>{q?.user === '' ? q?.agent : q?.user}</td>
                     <td>{q.name}</td>
+                    <td>{q.total_cost} тг</td>
+                    <td>{q.total_cost2} тг</td>
                     <td>
                       <Button
                         variant='outline'
@@ -471,7 +474,6 @@ export const Services = () => {
                         Услуги
                       </Button>
                     </td>
-                    <td>{q.total_cost} тг</td>
                     <td>
                       {q?.pay && `Карта`}
                       {q?.bonuses && `Бонусы`}
@@ -622,7 +624,6 @@ export const Services = () => {
         title='Подтвердите действие'
       >
         <p>Сумма: {refund?.bid?.total_cost}</p>
-        <p>Сумма 5%: {refund?.bid?.total_cost2}</p>
         <p>IBAN: {refund?.bid?.refund_data?.iban}</p>
         <p>ФИО: {refund?.bid?.refund_data?.fio}</p>
         <p>ИИН: {refund?.bid?.refund_data?.iin}</p>
@@ -649,10 +650,15 @@ export const Services = () => {
                 await pb.collection('service_bids').update(refund?.bid?.id, {
                   refunded: true,
                   status: 'cancelled',
-                  refunded_sum: refundSum
+                  refunded_sum: refundSum,
                 })
-                .then(() => {
-                  window.location.reload()
+                .then(async () => {
+                  await pb.collection('users').update(refund?.bid?.user === "" ? refund?.bid?.agent : refund?.bid?.user, {
+                    'balance+': refund?.bid?.costs?.bonuses
+                  })
+                  .then(() => {
+                    window.location.reload()
+                  })
                 })
               }}>
                 Да
