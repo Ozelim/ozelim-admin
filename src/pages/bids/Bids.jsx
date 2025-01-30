@@ -2079,6 +2079,7 @@ export const Bids = () => {
                   <tr>
                     <th>Дата</th>
                     <th>Наименование орг.</th>
+                    <th>Имя</th>
                     <th>Номер телефона</th>
                     <th>Действие</th>
                   </tr>
@@ -2088,6 +2089,7 @@ export const Bids = () => {
                     return (
                       <tr key={w?.id}>
                         <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                        <td>{w?.tour}</td>
                         <td>{w?.name}</td>
                         <td>{w?.phone}</td>
                         <td>
