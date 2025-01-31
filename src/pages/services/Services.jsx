@@ -532,7 +532,7 @@ export const Services = () => {
                 return (
                   <tr key={i}>
                     <td>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</td>
-                    <td>{q?.user ?? q?.agent}</td>
+                    <td>{q?.user === '' ? q?.agent : q?.user}</td>
                     <td>{q.name}</td>
                     <td>
                       <Button
