@@ -80,7 +80,7 @@ export const Replenish = () => {
           <p>ID:</p>
           <p>{userData?.data?.id}</p>
         </li>
-        {userData?.data?.user === '' ? (
+        {userData?.data?.collectionName === 'agents' ? (
           <ul className='space-y-2'>
             <li className='grid grid-cols-2'>
               <p>ФИО:</p>
