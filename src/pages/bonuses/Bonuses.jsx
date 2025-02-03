@@ -81,7 +81,7 @@ export const Bonuses = () => {
                 </li>
                 <li className='grid grid-cols-2 gap-4'>
                   <p>ФИО: </p>
-                  <p className='whitespace-nowrap'>Абашкуров Арман Канжарбекович</p>
+                  <p className='whitespace-nowrap'>{foundUser?.fio}</p>
                 </li>
                 <li className='grid grid-cols-2 gap-4'>
                   <p>Email: </p>
