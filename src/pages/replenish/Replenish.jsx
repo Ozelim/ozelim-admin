@@ -20,11 +20,11 @@ export const Replenish = () => {
   React.useEffect(() => {
     getReplenish()
     .then(res => {
+      console.log(res, 'res');
+      
       setReplenish(res)
     })
   }, [])
-
-  console.log(userData?.data, 'data');
 
   return (
     <>
