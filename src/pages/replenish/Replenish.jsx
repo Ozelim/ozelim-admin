@@ -35,6 +35,7 @@ export const Replenish = () => {
             <tr>
               <th>Дата</th>
               <th>Пользователь</th>
+              <th>Тип</th>
               <th>Сумма</th>
             </tr>
           </thead>
@@ -50,8 +51,11 @@ export const Replenish = () => {
                     onClick={() => setUserData({modal: true, data: rep?.expand?.user})}
                   >
                     <Button compact variant='outline'>
-                      {rep?.user}
+                      {rep?.user === '' ? rep?.agent : rep?.user}
                     </Button>
+                  </td>
+                  <td>
+                    {rep?.user === '' ? 'Агент' : 'Партнер'}
                   </td>
                   <td>{rep?.sum}</td>
                 </tr>
