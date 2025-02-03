@@ -25,7 +25,6 @@ export const Replenish = () => {
   }, [])
 
   console.log(userData?.data, 'data');
-  
 
   return (
     <>
@@ -51,7 +50,7 @@ export const Replenish = () => {
                   <td>{dayjs(rep?.created).format('YY-MM-DD, HH:mm')}</td>
                   <td 
                     className='cursor-pointer' 
-                    onClick={() => setUserData({modal: true, data: rep?.expand?.user})}
+                    onClick={() => setUserData({modal: true, data: rep?.expand?.user === '' ? rep?.expand?.agent : rep?.expand?.user})}
                   >
                     <Button compact variant='outline'>
                       {rep?.user === '' ? rep?.agent : rep?.user}
