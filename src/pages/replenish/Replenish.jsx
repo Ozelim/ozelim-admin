@@ -24,6 +24,9 @@ export const Replenish = () => {
     })
   }, [])
 
+  console.log(userData?.data, 'data');
+  
+
   return (
     <>
       <div>
@@ -81,10 +84,6 @@ export const Replenish = () => {
         {userData?.data?.user === '' ? (
           <ul className='space-y-2'>
             <li className='grid grid-cols-2'>
-              <p>ID:</p>
-              <p>{userData?.data?.id}</p>
-            </li>
-            <li className='grid grid-cols-2'>
               <p>ФИО:</p>
               <p>{userData?.data?.fio}</p>
             </li>
@@ -103,10 +102,6 @@ export const Replenish = () => {
           </ul>
         ) : (
           <ul className='space-y-2'>
-            <li className='grid grid-cols-2'>
-              <p>ID:</p>
-              <p>{userData?.data?.id}</p>
-            </li>
             <li className='grid grid-cols-2'>
               <p>Имя:</p>
               <p>{userData?.data?.name}</p>
