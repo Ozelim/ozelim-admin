@@ -22,7 +22,7 @@ export const Header = () => {
           </Link>
         </p>
         {/* <p className='justify-start font-head font-bold ml-4'>
-          <Link to={'/market'}>
+          <Link to={'/duken'}>
             OZELIM DUKEN
           </Link>
         </p> */}

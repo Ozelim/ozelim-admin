@@ -40,16 +40,18 @@ export const Sidebar = () => {
     {path: '/dual', labelru: 'Дуальное обучение', labelkz: 'Дуальное обучение', mng: true},
   ]
   const array2 = [
-    {path: '/market/shops', labelru: 'Магазины'},
-    {path: '/market/categories', labelru: 'Категории'},
-    {path: '/market/users', labelru: 'Пользователи'},
+    {path: '/duken/shops', labelru: 'Заявки продавцов'},
+    {path: '/duken/all-shops', labelru: 'Магазины'},
+    {path: '/duken/categories', labelru: 'Категории'},
+    {path: '/duken/users', labelru: 'Пользователи'},
+    {path: '/duken/products', labelru: 'Товары'},
   ]
 
   const {pathname} = useLocation()
 
   const {user} = useAuth()
 
-  if (pathname.includes('market')) {
+  if (pathname.includes('duken')) {
     return (
       <div className='grid grid-cols-1'>
         {array2.map((page, i) => {

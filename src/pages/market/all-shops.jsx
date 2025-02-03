@@ -9,14 +9,13 @@ async function getShops () {
   return await pb.collection('markets').getFullList({
     expand: 'merchant',
     sort: 'created',
+    filter: `status != 'created'`
   })
 }
 
-export const Shops = () => {
+export const AllShops = () => {
 
   const [shops, setShops] = React.useState([])
-
-  const createdShops = shops?.filter(shop => shop.status === 'created')
 
   const [loading, loading_h] = useDisclosure(false)
 
@@ -81,9 +80,7 @@ export const Shops = () => {
 
   return (
     <div className='w-full'>
-      <p className='text-xl'>Магазины ожидающие подтверждения</p>
       <Table
-        className='mt-4'
       >
         <thead>
           <tr>
@@ -96,7 +93,7 @@ export const Shops = () => {
           </tr>
         </thead>
         <tbody>
-          {createdShops?.map(shop => (
+          {shops?.map(shop => (
             <tr key={shop.id}>
               <td>{shop.name}</td>
               <td>{shop.address}</td>
@@ -114,12 +111,12 @@ export const Shops = () => {
               <td>
                 <div className='flex items-center gap-3'>
                   <Button
-                    onClick={() => createShop(shop)}
+                    // onClick={() => createShop(shop)}
                   >
-                    Создать магазин
+                    Подробнее
                   </Button>
                   <CloseButton
-                    onClick={() => disableShop(shop)}
+                    // onClick={() => disableShop(shop)}
                   />
                 </div>
               </td>

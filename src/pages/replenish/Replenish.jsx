@@ -5,7 +5,7 @@ import { pb } from 'shared/api'
 import { getImageUrl } from 'shared/lib'
 
 async function getReplenish () {
-  return await pb.collection('replenish').getFullList({filter: `status = 'paid'`, expand: `user`, sort: '-created'})
+  return await pb.collection('replenish').getFullList({filter: `status = 'paid'`, expand: `user, agent`, sort: '-created'})
 }
 
 export const Replenish = () => {

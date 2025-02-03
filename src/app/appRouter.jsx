@@ -44,7 +44,9 @@ import {
   Partners,
   Marketsers,
   Shops,
-  Categories
+  Categories,
+  Products,
+  AllShops
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -85,10 +87,12 @@ const appRouter = createBrowserRouter([
       { path: "/dual", element: <SwitchLayout ru={<Dual />} kz={<DualKz/>} /> },
       { path: "*", element: <NotFound /> },
       
-      { path: '/market', children: [
+      { path: '/duken', children: [
         { path: 'users', element: <Marketsers/>},
         { path: 'shops', element: <Shops/>},
         { path: 'categories', element: <Categories/>},
+        { path: 'products', element: <Products/>},
+        { path: 'all-shops', element: <AllShops/>},
       ]}
     ],
   },
