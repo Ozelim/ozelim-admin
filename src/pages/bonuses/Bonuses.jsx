@@ -71,7 +71,7 @@ export const Bonuses = () => {
       </div>
       <div>
         {foundUser?.id && (
-          <div className='grid grid-cols-[25%_auto] gap-4'>
+          <div className='grid grid-cols-[35%_auto] gap-4'>
             <div className='max-w-[150px]'>
               <img src={getImageUrl(foundUser, foundUser?.avatar)} className='w-36 h-36 object-cover rounded-full mt-4' alt='' />
               <ul className='space-y-1.5 mt-4'>

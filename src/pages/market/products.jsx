@@ -52,7 +52,7 @@ export const Products = () => {
       centered: true,
       onConfirm: async () => {
         await pb.collection('products').update(id, {
-          status: 'waiting'
+          status: 'created'
         })
         .then(() => {
           handleProducts()
