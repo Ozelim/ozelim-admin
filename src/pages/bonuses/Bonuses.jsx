@@ -127,7 +127,7 @@ export const Bonuses = () => {
                       <tr key={i} className="text">
                         <td className='whitespace-nowrap'>
                           {dayjs(q?.created).format(
-                            'YY-MM-DD, HH:mm'
+                            'DD.MM.YYYY, HH:mm'
                           )}
                         </td>
                         <td>{q?.referal}</td>
@@ -141,7 +141,7 @@ export const Bonuses = () => {
                       <tr key={i} className="text">
                         <td className='whitespace-nowrap'>
                           {dayjs(q?.created).format(
-                            'YY-MM-DD, HH:mm'
+                            'DD.MM.YYYY, HH:mm'
                           )}
                         </td>
                         <td>-</td>
@@ -155,7 +155,7 @@ export const Bonuses = () => {
                       <tr key={i} className="text">
                         <td className='whitespace-nowrap'>
                           {dayjs(q?.created).format(
-                            'YY-MM-DD, HH:mm'
+                            'DD.MM.YYYY, HH:mm'
                           )}
                         </td>
                         <td>-</td>
@@ -169,7 +169,7 @@ export const Bonuses = () => {
                       <tr key={i} className="text">
                         <td className='whitespace-nowrap'>
                           {dayjs(q?.created).format(
-                            'YY-MM-DD, HH:mm'
+                            'DD.MM.YYYY, HH:mm'
                           )}
                         </td>
                         <td>-</td>
@@ -183,7 +183,7 @@ export const Bonuses = () => {
                       <tr key={i} className="text">
                         <td className='whitespace-nowrap'>
                           {dayjs(q?.created).format(
-                            'YY-MM-DD, HH:mm'
+                            'DD.MM.YYYY, HH:mm'
                           )}
                         </td>
                         <td className="text-black">Услуга</td>
