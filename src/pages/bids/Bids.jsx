@@ -313,7 +313,7 @@ export const Bids = () => {
     // { label: 'Пользователь', value: 'user-bids' },
   ]
 
-  console.log('commit z');
+  console.log('commit c');
   
 
   async function makeAgent (id) {
@@ -347,6 +347,7 @@ export const Bids = () => {
             ]
           })
         })
+
         await pb.collection('agents').update(res?.sponsor, {
           // 'balance+': 2000
           'balance+': 0
@@ -367,6 +368,30 @@ export const Bids = () => {
                 }
               ]
             })
+            .then(async () => {
+              await pb.collection('agents').update(q?.sponsor, {
+                // 'balance+': 1000
+                'balance+': 0
+              })
+              .then(async () => {
+                await pb.collection('user_bonuses').getOne(q?.sponsor)
+                .then(async (response) => {
+                  console.log(response, 'response 3');
+      
+                  await pb.collection('user_bonuses').update(response?.id, {
+                    referals: [
+                      ...response?.referals ?? [],
+                      {
+                        id: crypto.randomUUID(),
+                        created: new Date(),
+                        referal: id, 
+                        sum: 1000,
+                      }
+                    ]
+                  })
+                })
+              })
+            })
           })
         })
         .catch(() => {
@@ -375,30 +400,6 @@ export const Bids = () => {
             title: 'Заявка',
             message: 'Пользователь теперь агент!',
             color: 'green',
-          })
-        })
-        .then(async q => {
-          await pb.collection('agents').update(q?.sponsor, {
-            // 'balance+': 1000
-            'balance+': 0
-          })
-          .then(async () => {
-            await pb.collection('user_bonuses').getOne(q?.sponsor)
-            .then(async (response) => {
-              console.log(response, 'response 3');
-  
-              await pb.collection('user_bonuses').update(response?.id, {
-                referals: [
-                  ...response?.referals ?? [],
-                  {
-                    id: crypto.randomUUID(),
-                    created: new Date(),
-                    referal: id, 
-                    sum: 2000,
-                  }
-                ]
-              })
-            })
           })
         })
         .catch(() => {
