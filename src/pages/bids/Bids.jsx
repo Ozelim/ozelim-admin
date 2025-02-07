@@ -324,40 +324,46 @@ export const Bids = () => {
       const sponsor = await pb.collection('agents').getOne(response?.sponsor)
   
       await pb.collection('agents').update(sponsor?.id, {
-        'balance+': 3000
+        // 'balance+': 3000
+        'balance+': 0
       })
       .then(async res => {
         await pb.collection('user_bonuses').getOne(sponsor?.id)
         .then(async (response) => {
-          await pb.collection('user_bonuses').update(response, {
-            referals: [
-              ...response?.referals ?? [],
-              {
-                id: crypto.randomUUID(),
-                created: new Date(),
-                referal: id, 
-                sum: 3000,
-              }
-            ]
-          })
+          console.log(response, 'response 1');
+          
+          // await pb.collection('user_bonuses').update(response?.id, {
+          //   referals: [
+          //     ...response?.referals ?? [],
+          //     {
+          //       id: crypto.randomUUID(),
+          //       created: new Date(),
+          //       referal: id, 
+          //       sum: 3000,
+          //     }
+          //   ]
+          // })
         })
         await pb.collection('agents').update(res?.sponsor, {
-          'balance+': 2000
+          // 'balance+': 2000
+          'balance+': 0
         })
         .then(async q => {
           await pb.collection('user_bonuses').getOne(q?.sponsor)
           .then(async (response) => {
-            await pb.collection('user_bonuses').update(response, {
-              referals: [
-                ...response?.referals ?? [],
-                {
-                  id: crypto.randomUUID(),
-                  created: new Date(),
-                  referal: id, 
-                  sum: 2000,
-                }
-              ]
-            })
+            console.log(response, 'response 2');
+
+            // await pb.collection('user_bonuses').update(response?.id, {
+            //   referals: [
+            //     ...response?.referals ?? [],
+            //     {
+            //       id: crypto.randomUUID(),
+            //       created: new Date(),
+            //       referal: id, 
+            //       sum: 2000,
+            //     }
+            //   ]
+            // })
           })
         })
         .catch(() => {
@@ -370,7 +376,26 @@ export const Bids = () => {
         })
         .then(async q => {
           await pb.collection('agents').update(q?.sponsor, {
-            'balance+': 1000
+            // 'balance+': 1000
+            'balance+': 0
+          })
+          .then(async () => {
+            await pb.collection('user_bonuses').getOne(q?.sponsor)
+            .then(async (response) => {
+              console.log(response, 'response 2');
+  
+              // await pb.collection('user_bonuses').update(response?.id, {
+              //   referals: [
+              //     ...response?.referals ?? [],
+              //     {
+              //       id: crypto.randomUUID(),
+              //       created: new Date(),
+              //       referal: id, 
+              //       sum: 2000,
+              //     }
+              //   ]
+              // })
+            })
           })
         })
         .catch(() => {
