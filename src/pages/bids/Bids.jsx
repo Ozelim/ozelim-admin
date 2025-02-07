@@ -313,7 +313,7 @@ export const Bids = () => {
     // { label: 'Пользователь', value: 'user-bids' },
   ]
 
-  console.log('commit c');
+  console.log('commit w');
   
 
   async function makeAgent (id) {
@@ -327,8 +327,7 @@ export const Bids = () => {
       const sponsor = await pb.collection('agents').getOne(response?.sponsor)
   
       await pb.collection('agents').update(sponsor?.id, {
-        // 'balance+': 3000
-        'balance+': 0
+        'balance+': 3000
       })
       .then(async res => {
         await pb.collection('user_bonuses').getOne(sponsor?.id)
@@ -349,8 +348,7 @@ export const Bids = () => {
         })
 
         await pb.collection('agents').update(res?.sponsor, {
-          // 'balance+': 2000
-          'balance+': 0
+          'balance+': 2000
         })
         .then(async q => {
           await pb.collection('user_bonuses').getOne(q?.id)
@@ -370,8 +368,7 @@ export const Bids = () => {
             })
             .then(async () => {
               await pb.collection('agents').update(q?.sponsor, {
-                // 'balance+': 1000
-                'balance+': 0
+                'balance+': 1000
               })
               .then(async () => {
                 await pb.collection('user_bonuses').getOne(q?.sponsor)
