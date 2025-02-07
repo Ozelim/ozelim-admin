@@ -313,6 +313,9 @@ export const Bids = () => {
     // { label: 'Пользователь', value: 'user-bids' },
   ]
 
+  console.log('commit z');
+  
+
   async function makeAgent (id) {
 
     await pb.collection('agents').update(bid?.agent, {
@@ -332,38 +335,38 @@ export const Bids = () => {
         .then(async (response) => {
           console.log(response, 'response 1');
           
-          // await pb.collection('user_bonuses').update(response?.id, {
-          //   referals: [
-          //     ...response?.referals ?? [],
-          //     {
-          //       id: crypto.randomUUID(),
-          //       created: new Date(),
-          //       referal: id, 
-          //       sum: 3000,
-          //     }
-          //   ]
-          // })
+          await pb.collection('user_bonuses').update(response?.id, {
+            referals: [
+              ...response?.referals ?? [],
+              {
+                id: crypto.randomUUID(),
+                created: new Date(),
+                referal: id, 
+                sum: 3000,
+              }
+            ]
+          })
         })
         await pb.collection('agents').update(res?.sponsor, {
           // 'balance+': 2000
           'balance+': 0
         })
         .then(async q => {
-          await pb.collection('user_bonuses').getOne(q?.sponsor)
+          await pb.collection('user_bonuses').getOne(q?.id)
           .then(async (response) => {
             console.log(response, 'response 2');
 
-            // await pb.collection('user_bonuses').update(response?.id, {
-            //   referals: [
-            //     ...response?.referals ?? [],
-            //     {
-            //       id: crypto.randomUUID(),
-            //       created: new Date(),
-            //       referal: id, 
-            //       sum: 2000,
-            //     }
-            //   ]
-            // })
+            await pb.collection('user_bonuses').update(response?.id, {
+              referals: [
+                ...response?.referals ?? [],
+                {
+                  id: crypto.randomUUID(),
+                  created: new Date(),
+                  referal: id, 
+                  sum: 2000,
+                }
+              ]
+            })
           })
         })
         .catch(() => {
@@ -382,19 +385,19 @@ export const Bids = () => {
           .then(async () => {
             await pb.collection('user_bonuses').getOne(q?.sponsor)
             .then(async (response) => {
-              console.log(response, 'response 2');
+              console.log(response, 'response 3');
   
-              // await pb.collection('user_bonuses').update(response?.id, {
-              //   referals: [
-              //     ...response?.referals ?? [],
-              //     {
-              //       id: crypto.randomUUID(),
-              //       created: new Date(),
-              //       referal: id, 
-              //       sum: 2000,
-              //     }
-              //   ]
-              // })
+              await pb.collection('user_bonuses').update(response?.id, {
+                referals: [
+                  ...response?.referals ?? [],
+                  {
+                    id: crypto.randomUUID(),
+                    created: new Date(),
+                    referal: id, 
+                    sum: 2000,
+                  }
+                ]
+              })
             })
           })
         })
