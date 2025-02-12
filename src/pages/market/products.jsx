@@ -98,7 +98,7 @@ export const Products = () => {
             <Button 
               className='mt-4'
               component='a'
-              href={`https://oz-elim.kz/market/product/${q?.id}`}
+              href={`https://oz-elim.kz/duken/product/${q?.id}`}
               target='_blank'
               variant='outline'
             >

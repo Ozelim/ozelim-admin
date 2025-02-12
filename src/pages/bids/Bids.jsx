@@ -342,6 +342,7 @@ export const Bids = () => {
                 created: new Date(),
                 referal: id, 
                 sum: 3000,
+                type: 'agent'
               }
             ]
           })
@@ -363,6 +364,7 @@ export const Bids = () => {
                   created: new Date(),
                   referal: id, 
                   sum: 2000,
+                  type: 'agent'
                 }
               ]
             })
@@ -383,6 +385,7 @@ export const Bids = () => {
                         created: new Date(),
                         referal: id, 
                         sum: 1000,
+                        type: 'agent'
                       }
                     ]
                   })

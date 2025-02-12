@@ -72,16 +72,16 @@ export const HealthWorldKz = () => {
     }
 
     await pb.collection("text").update(fund?.text?.id, {
-      headings: changedHeadings,
-      text: changedText,
+      headings_kz: changedHeadings,
+      text_kz: changedText,
     });
   }
 
   React.useEffect(() => {
     getData("health-world").then((res) => {
       setFund(res);
-      setHeadings(res?.text?.headings);
-      setText(res?.text?.text);
+      setHeadings(res?.text?.headings_kz);
+      setText(res?.text?.text_kz);
       setImages(res?.images);
     });
   }, []);
@@ -366,6 +366,11 @@ export const HealthWorldKz = () => {
             name="text19"
             autosize
           />
+        </div>
+        <div className='flex justify-center'>
+          <Button onClick={saveFund}>
+            Сохранить
+          </Button>
         </div>
     </div>
   )
