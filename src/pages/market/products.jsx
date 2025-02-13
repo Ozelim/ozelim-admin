@@ -67,7 +67,7 @@ export const Products = () => {
 
   return (
     <div className='w-full'>
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         {onModeration?.map(q => (
           <div className='flex flex-col border h-full w-[277px]'>
           {(q?.pics?.[0] instanceof File || q?.pics?.[0] instanceof Blob) 

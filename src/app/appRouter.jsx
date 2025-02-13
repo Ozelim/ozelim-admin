@@ -46,7 +46,9 @@ import {
   Shops,
   Categories,
   Products,
-  AllShops
+  AllShops,
+  Chat,
+  TouristKz
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -82,7 +84,7 @@ const appRouter = createBrowserRouter([
       { path: "/rights", element: <Rights /> },
       { path: "/agents", element: <Agents /> },
       { path: "/users", element: <Users /> },
-      { path: "/tourist", element: <Tourist /> },
+      { path: "/tourist", element: <SwitchLayout ru={<Tourist/>} kz={<TouristKz/>}/>},
       { path: "/agents-bids", element: <AgentsBids /> },
       { path: "/dual", element: <SwitchLayout ru={<Dual />} kz={<DualKz/>} /> },
       { path: "*", element: <NotFound /> },
@@ -93,6 +95,7 @@ const appRouter = createBrowserRouter([
         { path: 'categories', element: <Categories/>},
         { path: 'products', element: <Products/>},
         { path: 'all-shops', element: <AllShops/>},
+        { path: 'chat', element: <Chat/>},
       ]}
     ],
   },

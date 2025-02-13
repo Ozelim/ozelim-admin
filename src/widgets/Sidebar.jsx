@@ -45,6 +45,7 @@ export const Sidebar = () => {
     {path: '/duken/categories', labelru: 'Категории'},
     {path: '/duken/users', labelru: 'Пользователи'},
     {path: '/duken/products', labelru: 'Товары'},
+    {path: '/duken/chat', labelru: 'Сообщения'},
   ]
 
   const {pathname} = useLocation()
