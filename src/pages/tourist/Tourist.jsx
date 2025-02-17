@@ -59,8 +59,8 @@ export const Tourist = () => {
   async function saveAbout () {
 
     await pb.collection('text').update(about?.text?.id, {
-      headings_kz: changedHeadings, 
-      text_kz: changedText
+      headings: changedHeadings, 
+      text: changedText
     })
 
     for (const index in changedImages) {
@@ -80,8 +80,8 @@ export const Tourist = () => {
   React.useEffect(() => {
     getData('tourist').then(res => {
       setAbout(res);
-      setHeadings(res?.text?.headings_kz)
-      setText(res?.text?.text_kz)
+      setHeadings(res?.text?.headings)
+      setText(res?.text?.text)
       setImages(res?.images)
     })
   }, [])
