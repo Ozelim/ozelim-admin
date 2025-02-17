@@ -127,9 +127,9 @@ export const ToursKz = () => {
         />
         <Textarea
           label="Описание"
-          value={changedText?.text2 ?? ""}
+          value={changedText?.text1 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
-          name="text2"
+          name="text1"
           autosize
         />
       </div>
