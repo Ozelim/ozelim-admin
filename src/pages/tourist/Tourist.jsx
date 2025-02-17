@@ -66,11 +66,13 @@ export const Tourist = () => {
     for (const index in changedImages) {
       if (!isNaN(index)) {
         const formData = new FormData()
-        formData.append(`${index}`, changedImages?.[index])
-        await pb.collection('images').update(about?.images?.id, formData)
-        .then(res => {
-          console.log(res);
-        })
+        if (changedImages?.[index] instanceof File || changedImages?.[index] instanceof Blob) {
+          formData.append(`${index}`, changedImages?.[index])
+          await pb.collection('images').update(about?.images?.id, formData)
+          .then(res => {
+            console.log(res);
+          })
+        }
       }
     }
   }
