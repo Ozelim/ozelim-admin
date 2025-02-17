@@ -7,6 +7,7 @@ import { pb } from 'shared/api'
 import { useAuth } from 'shared/hooks'
 import { getImageUrl } from 'shared/lib'
 import { useDisclosure } from '@mantine/hooks'
+import { pushNotification } from 'shared/lib/pushNotification'
 
 async function getOffersChat () {
   return await pb.collection('chats').getFullList({
@@ -70,6 +71,7 @@ export const Chat = () => {
 
     getMerchantsChat()
     .then(res => {
+      setMerchantChats(res)
       // setSupportChats([...supportChats, ...res])
     })
 
@@ -138,19 +140,21 @@ export const Chat = () => {
           },
         ],
       })
-      .then((res) => {
+      .then(async (res) => {
         setMessage('')
         delay_h.open()
         setTimeout(() => {
           delay_h.close()
         }, 3000)
+
+        await pushNotification(selectedChat?.user, 'messages')
       })
   }
 
   return (
     <div className="market">
       <div className="grid lg:grid-cols-[30%_auto] border mt-4 rounded-xl overflow-hidden max-w-6xl mx-auto bg-white">
-        <div className="flex flex-col overflow-y-auto h-[50vh]">
+        <div className="flex flex-col overflow-y-auto h-[70vh]">
           {chats?.map((q, i) => {
 
             const u = q?.expand?.user
@@ -160,7 +164,7 @@ export const Chat = () => {
                 className={clsx(
                   'flex gap-2 items-center border-t p-3 pr-0 first:border-t-0 cursor-pointer',
                   {
-                    'bg-red-600 text-white': selectedChat?.id === q?.id,
+                    'bg-primary-600 text-white': selectedChat?.id === q?.id,
                   }
                 )}
                 key={i}
@@ -193,8 +197,48 @@ export const Chat = () => {
               </div>
             )
           })}
+
+          <p className='text-center text-gray-6 py-3 border-b'>
+            Магазины
+          </p>
+
+          {merchantChats?.map((q, i) => {
+            const m = q?.expand?.merchant
+
+            return (
+              <div
+                className={clsx(
+                  'flex gap-2 items-center border-t p-3 pr-0 first:border-t-0 cursor-pointer',
+                  {
+                    'bg-primary-600 text-white': selectedChat?.id === q?.id,
+                  }
+                )}
+                key={i}
+                onClick={() => handleChatSelect(q)}
+              >
+                <img
+                  src={getImageUrl(m, m?.image)}
+                  alt=""
+                  className="w-14 h-14 object-cover rounded-full"
+                />
+                <div>
+                  <Text lineClamp={1}>
+                    {m?.name}
+                  </Text>
+                  <Text
+                    lineClamp={1}
+                    size="sm"
+                    color={selectedChat?.id === q?.id ? 'white' : 'gray.6'}
+                  >
+                    {q?.messages?.at(-1)?.message}
+                  </Text>
+                </div>
+              </div>
+            )
+          }
+        )}
         </div>
-        <div className="lg:border-l grid grid-rows-[auto_1fr_auto] h-[50vh]">
+        <div className="lg:border-l grid grid-rows-[auto_1fr_auto] h-[70vh]">
           <div className="flex gap-4 justify-center items-center mt-3 border-b pb-3">
             <img
               src={getImageUrl(
@@ -218,7 +262,7 @@ export const Chat = () => {
                 return (
                   <div
                     key={i}
-                    className={clsx('bg-red-500 max-w-[264px] p-2 rounded-xl text-white w-fit', {
+                    className={clsx('bg-primary-500 max-w-[264px] p-2 rounded-xl text-white w-fit', {
                       'ml-auto': q?.user === user?.id,
                       // 'bg-gray-100': q?.user !== user?.id
                     })}

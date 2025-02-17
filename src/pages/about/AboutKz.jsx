@@ -57,7 +57,7 @@ export const AboutKz = () => {
   React.useEffect(() => {
     getData('about').then(res => {
       setAbout(res);
-      setHeadings(res?.text?.headings_kz)
+    setHeadings(res?.text?.headings_kz)
       setText(res?.text?.text_kz)
       setImages(res?.images)
     })

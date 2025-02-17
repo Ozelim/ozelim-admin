@@ -48,7 +48,8 @@ import {
   Products,
   AllShops,
   Chat,
-  TouristKz
+  TouristKz,
+  Orders
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -96,6 +97,7 @@ const appRouter = createBrowserRouter([
         { path: 'products', element: <Products/>},
         { path: 'all-shops', element: <AllShops/>},
         { path: 'chat', element: <Chat/>},
+        { path: 'orders', element: <Orders/>},
       ]}
     ],
   },

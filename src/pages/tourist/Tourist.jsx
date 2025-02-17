@@ -58,6 +58,11 @@ export const Tourist = () => {
 
   async function saveAbout () {
 
+    await pb.collection('text').update(about?.text?.id, {
+      headings_kz: changedHeadings, 
+      text_kz: changedText
+    })
+
     for (const index in changedImages) {
       if (!isNaN(index)) {
         const formData = new FormData()
@@ -68,10 +73,6 @@ export const Tourist = () => {
         })
       }
     }
-    await pb.collection('text').update(about?.text?.id, {
-      headings_kz: changedHeadings, 
-      text_kz: changedText
-    })
   }
 
   React.useEffect(() => {
@@ -91,7 +92,6 @@ export const Tourist = () => {
   React.useEffect(() => {
     setChangedImages(images)
     setPics(images?.[`11`])
-
   }, [images])
 
   const [pics, setPics] = React.useState([])
