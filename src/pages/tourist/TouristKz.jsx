@@ -38,6 +38,11 @@ export const TouristKz = () => {
 
   async function saveAbout () {
 
+    await pb.collection('text').update(about?.text?.id, {
+      headings_kz: changedHeadings, 
+      text_kz: changedText
+    })
+
     for (const index in changedImages) {
       if (!isNaN(index)) {
         const formData = new FormData()
@@ -48,10 +53,6 @@ export const TouristKz = () => {
         })
       }
     }
-    await pb.collection('text').update(about?.text?.id, {
-      headings_kz: changedHeadings, 
-      text_kz: changedText
-    })
   }
 
   React.useEffect(() => {
