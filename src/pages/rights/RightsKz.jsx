@@ -196,38 +196,73 @@ export const RightsKz = () => {
           name="heading4"
         />
         <Textarea
-          label="Описание"
+          label="Описание 1"
           value={changedText?.text5 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
           name="text5"
           autosize
         />
         <Textarea
-          label="Описание"
+          label="Подописание 1"
+          value={changedText?.text55 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text55"
+          autosize
+        />
+        <Textarea
+          label="Описание 2"
           value={changedText?.text6 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
           name="text6"
           autosize
         />
         <Textarea
-          label="Описание"
+          label="Подописание 2"
+          value={changedText?.text66 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text66"
+          autosize
+        />
+        <Textarea
+          label="Описание 3"
           value={changedText?.text7 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
           name="text7"
           autosize
         />
         <Textarea
-          label="Описание"
+          label="Подописание 3"
+          value={changedText?.text77 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text77"
+          autosize
+        />
+        <Textarea
+          label="Описание 4"
           value={changedText?.text8 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
           name="text8"
           autosize
         />
         <Textarea
-          label="Описание"
+          label="Подописание 4"
+          value={changedText?.text88 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text88"
+          autosize
+        />
+        <Textarea
+          label="Описание 5"
           value={changedText?.text9 ?? ""}
           onChange={(e) => handleHealthChange(e, "text")}
           name="text9"
+          autosize
+        />
+        <Textarea
+          label="Подописание 5"
+          value={changedText?.text99 ?? ""}
+          onChange={(e) => handleHealthChange(e, "text")}
+          name="text99"
           autosize
         />
       </div>
