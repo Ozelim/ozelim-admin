@@ -274,7 +274,14 @@ export const RightsAccordion = () => {
     fetchData();
   }, []);
 
-  const handleDescriptionChange = (index, sectionIndex, field, value) => {
+  const handleDescriptionChange = (index, sectionIndex, field, value, kz) => {
+    if (kz) {
+      const updatedData = [...accData];
+      updatedData[index].description_kz.content[sectionIndex][field] = value;
+      setAccData(updatedData);
+      return
+    }
+
     const updatedData = [...accData];
     updatedData[index].description.content[sectionIndex][field] = value;
     setAccData(updatedData);
@@ -285,8 +292,8 @@ export const RightsAccordion = () => {
     try {
       await pb.collection('rights_accordion').update(id, {
         label: data.label,
-        description: JSON.stringify(data.description), // Make sure description is saved as a JSON string
         label_kz: data?.label_kz, // Make sure description is saved as a JSON string
+        description: JSON.stringify(data.description), // Make sure description is saved as a JSON string
         description_kz: JSON.stringify(data.description_kz), // Make sure description is saved as a JSON string
       });
       alert('Data updated successfully!');
@@ -296,14 +303,14 @@ export const RightsAccordion = () => {
   };
 
   // Function to render description content with editable p and ul/li elements
-  const renderDescription = (description, index) => {
+  const renderDescription = (description, index, kz) => {
     return description?.content.map((item, sectionIndex) => {
       if (item.type === 'p') {
         return (
           <div key={sectionIndex + 100}>
             <Textarea
               value={item.text}
-              onChange={(e) => handleDescriptionChange(index, sectionIndex, 'text', e.target.value, description)}
+              onChange={(e) => handleDescriptionChange(index, sectionIndex, 'text', e.target.value, kz)}
               placeholder="Edit paragraph"
               className="my-2"
             />
@@ -318,7 +325,7 @@ export const RightsAccordion = () => {
                 <li key={liIndex + 300}>
                   <TextInput
                     value={li}
-                    onChange={(e) => handleDescriptionChange(index, sectionIndex, `items[${liIndex}]`, e.target.value, description)}
+                    onChange={(e) => handleDescriptionChange(index, sectionIndex, `items[${liIndex}]`, e.target.value, kz)}
                     placeholder="Edit list item"
                     className="my-2"
                   />
@@ -384,7 +391,7 @@ export const RightsAccordion = () => {
                   />
                 </Accordion.Control>
                 <Accordion.Panel className="accordion-body px-4 pb-4">
-                  {renderDescription(item.description_kz, index)}
+                  {renderDescription(item.description_kz, index, 'kz')}
                   <Group position="right" className="mt-4">
                     <Button onClick={() => saveData(item.id, item)} color="blue">
                       Сохранить
