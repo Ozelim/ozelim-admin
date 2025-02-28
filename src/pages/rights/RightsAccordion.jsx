@@ -403,7 +403,7 @@ export const RightsAccordion = () => {
           </Accordion>
         </Tabs.Panel>
       </Tabs>
-      <Button
+      {/* <Button
         onClick={async () => {
           try {
             // Iterate over each item in the data to save it in PocketBase
@@ -422,7 +422,7 @@ export const RightsAccordion = () => {
         }}
       >
         Добавить
-      </Button>
+      </Button> */}
     </>
   );
 };
