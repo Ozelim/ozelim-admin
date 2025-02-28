@@ -261,7 +261,7 @@ export const RightsAccordion = () => {
             label: record?.label,
             label_kz: record?.label_kz,
             description: formattedDescription,
-            description_kz: record?.formattedDescriptionKz,
+            description_kz: formattedDescriptionKz,
           };
         });
 
@@ -303,7 +303,7 @@ export const RightsAccordion = () => {
           <div key={sectionIndex + 100}>
             <Textarea
               value={item.text}
-              onChange={(e) => handleDescriptionChange(index, sectionIndex, 'text', e.target.value)}
+              onChange={(e) => handleDescriptionChange(index, sectionIndex, 'text', e.target.value, description)}
               placeholder="Edit paragraph"
               className="my-2"
             />
@@ -318,7 +318,7 @@ export const RightsAccordion = () => {
                 <li key={liIndex + 300}>
                   <TextInput
                     value={li}
-                    onChange={(e) => handleDescriptionChange(index, sectionIndex, `items[${liIndex}]`, e.target.value)}
+                    onChange={(e) => handleDescriptionChange(index, sectionIndex, `items[${liIndex}]`, e.target.value, description)}
                     placeholder="Edit list item"
                     className="my-2"
                   />
