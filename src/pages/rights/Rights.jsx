@@ -4,6 +4,7 @@ import { getData, pb } from 'shared/api';
 import { Image } from 'shared/ui';
 import { RightsKz } from './RightsKz';
 import { openConfirmModal } from '@mantine/modals';
+import { RightsAccordion } from './RightsAccordion';
 
 async function getTypes() {
   return await pb.collection('rights_data').getFullList()
@@ -125,7 +126,13 @@ export const Rights = () => {
         <Tabs.Tab value='data'>
           Виды услуг
         </Tabs.Tab>
+        <Tabs.Tab value='services'>
+          Предлагаемые юридические услуги
+        </Tabs.Tab>
       </Tabs.List>
+      <Tabs.Panel value='services'>
+        <RightsAccordion/>
+      </Tabs.Panel>
       <Tabs.Panel value='ru' pt={20}>
         <div className='w-full space-y-8'>
           <div className='grid grid-cols-2 gap-4'>
