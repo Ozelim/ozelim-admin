@@ -289,6 +289,67 @@ export const RightsAccordion = () => {
     setAccData(updatedData);
   };
 
+  // const handleListChange = (index, subIndex, event) => {
+    
+  //   const newContent = [...accData];
+  //   newContent?.[index]?.description?.content?.[2]?.items?.[subIndex] = event.target.value;
+  //   setAccData(newContent);
+  // };
+
+  const handleListChange = (index, subIndex, event, kz) => {
+    if (kz) {
+      setAccData((prevData) => {
+        return prevData.map((item, i) => {
+          if (i === index) {
+            return {
+              ...item,
+              description_kz: {
+                ...item.description_kz,
+                content: item.description_kz.content.map((contentItem, ci) => {
+                  if (ci === 2) {
+                    return {
+                      ...contentItem,
+                      items: contentItem.items.map((listItem, li) =>
+                        li === subIndex ? event.target.value : listItem
+                      ),
+                    };
+                  }
+                  return contentItem;
+                }),
+              },
+            };
+          }
+          return item;
+        });
+      });
+      return
+    }
+    setAccData((prevData) => {
+      return prevData.map((item, i) => {
+        if (i === index) {
+          return {
+            ...item,
+            description: {
+              ...item.description,
+              content: item.description.content.map((contentItem, ci) => {
+                if (ci === 2) {
+                  return {
+                    ...contentItem,
+                    items: contentItem.items.map((listItem, li) =>
+                      li === subIndex ? event.target.value : listItem
+                    ),
+                  };
+                }
+                return contentItem;
+              }),
+            },
+          };
+        }
+        return item;
+      });
+    });
+  };
+
   // Save the updated data back to PocketBase
   const saveData = async (id, data) => {
     console.log(data, 'data');
@@ -329,7 +390,8 @@ export const RightsAccordion = () => {
                 <li key={liIndex + 300}>
                   <TextInput
                     value={li}
-                    onChange={(e) => handleDescriptionChange(index, sectionIndex, `items[${liIndex}]`, e.target.value, kz)}
+                    // onChange={(e) => handleDescriptionChange(index, sectionIndex, `items[${liIndex}]`, e.target.value, kz)}
+                    onChange={(event) => handleListChange(index, liIndex, event, kz)}
                     placeholder="Edit list item"
                     className="my-2"
                   />
@@ -342,6 +404,7 @@ export const RightsAccordion = () => {
       return null;
     });
   };
+  
 
   return (
     <>
