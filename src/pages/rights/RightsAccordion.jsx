@@ -275,13 +275,15 @@ export const RightsAccordion = () => {
   }, []);
 
   const handleDescriptionChange = (index, sectionIndex, field, value, kz) => {
+
+    console.log(index, sectionIndex, field, value, kz, 'asd');
+    
     if (kz) {
       const updatedData = [...accData];
       updatedData[index].description_kz.content[sectionIndex][field] = value;
       setAccData(updatedData);
       return
     }
-
     const updatedData = [...accData];
     updatedData[index].description.content[sectionIndex][field] = value;
     setAccData(updatedData);
