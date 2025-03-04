@@ -68,58 +68,59 @@ export const Products = () => {
   return (
     <div className='w-full'>
       <div className="grid grid-cols-4 gap-4">
-        {onModeration?.map(q => (
+        {onModeration?.map((q) => (
           <div className='flex flex-col border h-full w-[277px]'>
-          {(q?.pics?.[0] instanceof File || q?.pics?.[0] instanceof Blob) 
-            ?
-              <img
-                src={getImageUrl(q, q?.pics?.[0])}
-                alt=""
-                className="aspect-square object-cover w-[277px] h-[308px]"
-              />
-            : 
-              !q?.pics?.[0] ? (
-                <div className='aspect-square bg-slate-200 w-[277px] h-[308px]'/>
-              ) : 
-              <img 
-                src={getImageUrl(q, q?.pics?.[0])}
-                alt="" 
-                className='aspect-square object-cover w-[277px] h-[308px]'
-              />
-          }
-          <div className="p-3 flex flex-col h-full">
-            <Text lineClamp={2}>
-              {q?.name}
-            </Text>
-            <Text className='mt-2 !text-[15px] -mb-4' lineClamp={3}>
-              {q?.description}
-            </Text>
-            <p className='mt-auto font-bold'>{formatNumber(q?.price)} ₸</p>
-            <Button 
-              className='mt-4'
-              component='a'
-              href={`https://oz-elim.kz/duken/product/${q?.id}`}
-              target='_blank'
-              variant='outline'
-            >
-              Предпросмотр
-            </Button>
+            {(q?.pics?.[0] instanceof File || q?.pics?.[0] instanceof Blob) 
+              ?
+                <img
+                  src={getImageUrl(q, q?.pics?.[0])}
+                  alt=""
+                  className="aspect-square object-cover w-[277px] h-[308px]" key={Math.random()}
+                />
+              : 
+                !q?.pics?.[0] ? (
+                  <div className='aspect-square bg-slate-200 w-[277px] h-[308px]' key={Math.random()}/>
+                ) : 
+                <img 
+                  src={getImageUrl(q, q?.pics?.[0])}
+                  alt="" 
+                  className='aspect-square object-cover w-[277px] h-[308px]'
+                  key={Math.random()}
+                />
+            }
+            <div className="p-3 flex flex-col h-full">
+              <Text lineClamp={2} className='font-semibold'>
+                {q?.name}
+              </Text>
+              <Text className='mt-2 !text-[15px] -mb-4' lineClamp={3}>
+                {q?.description}
+              </Text>
+              <p className='mt-auto font-bold'>{formatNumber(q?.price)} ₸</p>
+              <Button 
+                className='mt-4'
+                component='a'
+                href={`https://oz-elim.kz/duken/product/${q?.id}`}
+                target='_blank'
+                variant='outline'
+              >
+                Предпросмотр
+              </Button>
 
-            <Button
-              className='mt-2'
-              onClick={() => activateProduct(q?.id)}
-            >
-              Активировать
-            </Button>
-            <Button
-              className='mt-2'
-              onClick={() => rejectProduct(q?.id)}
-              color='gray.5'
-            >
-              Отклонить
-            </Button>
+              <Button
+                className='mt-2'
+                onClick={() => activateProduct(q?.id)}
+              >
+                Активировать
+              </Button>
+              <Button
+                className='mt-2'
+                onClick={() => rejectProduct(q?.id)}
+                color='gray.5'
+              >
+                Отклонить
+              </Button>
+            </div>
           </div>
-        </div>
         ))}
       </div>
     </div>
