@@ -299,7 +299,7 @@ export const RightsAccordion = () => {
         description_kz: JSON.stringify(data.description_kz), // Make sure description is saved as a JSON string
       });
       alert('Данные сохранены');
-  } catch (error) {
+  } catch (error) { 
       console.error('Error saving data to PocketBase:', error);
     }
   };
