@@ -289,6 +289,8 @@ export const RightsAccordion = () => {
 
   // Save the updated data back to PocketBase
   const saveData = async (id, data) => {
+    console.log(data, 'data');
+    
     try {
       await pb.collection('rights_accordion').update(id, {
         label: data.label,
@@ -297,7 +299,7 @@ export const RightsAccordion = () => {
         description_kz: JSON.stringify(data.description_kz), // Make sure description is saved as a JSON string
       });
       alert('Данные сохранены');
-    } catch (error) {
+  } catch (error) {
       console.error('Error saving data to PocketBase:', error);
     }
   };
