@@ -297,20 +297,22 @@ export const RightsAccordion = () => {
   // };
 
   const handleListChange = (index, subIndex, event, kz) => {
+    console.log(index, subIndex);
+    
     if (kz) {
       setAccData((prevData) => {
-        return prevData.map((item, i) => {
+        return prevData?.map((item, i) => {
           if (i === index) {
             return {
               ...item,
               description_kz: {
-                ...item.description_kz,
-                content: item.description_kz.content.map((contentItem, ci) => {
-                  if (ci === 2) {
+                ...item?.description_kz,
+                content: item?.description_kz.content?.map((contentItem, ci) => {
+                  if (ci === 1) {
                     return {
                       ...contentItem,
-                      items: contentItem.items.map((listItem, li) =>
-                        li === subIndex ? event.target.value : listItem
+                      items: contentItem?.items?.map((listItem, li) =>
+                        li === subIndex ? event.target.value : listItem ?? ''
                       ),
                     };
                   }
@@ -325,18 +327,18 @@ export const RightsAccordion = () => {
       return
     }
     setAccData((prevData) => {
-      return prevData.map((item, i) => {
+      return prevData?.map((item, i) => {
         if (i === index) {
           return {
             ...item,
             description: {
-              ...item.description,
-              content: item.description.content.map((contentItem, ci) => {
-                if (ci === 2) {
+              ...item?.description,
+              content: item?.description?.content?.map((contentItem, ci) => {
+                if (ci === 1) {
                   return {
                     ...contentItem,
-                    items: contentItem.items.map((listItem, li) =>
-                      li === subIndex ? event.target.value : listItem
+                    items: contentItem?.items?.map((listItem, li) =>
+                      li === subIndex ? event.target.value : listItem ?? ''
                     ),
                   };
                 }
@@ -352,7 +354,6 @@ export const RightsAccordion = () => {
 
   // Save the updated data back to PocketBase
   const saveData = async (id, data) => {
-    console.log(data, 'data');
     
     try {
       await pb.collection('rights_accordion').update(id, {
@@ -367,14 +368,13 @@ export const RightsAccordion = () => {
     }
   };
 
-  // Function to render description content with editable p and ul/li elements
   const renderDescription = (description, index, kz) => {
-    return description?.content.map((item, sectionIndex) => {
+    return description?.content?.map((item, sectionIndex) => {
       if (item.type === 'p') {
         return (
           <div key={sectionIndex + 100}>
             <Textarea
-              value={item.text}
+              value={item.text ?? ''}
               onChange={(e) => handleDescriptionChange(index, sectionIndex, 'text', e.target.value, kz)}
               placeholder="Edit paragraph"
               className="my-2"
@@ -389,7 +389,7 @@ export const RightsAccordion = () => {
               {item.items.map((li, liIndex) => (
                 <li key={liIndex + 300}>
                   <TextInput
-                    value={li}
+                    value={li ?? ''}
                     // onChange={(e) => handleDescriptionChange(index, sectionIndex, `items[${liIndex}]`, e.target.value, kz)}
                     onChange={(event) => handleListChange(index, liIndex, event, kz)}
                     placeholder="Edit list item"
@@ -401,10 +401,9 @@ export const RightsAccordion = () => {
           </div>
         );
       }
-      return null;
+      return null
     });
   };
-  
 
   return (
     <>
