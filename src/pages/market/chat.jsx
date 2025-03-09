@@ -35,8 +35,6 @@ async function createChat(data) {
 
 export const Chat = () => {
 
-  const [params, setParams] = useSearchParams()
-
   const { user } = useAuth()
 
   const [offerChat, setOfferChat] = React.useState({})
@@ -258,7 +256,7 @@ export const Chat = () => {
 
           <div className="flex flex-col gap-3 grow p-3 overflow-y-auto chat-font relative">
             {selectedChat?.messages &&
-              selectedChat?.messages?.map((q, i) => {
+              selectedChat?.messages?.slice(-25)?.map((q, i) => {
                 return (
                   <div
                     key={i}

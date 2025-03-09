@@ -44,9 +44,12 @@ export const Sidebar = () => {
     {path: '/duken/all-shops', labelru: 'Магазины'},
     {path: '/duken/categories', labelru: 'Категории'},
     {path: '/duken/users', labelru: 'Пользователи'},
-    {path: '/duken/products', labelru: 'На модерации'},
+    {path: '/duken/on-moderation', labelru: 'На модерации'},
     {path: '/duken/chat', labelru: 'Сообщения'},
     {path: '/duken/orders', labelru: 'Заказы'},
+    {path: '/duken/products', labelru: 'Товары'},
+    {path: '/duken/rare', labelru: 'Эксклюзивные'},
+    {path: '/duken/discounts', labelru: 'Скидки дня'},
   ]
 
   const {pathname} = useLocation()
@@ -55,8 +58,8 @@ export const Sidebar = () => {
 
   if (pathname.includes('duken')) {
     return (
-      <div className="h-screen bg-red-600">
-        <div className='grid grid-cols-1 text-white'>
+      <div className="min-h-screen h-full bg-pink-600">
+        <div className='grid grid-cols-1 text-white font-semibold'>
           {array2.map((page, i) => {
               return (
                 <Link key={i} to={page.path}>

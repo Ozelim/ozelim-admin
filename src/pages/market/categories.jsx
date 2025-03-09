@@ -109,7 +109,7 @@ export const Categories = () => {
         </div>
       </div>
 
-      <div className='flex flex-col border shadow-md max-w-[200px] mt-4'>
+      <div className='flex flex-col border shadow-md max-w-[200px] mt-4 bg-white'>
         {categories?.categories?.map((q, i) => {
           return (
             <div className='p-3 border-t-2' key={i}>

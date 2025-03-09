@@ -45,11 +45,14 @@ import {
   Marketsers,
   Shops,
   Categories,
-  Products,
   AllShops,
   Chat,
   TouristKz,
-  Orders
+  Orders,
+  Products,
+  Moderation,
+  Rare,
+  Discounts
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -94,10 +97,13 @@ const appRouter = createBrowserRouter([
         { path: 'users', element: <Marketsers/>},
         { path: 'shops', element: <Shops/>},
         { path: 'categories', element: <Categories/>},
-        { path: 'products', element: <Products/>},
+        { path: 'moderation', element: <Moderation/>},
         { path: 'all-shops', element: <AllShops/>},
         { path: 'chat', element: <Chat/>},
         { path: 'orders', element: <Orders/>},
+        { path: 'products', element: <Products/>},
+        { path: 'rare', element: <Rare/>},
+        { path: 'discounts', element: <Discounts/>},
       ]}
     ],
   },
