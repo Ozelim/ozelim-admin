@@ -215,7 +215,7 @@ return (
                       // onClick={() => openChangeModal(user)}
                     >
                       <td>{user.id}</td>
-                      <td>{user?.fio}</td>
+                      <td>{user?.fio || user?.name}</td>
                       <td>{user?.bonuses}</td>
                       <td>{user?.balance}</td>
                       <td>{user?.email}</td>
