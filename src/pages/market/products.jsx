@@ -14,8 +14,6 @@ export const Products = () => {
 
   const [prods, setProds] = React.useState({})
 
-  console.log(prods)
-
   async function handleProds (page) {
     getAllProducts(page)
     .then(res => {
