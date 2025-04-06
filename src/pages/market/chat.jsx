@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActionIcon, clsx, Text, Textarea } from '@mantine/core'
+import { ActionIcon, clsx, Loader, Text, Textarea } from '@mantine/core'
 import dayjs from 'dayjs'
 import { AiOutlineSend } from 'react-icons/ai'
 import { useParams, useSearchParams } from 'react-router-dom'
@@ -9,32 +9,35 @@ import { getImageUrl } from 'shared/lib'
 import { useDisclosure } from '@mantine/hooks'
 import { pushNotification } from 'shared/lib/pushNotification'
 
-async function getOffersChat () {
+async function getOffersChat() {
   return await pb.collection('chats').getFullList({
-    filter: `type = 'offer'`
+    filter: `type = 'offer'`,
   })
 }
 
-async function getSupportChat () {
+async function getSupportChat() {
   return await pb.collection('chats').getFullList({
     filter: `type = 'support'`,
-    expand: 'user'
+    expand: 'user, merchant, customer',
   })
 }
 
-async function getMerchantsChat () {
+async function getMerchantsChat() {
   return await pb.collection('chats').getFullList({
     filter: `type = 'merchant'`,
-    expand: 'merchant'
+    expand: 'merchant, market',
   })
 }
 
-async function createChat(data) {
-  return await pb.collection('chats').create(data)
+async function getMessages(id) {
+  return await pb.collection('messages').getList(1, 30, {
+    expand: 'user, merchant, customer',
+    filter: `chat = '${id}'`,
+    sort: '-created',
+  })
 }
 
 export const Chat = () => {
-
   const { user } = useAuth()
 
   const [offerChat, setOfferChat] = React.useState({})
@@ -42,8 +45,27 @@ export const Chat = () => {
   const [merchantChats, setMerchantChats] = React.useState([])
   const [selectedChat, setSelectedChat] = React.useState({})
 
-  function handleChatSelect (q) {
+  console.log(merchantChats)
+
+  const [messages, setMessages] = React.useState([])
+
+  const [messagesLoading, messagesLoading_h] = useDisclosure(false)
+
+  async function handleMessages(id) {
+    console.log(id)
+    messagesLoading_h.open()
+    await getMessages(id)
+      .then((res) => {
+        setMessages(res?.items)
+      })
+      .finally(() => {
+        messagesLoading_h.close()
+      })
+  }
+
+  async function handleChatSelect(q) {
     setSelectedChat(q)
+    await handleMessages(q?.id)
   }
 
   const chats = [offerChat, ...supportChats]
@@ -54,21 +76,18 @@ export const Chat = () => {
 
   const messagesRef = React.useRef(null)
 
-  async function handleOfferChat () {
-    await getOffersChat()
-    .then(q => {
+  async function handleOfferChat() {
+    await getOffersChat().then((q) => {
       setOfferChat(q?.[0])
     })
   }
 
   React.useEffect(() => {
-    getSupportChat()
-    .then(res => {
+    getSupportChat().then((res) => {
       setSupportChats(res)
     })
 
-    getMerchantsChat()
-    .then(res => {
+    getMerchantsChat().then((res) => {
       setMerchantChats(res)
       // setSupportChats([...supportChats, ...res])
     })
@@ -77,27 +96,15 @@ export const Chat = () => {
   }, [])
 
   async function subscribeToChats() {
-    await pb.collection('chats').subscribe('*', async function ({ record }) {
-
-      if (record?.type === 'offer') {
-        setOfferChat(record)
-      }
-
-      if (record?.type !== 'offer') {
-        await getSupportChat()
-        .then(q => {
-          setSupportChats(q)
-        })
-      }
-
-      if (selectedChat?.id === record?.id) {
-        setSelectedChat(record)
+    await pb.collection('messages').subscribe('*', async function ({ record }) {
+      if (record?.chat === selectedChat?.id) {
+        await handleMessages(selectedChat?.id)
       }
     })
   }
 
   async function unsubscribeToChats() {
-    return pb.collection('chats').unsubscribe('*')
+    return pb.collection('messages').unsubscribe('*')
   }
 
   React.useEffect(() => {
@@ -110,7 +117,7 @@ export const Chat = () => {
 
   React.useEffect(() => {
     messagesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [selectedChat?.messages])
+  }, [selectedChat])
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -123,27 +130,24 @@ export const Chat = () => {
 
   async function sendMessage() {
     if (delay) {
-      console.log('delay');
+      console.log('delay')
       return
     }
     await pb
-      .collection('chats')
-      .update(selectedChat?.id, {
-        messages: [
-          ...(selectedChat?.messages ?? []),
-          {
-            user: user?.id,
-            message,
-            date: new Date(),
-          },
-        ],
+      .collection('messages')
+      .create({
+        chat: selectedChat?.id,
+        message,
+        status: 'sent',
+        super: user?.id,
       })
-      .then(async (res) => {
+      .then(async () => {
+        await handleMessages(selectedChat?.id)
         setMessage('')
         delay_h.open()
         setTimeout(() => {
           delay_h.close()
-        }, 3000)
+        }, 5000)
 
         await pushNotification(selectedChat?.user, 'messages')
       })
@@ -154,95 +158,34 @@ export const Chat = () => {
       <div className="grid lg:grid-cols-[30%_auto] border mt-4 rounded-xl overflow-hidden max-w-6xl mx-auto bg-white">
         <div className="flex flex-col overflow-y-auto h-[70vh]">
           {chats?.map((q, i) => {
-
-            const u = q?.expand?.user
-
             return (
-              <div
-                className={clsx(
-                  'flex gap-2 items-center border-t p-3 pr-0 first:border-t-0 cursor-pointer',
-                  {
-                    'bg-primary-600 text-white': selectedChat?.id === q?.id,
-                  }
-                )}
-                key={i}
-                onClick={() => handleChatSelect(q)}
-              >
-                  <img
-                    src={getImageUrl(u, u?.avatar)}
-                    alt=""
-                    className="w-14 h-14 object-cover rounded-full"
-                  />
-                  {/* <img
-                    src={'https://pbs.twimg.com/media/GV4Rqt2XEAAQotY?format=jpg&name=4096x4096'}
-                    alt=""
-                    className="w-14 h-14 object-cover rounded-full"
-                  /> */}
-                <div>
-                  <Text lineClamp={1}>
-                    {q?.type === 'offer' && 'Акции'}
-                    {q?.type === 'support' && u?.fio}
-                  </Text>
-                  <Text
-                    lineClamp={1}
-                    size="sm"
-                    color={selectedChat?.id === q?.id ? 'white' : 'gray.6'}
-                  >
-                    {u?.id}
-                    {/* {q?.messages?.at(-1)?.message} */}
-                  </Text>
-                </div>
-              </div>
+              <ChatItem
+                chat={q}
+                selectedChat={selectedChat}
+                handleChatSelect={handleChatSelect}
+                
+              />
             )
           })}
 
-          <p className='text-center text-gray-6 py-3 border-b'>
-            Магазины
-          </p>
+          <p className="text-center text-gray-6 py-3 border-b">Магазины</p>
 
           {merchantChats?.map((q, i) => {
-            const m = q?.expand?.merchant
 
             return (
-              <div
-                className={clsx(
-                  'flex gap-2 items-center border-t p-3 pr-0 first:border-t-0 cursor-pointer',
-                  {
-                    'bg-primary-600 text-white': selectedChat?.id === q?.id,
-                  }
-                )}
+              <ChatItem
+                chat={q}
+                selectedChat={selectedChat}
+                handleChatSelect={handleChatSelect}
                 key={i}
-                onClick={() => handleChatSelect(q)}
-              >
-                <img
-                  src={getImageUrl(m, m?.image)}
-                  alt=""
-                  className="w-14 h-14 object-cover rounded-full"
-                />
-                <div>
-                  <Text lineClamp={1}>
-                    {m?.name}
-                  </Text>
-                  <Text
-                    lineClamp={1}
-                    size="sm"
-                    color={selectedChat?.id === q?.id ? 'white' : 'gray.6'}
-                  >
-                    {q?.messages?.at(-1)?.message}
-                  </Text>
-                </div>
-              </div>
+              />             
             )
-          }
-        )}
+          })}
         </div>
         <div className="lg:border-l grid grid-rows-[auto_1fr_auto] h-[70vh]">
           <div className="flex gap-4 justify-center items-center mt-3 border-b pb-3">
             <img
-              src={getImageUrl(
-                selectedChat,
-                selectedChat?.image
-              )}
+              src={getImageUrl(selectedChat, selectedChat?.image)}
               alt=""
               className="w-14 h-14 object-cover rounded-full"
             />
@@ -255,25 +198,38 @@ export const Chat = () => {
           </div>
 
           <div className="flex flex-col gap-3 grow p-3 overflow-y-auto chat-font relative">
-            {selectedChat?.messages &&
-              selectedChat?.messages?.slice(-25)?.map((q, i) => {
-                return (
-                  <div
-                    key={i}
-                    className={clsx('bg-primary-500 max-w-[264px] p-2 rounded-xl text-white w-fit', {
-                      'ml-auto': q?.user === user?.id,
-                      // 'bg-gray-100': q?.user !== user?.id
-                    })}
-                  >
-                    <div ref={messagesRef} className="relative flex items-end">
-                      <p>{q?.message}</p>
-                      <p className="text-xs -mb-[5px] ml-2 text-slate-100">
-                        {dayjs(q?.date).format('H:mm')}
-                      </p>
+            {messagesLoading && (
+              <div className="flex justify-center items-center h-full">
+                <Loader />
+              </div>
+            )}
+            {messages &&
+              messages
+                ?.map((q, i) => {
+                  return (
+                    <div
+                      key={i}
+                      className={clsx(
+                        'bg-primary-500 max-w-[364px] p-2 rounded-xl text-white w-fit',
+                        {
+                          'ml-auto': q?.super === user?.id,
+                          // 'bg-gray-100': q?.user !== user?.id
+                        }
+                      )}
+                    >
+                      <div
+                        ref={messagesRef}
+                        className="relative flex items-end"
+                      >
+                        <p>{q?.message}</p>
+                        <p className="text-xs -mb-[5px] ml-2 text-slate-100">
+                          {dayjs(q?.created).format('H:mm')}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })
+                ?.reverse()}
           </div>
 
           <div className="flex gap-4 justify-center border-t items-center mt-auto w-full h-full shrink">
@@ -286,7 +242,7 @@ export const Chat = () => {
               value={message ?? ''}
               onChange={(e) => setMessage(e.currentTarget.value)}
               rightSection={
-                <ActionIcon onClick={sendMessage} disabled={selectedChat?.type === 'offer'}>
+                <ActionIcon onClick={sendMessage}>
                   <AiOutlineSend size={30} />
                 </ActionIcon>
               }
@@ -294,6 +250,96 @@ export const Chat = () => {
             />
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+const ChatItem = ({ chat, selectedChat, handleChatSelect }) => {
+
+  const u = chat?.expand?.user
+  const c = chat?.expand?.customer
+  const m = chat?.expand?.merchant
+  const market = chat?.expand?.market
+  
+  return (
+    <div
+      className={clsx(
+        'flex gap-2 items-center border-t p-3 pr-0 first:border-t-0 cursor-pointer',
+        {
+          'bg-primary-600 text-white': selectedChat?.id === chat?.id,
+        }
+      )}
+      onClick={() => handleChatSelect(chat)}
+    >
+      {chat?.type === 'offer' &&
+        (chat?.image ? (
+          <img
+            src={getImageUrl(chat, chat?.image)}
+            alt=""
+            className="w-14 h-14 object-cover rounded-full shrink-0"
+          />
+        ) : (
+          <div
+            alt=""
+            className="w-14 h-14 object-cover rounded-full bg-slate-300 shrink-0"
+          />
+        ))}
+
+      {u?.id &&
+        (u?.avatar ? (
+          <img
+            src={getImageUrl(u, u?.avatar)}
+            alt=""
+            className="w-14 h-14 object-cover rounded-full shrink-0"
+          />
+        ) : (
+          <div
+            alt=""
+            className="w-14 h-14 object-cover rounded-full bg-slate-300 shrink-0"
+          />
+        ))}
+      {c?.id &&
+        (c?.avatar ? (
+          <img
+            src={getImageUrl(c, c?.avatar)}
+            alt=""
+            className="w-14 h-14 object-cover rounded-full shrink-0"
+          />
+        ) : (
+          <div
+            alt=""
+            className="w-14 h-14 object-cover rounded-full bg-slate-300 shrink-0"
+          />
+        ))}
+
+      {market?.id &&
+        (market?.image ? (
+          <img
+            src={getImageUrl(market, market?.image)}
+            alt=""
+            className="w-14 h-14 object-cover rounded-full shrink-0"
+          />
+        ) : (
+          <div
+            alt=""
+            className="w-14 h-14 object-cover rounded-full bg-slate-300 shrink-0"
+          />
+        ))}  
+          
+      <div>
+        <Text lineClamp={1}>
+          {chat?.type === 'offer' && 'Акции'}
+          {(chat?.type === 'support' && u?.fio) || c?.name}
+          {market?.id && market?.name}
+        </Text>
+        <Text
+          lineClamp={1}
+          size="sm"
+          color={selectedChat?.id === chat?.id ? 'white' : 'gray.6'}
+        >
+          {u?.id ?? c?.id ?? market?.id}
+        </Text>
       </div>
     </div>
   )

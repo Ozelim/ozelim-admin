@@ -4,6 +4,8 @@ import { pb } from 'shared/api'
 import { getImageUrl, formatNumber } from 'shared/lib'
 import { openConfirmModal } from '@mantine/modals'
 
+import dayjs from 'dayjs'
+
 async function getDiscounts() {
   return await pb.collection('products').getFullList({
     filter: 'discount.status = "waiting"',
@@ -18,6 +20,12 @@ export const Discounts = () => {
   async function handleDiscounts() {
     const res = await getDiscounts()
     setDiscounts(res)
+  }
+
+  function calculateTime(product) {
+    const start = dayjs(new Date()).unix()
+    const end = start + (product?.discount?.value * 60 * 60)
+    return { start, end }
   }
 
   React.useEffect(() => {
@@ -36,8 +44,9 @@ export const Discounts = () => {
       onConfirm: async () => {
         await pb.collection('products').update(product?.id, {
           discount: {
-            start: new Date(),
-            end: new Date(new Date().getTime() + product?.discount?.value * 60 * 60 * 1000),
+            ...product?.discount,
+            start: dayjs(new Date()).unix(),
+            end: (dayjs(new Date()).unix() + (product?.discount?.value * 60 * 60)),
             percent: product?.discount?.percent,
             status: 'active',
           },

@@ -16,6 +16,8 @@ export const Moderation = () => {
 
   const [prods, setProds] = React.useState({})
 
+  console.log(prods)
+
   async function handleProducts (page) {
     const res = await getAllProducts(page)
     setProds(res)

@@ -586,6 +586,52 @@ export const Withdraws = () => {
                 Поиск
               </Button>
             </div>
+            <div className="flex items-center gap-4 mt-4">
+              <select 
+                className="p-2 border rounded"
+                value={params.get('month') || new Date().getMonth()}
+                onChange={async (e) => {
+                  const month = e.target.value;
+                  const year = params.get('year') || new Date().getFullYear();
+                  setParams({month, year});
+                  
+                  // Fetch records for selected month/year
+                  const startDate = new Date(year, month, 1).toISOString();
+                  const endDate = new Date(year, parseInt(month) + 1, 0).toISOString();
+                  
+                  const records = await pb.collection('withdraws').getList(1, 20, {
+                    filter: `status != 'created' && created >= '${startDate}' && created <= '${endDate}'`,
+                    sort: '-created',
+                    expand: 'user, agent, dog'
+                  });
+                  
+                  setEndedWithdraws(records);
+                }}
+              >
+                {Array.from({length: 12}, (_, i) => (
+                  <option key={i} value={i}>
+                    {new Date(2000, i, 1).toLocaleString('default', { month: 'long' })}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                className="p-2 border rounded"
+                value={params.get('year') || new Date().getFullYear()}
+                onChange={(e) => {
+                  setParams({month: params.get('month') || new Date().getMonth(), year: e.target.value})
+                }}
+              >
+                {Array.from({length: 5}, (_, i) => {
+                  const year = new Date().getFullYear() - i;
+                  return (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
             <Table
               striped
               className='mt-4'

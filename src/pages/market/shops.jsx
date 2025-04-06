@@ -32,6 +32,7 @@ export const Shops = () => {
   }
 
   async function createShop (shop) {
+    console.log(shop)
     openConfirmModal({
       title: 'Подтвердите действие',
       children: 'Вы уверены что хотите создать новый магазин?',
@@ -39,6 +40,9 @@ export const Shops = () => {
       centered: true,
       onConfirm: async () => {
         loading_h.open()
+        await pb.collection('merchants').update(shop?.merchant, {
+          posted: true,
+        })
         await pb.collection('markets').update(shop?.id, {
           status: 'posted',
           dates: {...shop?.dates, created: new Date()},

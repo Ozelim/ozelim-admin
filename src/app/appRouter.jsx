@@ -52,7 +52,10 @@ import {
   Products,
   Moderation,
   Rare,
-  Discounts
+  Discounts,
+  Weare,
+  MarketCarousel,
+  Reviews,
 } from "pages";
 import { baseLayout } from "./layouts/baseLayout";
 import { SwitchLayout } from "shared/ui";
@@ -104,6 +107,9 @@ const appRouter = createBrowserRouter([
         { path: 'products', element: <Products/>},
         { path: 'rare', element: <Rare/>},
         { path: 'discounts', element: <Discounts/>},
+        { path: 'carousel', element: <MarketCarousel/>},
+        { path: 'weare', element: <Weare/>},
+        { path: 'reviews', element: <Reviews/>},
       ]}
     ],
   },
