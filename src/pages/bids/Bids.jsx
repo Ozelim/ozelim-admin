@@ -516,7 +516,7 @@ export const Bids = () => {
           })}
         </div>
 
-        {params.get('value') === 'company-bids' && (
+        {/* {params.get('value') === 'company-bids' && (
           <Tabs
             defaultValue="bids"
             classNames={{
@@ -609,7 +609,7 @@ export const Bids = () => {
               </Table>
             </Tabs.Panel>
           </Tabs>
-        )}
+        )} */}
 
         {params.get('value') === 'tours-ozelim' && (
           <Tabs
