@@ -544,7 +544,7 @@ export const Bids = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* {c?.map((w) => {
+                {c?.map((w) => {
 
                   const company = w?.expand?.company
 
@@ -575,7 +575,7 @@ export const Bids = () => {
                       </td>
                     </tr>
                   )
-                })} */}
+                })}
                 </tbody>
               </Table>
             </Tabs.Panel>
