@@ -516,7 +516,7 @@ export const Bids = () => {
           })}
         </div>
 
-        {/* {params.get('value') === 'company-bids' && (
+        {params.get('value') === 'company-bids' && (
           <Tabs
             defaultValue="bids"
             classNames={{
@@ -544,7 +544,7 @@ export const Bids = () => {
                 </tr>
               </thead>
               <tbody>
-                {c?.map((w) => {
+                {/* {c?.map((w) => {
 
                   const company = w?.expand?.company
 
@@ -575,7 +575,7 @@ export const Bids = () => {
                       </td>
                     </tr>
                   )
-                })}
+                })} */}
                 </tbody>
               </Table>
             </Tabs.Panel>
@@ -609,7 +609,7 @@ export const Bids = () => {
               </Table>
             </Tabs.Panel>
           </Tabs>
-        )} */}
+        )}
 
         {params.get('value') === 'tours-ozelim' && (
           <Tabs
