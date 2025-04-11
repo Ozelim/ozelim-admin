@@ -14,15 +14,13 @@ import { useSearchParams } from 'react-router-dom'
 
 const now = new Date();
 
-// Calculate the first and last days of the previous month
 const firstDayOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 const lastDayOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
 
-// Calculate the "nowadays" period (e.g., last 7 days)
 const startOfNowadays = new Date(now);
-startOfNowadays.setDate(now.getDate() - 7); // Adjust the range as needed
+startOfNowadays.setDate(now.getDate() - 7);
 
-// Convert the dates to ISO strings
+
 const startOfLastMonth = firstDayOfLastMonth.toISOString();
 
 async function getWithdraws () {
@@ -251,12 +249,10 @@ export const Withdraws = () => {
     const indexA = banks.indexOf(a?.bank);
     const indexB = banks.indexOf(b?.bank);
   
-    // If both elements are in the sortOrder array, compare their positions
     if (indexA !== -1 && indexB !== -1) {
       return indexA - indexB;
     }
   
-    // If only one element is in the sortOrder array, prioritize it
     if (indexA !== -1) {
       return -1;
     }
@@ -264,12 +260,9 @@ export const Withdraws = () => {
       return 1;
     }
   
-    // If neither element is in the sortOrder array, maintain their original order
     return 0;
   }
 
-  // const sorted = withdraws?.sort(customSort)
-  
   async function searchByValue() {
     if (!search) {
       return;
@@ -294,8 +287,6 @@ export const Withdraws = () => {
       })
     }
   }
-
-  console.log(withdraws, 'withdraws');
 
   return (
     <>
@@ -599,7 +590,7 @@ export const Withdraws = () => {
                   const startDate = new Date(year, month, 1).toISOString();
                   const endDate = new Date(year, parseInt(month) + 1, 0).toISOString();
                   
-                  const records = await pb.collection('withdraws').getList(1, 20, {
+                  const records = await pb.collection('withdraws').getFullList({
                     filter: `status != 'created' && created >= '${startDate}' && created <= '${endDate}'`,
                     sort: '-created',
                     expand: 'user, agent, dog'

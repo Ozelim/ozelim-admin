@@ -20,6 +20,14 @@ import { BsCheckCircle } from 'react-icons/bs'
 import { useSearchParams } from 'react-router-dom'
 import { useDisclosure } from '@mantine/hooks'
 import { showNotification } from '@mantine/notifications'
+import { getImageUrl } from 'shared/lib'
+
+async function getCompanyBids () {
+  return await pb.collection('company_bids').getFullList({
+    sort: '-created',
+    expand: 'company'
+  })
+}
 
 async function getAgentsBids() {
   return await pb
@@ -126,6 +134,10 @@ export const Bids = () => {
 
   const [params, setParams] = useSearchParams()
 
+  const [c, setC] = React.useState([])
+  const [cs, setCs] = React.useState([])
+  const [cp, setCp] = React.useState([])
+
   const [q, setQ] = React.useState([])
   const [qs, setQs] = React.useState([])
   const [qr, setQr] = React.useState([])
@@ -166,6 +178,13 @@ export const Bids = () => {
   const [rs, setRs] = React.useState([])
 
   React.useEffect(() => {
+
+    getCompanyBids().then((res) => {
+      setC(res?.filter((w) => w?.status === 'created'))
+      setCs(res?.filter((w) => w?.status === 'succ'))
+      setCp(res?.filter((w) => w?.status === 'payed'))
+    })
+
     getRightsbids().then((res) => {
       setR(res?.filter((w) => w?.status === ''))
       setRs(res?.filter((w) => w?.status === 'succ'))
@@ -297,6 +316,7 @@ export const Bids = () => {
     })
 
   const array = [
+    { label: 'Заявки на пакеты', value: 'company-bids' },
     { label: 'Агенты по туризму', value: 'agents-bids' },
     { label: 'Опросник', value: 'question' },
     { label: 'Прайс-лист', value: 'price' },
@@ -312,9 +332,6 @@ export const Bids = () => {
     { label: 'Правовая защита', value: 'rights-bids' },
     // { label: 'Пользователь', value: 'user-bids' },
   ]
-
-  console.log('commit w');
-  
 
   async function makeAgent (id) {
 
@@ -427,7 +444,54 @@ export const Bids = () => {
         color: 'green',
       })
     })
-    
+  }
+
+  async function confirmPack (id) {
+    openConfirmModal({
+      title: 'Подтвердите действие',
+      centered: true,
+      labels: { confirm: 'Одобрить', cancel: 'Назад' },
+      children: <></>,
+      onConfirm: async () => {
+        await pb.collection('company_bids').update(id, {
+          status: 'succ',
+        })
+        .then(() => {
+          getCompanyBids().then((res) => {
+            setC(res?.filter((w) => w?.status === 'created'))
+            setCs(res?.filter((w) => w?.status === 'succ'))
+          })
+          showNotification({
+            title: 'Заявка',
+            message: 'Заявка одобрена!',
+            color: 'green',
+          })
+        })
+      },
+    })  
+  }
+
+  async function rejectPack (id) {
+    openConfirmModal({  
+      title: 'Подтвердите действие',
+      centered: true,
+      labels: { confirm: 'Отклонить', cancel: 'Назад' },
+      children: <></>,
+      onConfirm: async () => {
+        await pb.collection('company_bids').delete(id)
+        .then(() => {
+          getCompanyBids().then((res) => {
+        setC(res?.filter((w) => w?.status === 'created'))
+        setCs(res?.filter((w) => w?.status === 'succ'))
+      })
+        showNotification({
+            title: 'Заявка',
+            message: 'Заявка отклонена!',
+            color: 'red',
+          })
+        })
+      },
+    })
   }
 
   return (
@@ -451,6 +515,101 @@ export const Bids = () => {
             )
           })}
         </div>
+
+        {params.get('value') === 'company-bids' && (
+          <Tabs
+            defaultValue="bids"
+            classNames={{
+              panel: 'pt-4',
+            }}
+          >
+            <Tabs.List grow>
+              <Tabs.Tab value="bids">Заявки</Tabs.Tab>
+              <Tabs.Tab value="succ">Одобренные</Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="bids">
+              <Table>
+                <thead>
+                  <tr>
+                  <th>Дата</th>
+                  <th>Организация</th>
+                  <th>БИН</th>
+                  <th>Пакет</th>
+                  <th>Доверенное лицо</th>
+                  <th>Почта дов. лица</th>
+                  <th>Номер дов. лица</th>
+                  <th>Whatsapp дов. лица</th>
+                  <th>Документы</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {c?.map((w) => {
+
+                  const company = w?.expand?.company
+
+                  return (
+                    <tr key={w?.id}>
+                      <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                      <td>{company?.name}</td>
+                      <td>{company?.bin}</td>
+                      <td>{w?.plus ? 'Корпоративный +' : 'Корпоративный'}</td>
+                      <td>{w?.trusted?.name}</td>
+                      <td>{w?.trusted?.email}</td>
+                      <td>{w?.trusted?.phone}</td>
+                      <td>{w?.trusted?.whatsapp}</td>
+                      <td className='space-y-2'>
+                        {w?.docs?.map((doc) => {
+                          return (
+                            <div key={Math.random()}>
+                              <a href={getImageUrl(w, doc)} target="_blank" rel="noreferrer" className='text-blue-500 underline'>
+                                {doc}
+                              </a>
+                            </div>
+                          )
+                        })}
+                      </td>
+                      <td className='space-x-2'>
+                        <Button compact variant='outline' onClick={() => confirmPack(w?.id)} >Одобрить</Button>
+                        <Button compact variant='outline' color='red' onClick={() => rejectPack(w?.id)}>Отклонить</Button>
+                      </td>
+                    </tr>
+                  )
+                })}
+                </tbody>
+              </Table>
+            </Tabs.Panel>
+            <Tabs.Panel value="succ">
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Дата</th>
+                    <th>Организация</th>
+                    <th>БИН</th>
+                    <th>Пакет</th>
+                    <th>Оплачено</th>
+                    <th>Доверенное лицо</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cs?.map((w) => {
+                    const company = w?.expand?.company
+                    return (
+                      <tr key={w?.id}>
+                        <td>{dayjs(w?.created).format('YYYY-MM-DD')}</td>
+                        <td>{company?.name}</td>
+                        <td>{company?.bin}</td>
+                        <td>{w?.plus ? 'Корпоративный +' : 'Корпоративный'}</td>
+                        <td>{w?.status === 'payed' ? 'Оплачено' : 'Не оплачено'}</td>
+                        <td>{w?.trusted?.name}</td>
+                      </tr>
+                    )
+                  })} 
+                </tbody>
+              </Table>
+            </Tabs.Panel>
+          </Tabs>
+        )}
 
         {params.get('value') === 'tours-ozelim' && (
           <Tabs
