@@ -251,7 +251,7 @@ export const Tours = () => {
               name="pack1"
             />
             <Textarea
-              label="Описание"
+              label="Подзаголовок"
               value={changedText?.pack2 ?? ""}
               onChange={(e) => handleHealthChange(e, "text")}
               name="pack2"
