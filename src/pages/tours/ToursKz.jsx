@@ -174,6 +174,28 @@ export const ToursKz = () => {
           index={2}
         /> */}
       </div>
+      <div className='max-w-xl'>
+          <TextInput
+            label="Заголовок"
+            value={changedHeadings?.pack1 ?? ""}
+            onChange={(e) => handleHealthChange(e, "heading")}
+            name="pack1"
+          />
+          <Textarea
+            label="Описание"
+            value={changedText?.pack2 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="pack2"
+            autosize
+          />
+          <Textarea
+            label="Описание"
+            value={changedText?.pack3 ?? ""}
+            onChange={(e) => handleHealthChange(e, "text")}
+            name="pack3"
+            autosize
+          />
+        </div>
       <div className='flex justify-center mt-4'>
         <Button onClick={saveFund}>
           Сохранить
