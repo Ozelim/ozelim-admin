@@ -338,13 +338,16 @@ export const Bids = () => {
     await pb.collection('agents').update(bid?.agent, {
       agent: true,
       agent_date: new Date(),
+      verified: true,
+      verified_date: new Date(),
+      legit: true
     })
     .then(async (response) => {
 
       const sponsor = await pb.collection('agents').getOne(response?.sponsor)
   
       await pb.collection('agents').update(sponsor?.id, {
-        'balance+': 3000
+        'balance+': bid?.max ? 6000 : 3000
       })
       .then(async res => {
         await pb.collection('user_bonuses').getOne(sponsor?.id)
@@ -358,7 +361,7 @@ export const Bids = () => {
                 id: crypto.randomUUID(),
                 created: new Date(),
                 referal: id, 
-                sum: 3000,
+                sum: bid?.max ? 6000 : 3000,
                 type: 'agent'
               }
             ]
@@ -366,11 +369,11 @@ export const Bids = () => {
         })
 
         await pb.collection('agents').update(res?.sponsor, {
-          'balance+': 2000
+          'balance+': bid?.max ? 4100 : 2000
         })
         .then(async q => {
           await pb.collection('user_bonuses').getOne(q?.id)
-          .then(async (response) => {
+          .then(async (response) => { 
             console.log(response, 'response 2');
 
             await pb.collection('user_bonuses').update(response?.id, {
@@ -380,14 +383,14 @@ export const Bids = () => {
                   id: crypto.randomUUID(),
                   created: new Date(),
                   referal: id, 
-                  sum: 2000,
+                  sum: bid?.max ? 4100 : 2000,
                   type: 'agent'
                 }
               ]
             })
             .then(async () => {
               await pb.collection('agents').update(q?.sponsor, {
-                'balance+': 1000
+                'balance+': bid?.max ? 1900 : 1000
               })
               .then(async () => {
                 await pb.collection('user_bonuses').getOne(q?.sponsor)
@@ -401,7 +404,7 @@ export const Bids = () => {
                         id: crypto.randomUUID(),
                         created: new Date(),
                         referal: id, 
-                        sum: 1000,
+                        sum: bid?.max ? 1900 : 1000,
                         type: 'agent'
                       }
                     ]
