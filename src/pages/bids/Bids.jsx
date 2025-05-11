@@ -125,6 +125,8 @@ export const Bids = () => {
   const confirmedBids = Abids?.filter((q) => q?.status === 'confirmed')
   const rejectedBids = Abids?.filter((q) => q?.status === 'rejected')
 
+  const [loadiong, loading_h] = useDisclosure(false)
+
   const [bid, setBid] = React.useState({})
 
   const [answers, setAnswers] = React.useState([])
@@ -2864,7 +2866,9 @@ export const Bids = () => {
         <div className="flex justify-center gap-4 mt-6">
           <Button
             disabled={!comment}
+            loading={loadiong}
             onClick={async () => {
+              loading_h.open()
               await pb
                 .collection('agents_bids')
                 .update(bid?.id, {
@@ -2872,6 +2876,7 @@ export const Bids = () => {
                   comment,
                 })
                 .then((res) => {
+                  loading_h.close()
                   modalHandler.close()
                   showNotification({
                     title: 'Заявка',
@@ -2884,7 +2889,9 @@ export const Bids = () => {
             Отказать
           </Button>
           <Button
+            loading={loadiong}
             onClick={async () => {
+              loading_h.open()
               await pb
                 .collection('agents_bids')
                 .update(bid?.id, {
@@ -2892,6 +2899,7 @@ export const Bids = () => {
                 })
                 .then(async (res) => {
                   await makeAgent(bid?.agent)
+                  loading_h.close()
                 })
             }}
             disabled={comment}
