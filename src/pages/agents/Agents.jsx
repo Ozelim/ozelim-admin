@@ -49,7 +49,7 @@ export const Agents = () => {
       handleUsers(1)
       return
     }
-    const foundUsers = await pb.collection('users').getFullList({
+    const foundUsers = await pb.collection('agents').getFullList({
       filter: `
         id = '${search}' ||
         name ?~ '${search}' ||
@@ -95,22 +95,22 @@ export const Agents = () => {
   async function verifyUser(userId) {
     setLoading(true)
     return await pb
-      .collection('users')
+      .collection('agents')
       .update(userId, {
         verified: true,
       })
       .then(async (res) => {
-        const sponsor = await pb.collection('users').getOne(res?.sponsor)
-        await pb.collection('users').update(sponsor?.id, {
+        const sponsor = await pb.collection('agents').getOne(res?.sponsor)
+        await pb.collection('agents').update(sponsor?.id, {
           referals: [...sponsor?.referals, res?.id],
         })
 
-        const referals = await pb.collection('users').getFullList({
+        const referals = await pb.collection('agents').getFullList({
           filter: `sponsor = '${sponsor?.id}' && verified = true`,
         })
 
         if (referals?.length === 1) {
-          await pb.collection('users').update(sponsor?.id, {
+          await pb.collection('agents').update(sponsor?.id, {
             balance: sponsor?.balance + 30000,
           })
           setLoading(false)
@@ -118,7 +118,7 @@ export const Agents = () => {
         }
 
         if (referals?.length >= 4) {
-          await pb.collection('users').update(sponsor?.id, {
+          await pb.collection('agents').update(sponsor?.id, {
             balance: sponsor?.balance + 15000,
           })
           setLoading(false)
@@ -156,7 +156,7 @@ export const Agents = () => {
   }
 
   async function giveLevel(user, val) {
-    await pb.collection('users').update(user?.id, {
+    await pb.collection('agents').update(user?.id, {
       level: val,
     })
   }
