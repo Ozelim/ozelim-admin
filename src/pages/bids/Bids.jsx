@@ -446,6 +446,8 @@ export const Bids = () => {
         message: 'Пользователь теперь агент!',
         color: 'green',
       })
+
+      window.location.reload()
     })
   }
 
