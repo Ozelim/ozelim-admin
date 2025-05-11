@@ -122,7 +122,7 @@ export const Bonuses = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {userRecords?.referals?.map((q, i) => {
+                  {userRecords?.referals?.sort((a, b) => dayjs(b?.created).diff(dayjs(a?.created))).map((q, i) => {
                     return (
                       <tr key={i} className="text">
                         <td className='whitespace-nowrap'>
@@ -136,7 +136,7 @@ export const Bonuses = () => {
                       </tr>
                     )
                   })}
-                  {userRecords?.bonuses?.map((q, i) => {
+                  {userRecords?.bonuses?.sort((a, b) => dayjs(b?.created).diff(dayjs(a?.created))).map((q, i) => {
                     return (
                       <tr key={i} className="text">
                         <td className='whitespace-nowrap'>
@@ -150,7 +150,7 @@ export const Bonuses = () => {
                       </tr>
                     )
                   })}
-                  {userRecords?.replenish?.map((q, i) => {
+                  {userRecords?.replenish?.sort((a, b) => dayjs(b?.created).diff(dayjs(a?.created))).map((q, i) => {
                     return (
                       <tr key={i} className="text">
                         <td className='whitespace-nowrap'>
@@ -164,7 +164,7 @@ export const Bonuses = () => {
                       </tr>
                     )
                   })}
-                  {userRecords?.withdraws?.map((q, i) => {
+                  {userRecords?.withdraws?.sort((a, b) => dayjs(b?.created).diff(dayjs(a?.created))).map((q, i) => {
                     return (
                       <tr key={i} className="text">
                         <td className='whitespace-nowrap'>
@@ -178,7 +178,7 @@ export const Bonuses = () => {
                       </tr>
                     )
                   })}
-                  {userRecords?.services?.map((q, i) => {
+                  {userRecords?.services?.sort((a, b) => dayjs(b?.created).diff(dayjs(a?.created))).map((q, i) => {
                     return (
                       <tr key={i} className="text">
                         <td className='whitespace-nowrap'>
