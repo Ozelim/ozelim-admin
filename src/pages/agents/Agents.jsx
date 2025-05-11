@@ -50,13 +50,7 @@ export const Agents = () => {
       return
     }
     const foundUsers = await pb.collection('agents').getFullList({
-      filter: `
-        id = '${search}' ||
-        name ?~ '${search}' ||
-        email ?~ '${search}' ||
-        phone ?~ '${search}' ||
-        city ?~ '${search}'
-      `,
+      filter: `id = '${search}' || name ?~ '${search}' || email ?~ '${search}' || phone ?~ '${search}' || city ?~ '${search}'`,
       sort: '-created'
     })
 
