@@ -1,9 +1,7 @@
 import React from 'react'
 import { Button, FileButton, Tabs, TextInput, Textarea } from '@mantine/core';
 import { getData, pb } from 'shared/api';
-import { Image } from 'shared/ui';
-import { openConfirmModal } from '@mantine/modals';
-import { getImageUrl } from 'shared/lib';
+import { Editor, Image } from 'shared/ui';
 
 async function getResorts () {
   return await pb.collection('resorts_data').getFullList()
@@ -87,6 +85,10 @@ export const ToursKz = () => {
       headings_kz: changedHeadings,
       text_kz: changedText,
     });
+
+    await pb.collection("text").update(fund?.text?.id, {
+      text_kz: {...changedText, desc: desc}
+    });
   }
 
   React.useEffect(() => {
@@ -95,6 +97,7 @@ export const ToursKz = () => {
       setHeadings(res?.text?.headings_kz);
       setText(res?.text?.text_kz);
       setImages(res?.images);
+      setDesc(res?.text?.desc_kz)
     });
   }, []);
 
@@ -106,6 +109,12 @@ export const ToursKz = () => {
   React.useEffect(() => {
     setChangedImages(images);
   }, [images]);
+
+  const [desc, setDesc] = React.useState('')
+
+  function getDesc (e) {
+    setDesc(e)
+  }
 
   return (
     <div>
@@ -188,13 +197,8 @@ export const ToursKz = () => {
             name="pack2"
             autosize
           />
-          <Textarea
-            label="Описание"
-            value={changedText?.pack3 ?? ""}
-            onChange={(e) => handleHealthChange(e, "text")}
-            name="pack3"
-            autosize
-          />
+            <label>Описание</label>
+            <Editor getHTML={getDesc}/>
         </div>
       <div className='flex justify-center mt-4'>
         <Button onClick={saveFund}>

@@ -114,6 +114,10 @@ export const Tours = () => {
       headings: changedHeadings,
       text: changedText,
     });
+
+    await pb.collection("text").update(fund?.text?.id, {
+      text: {...changedText, desc: desc}
+    });
   }
 
   React.useEffect(() => {
@@ -122,6 +126,7 @@ export const Tours = () => {
       setHeadings(res?.text?.headings);
       setText(res?.text?.text);
       setImages(res?.images);
+      setDesc(res?.text?.desc)
     });
   }, []);
 
@@ -135,9 +140,14 @@ export const Tours = () => {
   }, [images]);
   
   const [html, setHtml] = React.useState('')
+  const [desc, setDesc] = React.useState('')
 
   function getHTML (e) {
     setHtml(e)
+  }
+
+  function getDesc (e) {
+    setDesc(e)
   }
   
   return (
@@ -257,13 +267,16 @@ export const Tours = () => {
               name="pack2"
               autosize
             />
-            <Textarea
+            <label>Описание</label>
+            <Editor getHTML={getDesc}/>
+
+            {/* <Textarea
               label="Описание"
               value={changedText?.pack3 ?? ""}
               onChange={(e) => handleHealthChange(e, "text")}
               name="pack3"
               autosize
-            />
+            /> */}
           </div>
           <div className='flex justify-center mt-4'>
             <Button onClick={saveFund}>
