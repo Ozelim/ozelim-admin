@@ -133,7 +133,7 @@ export const Users = () => {
   setLoading(true);
 
   try {
-    const response = await fetch("https://ozelim-fly.fly.dev/api/verify-agent", {
+    const response = await fetch("https://ozelim-payment.netlify.app/api/agents", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
