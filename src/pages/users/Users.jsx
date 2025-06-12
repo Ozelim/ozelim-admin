@@ -67,67 +67,113 @@ export const Users = () => {
     });
   }
 
-  async function verifyUser(userId) {
-    setLoading(true)
-    return await pb
-      .collection("users")
-      .update(userId, {
-        verified: true
-      })
-      .then(async res => {
-        const sponsor = await pb.collection('users').getOne(res?.sponsor)
-        await pb.collection('users').update(sponsor?.id, {
-          referals: [...sponsor?.referals, res?.id]
-        })
+  // async function verifyUser(userId) {
+  //   setLoading(true)
+  //   return await pb
+  //     .collection("users")
+  //     .update(userId, {
+  //       verified: true
+  //     })
+  //     .then(async res => {
+  //       const sponsor = await pb.collection('users').getOne(res?.sponsor)
+  //       await pb.collection('users').update(sponsor?.id, {
+  //         referals: [...sponsor?.referals, res?.id]
+  //       })
         
-        const referals = await pb.collection('users').getFullList({filter: `sponsor = '${sponsor?.id}' && verified = true`})
+  //       const referals = await pb.collection('users').getFullList({filter: `sponsor = '${sponsor?.id}' && verified = true`})
 
-        if (referals?.length === 1) {
-          await pb.collection('users').update(sponsor?.id, {
-            balance: sponsor?.balance + 30000            
-          })
-          setLoading(false)
-          return
-        }
+  //       if (referals?.length === 1) {
+  //         await pb.collection('users').update(sponsor?.id, {
+  //           balance: sponsor?.balance + 30000            
+  //         })
+  //         setLoading(false)
+  //         return
+  //       }
 
-        if (referals?.length >= 4) {
-          await pb.collection('users').update(sponsor?.id, {
-            balance: sponsor?.balance + 15000            
-          })
-          setLoading(false)
-          return
-        }
-        setLoading(false)
-      })
-      .catch(err => {
-        setLoading(false)
-      })
-  }
+  //       if (referals?.length >= 4) {
+  //         await pb.collection('users').update(sponsor?.id, {
+    //           balance: sponsor?.balance + 15000            
+    //         })
+    //         setLoading(false)
+    //         return
+  //       }
+  //       setLoading(false)
+  //     })
+  //     .catch(err => {
+  //       setLoading(false)
+  //     })
+  // }
   // Пример использования
+  
+  // const confirmVerifing = (userId) =>
+  //   openConfirmModal({
+  //     title: "Подтвердить верификацию",
+  //     centered: true,
+  //     children: <>Подтверить верификацию пользователя</>,
+  //     labels: { confirm: "Подтвердить", cancel: "Отмена" },
+  //     onConfirm: () => verifyUser(userId),
+  // });
+  
+  // const confirmLevel = (user, val) => {
+  //   openConfirmModal({
+  //     title: "Подтвердить верификацию",
+  //     centered: true,
+  //     children: <>Выдать уровень {val} пользователю {user?.id} </>,
+  //     labels: { confirm: "Подтвердить", cancel: "Отмена" },
+  //     onConfirm: () => giveLevel(user, val),
+  // })}
+  
+  // async function giveLevel (user, val) {
+  //   await pb.collection('users').update(user?.id, {
+  //     level: val
+  //   })
+  // }
 
-  const confirmVerifing = (userId) =>
-    openConfirmModal({
-      title: "Подтвердить верификацию",
-      centered: true,
-      children: <>Подтверить верификацию пользователя</>,
-      labels: { confirm: "Подтвердить", cancel: "Отмена" },
-      onConfirm: () => verifyUser(userId),
-  });
+  const verifyUser = async (userId) => {
+  setLoading(true);
 
-  const confirmLevel = (user, val) => {
-    openConfirmModal({
-      title: "Подтвердить верификацию",
-      centered: true,
-      children: <>Выдать уровень {val} пользователю {user?.id} </>,
-      labels: { confirm: "Подтвердить", cancel: "Отмена" },
-      onConfirm: () => giveLevel(user, val),
-  })}
+  try {
+    const response = await fetch("https://ozelim-fly.fly.dev/api/verify-agent", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: userId,
+        collectionName: "agents",
+        pay: {
+          type: "family"
+        }
+      })
+    });
 
-  async function giveLevel (user, val) {
-    await pb.collection('users').update(user?.id, {
-      level: val
-    })
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("Ошибка сервера:", error);
+      alert("Ошибка при верификации");
+    } else {
+      const data = await response.json();
+      console.log("Верификация успешна:", data);
+      alert("Агент успешно верифицирован!");
+      window.location.reload(); // или обновить таблицу вручную
+    }
+  } catch (err) {
+    console.error("Ошибка сети:", err);
+    alert("Сетевая ошибка при верификации");
   }
+
+  setLoading(false);
+};
+
+const confirmVerifying = (userId) =>
+  openConfirmModal({
+    title: "Подтвердить верификацию",
+    centered: true,
+    children: <>Вы уверены, что хотите верифицировать пользователя?</>,
+    labels: { confirm: "Подтвердить", cancel: "Отмена" },
+    confirmProps: { color: "green" },
+    onConfirm: () => verifyUser(userId),
+  });
 
   const [modal, setModal] = React.useState({
     show: false,
@@ -187,22 +233,21 @@ export const Users = () => {
                 >
                   <td>{user.id}</td>
                   <td>
-                    {user?.verified ? (
-                      <Button compact variant={"subtle"} color={"green"}>
-                        <AiFillCheckCircle size={20} />
-                      </Button>
-                    ) : (
-                      <Button
-                        compact
-                        variant={"subtle"}
-                        color="yellow"
-                        // onClick={() => confirmVerifing(user?.id)}
-                        // onClick={() => verifyUser(user?.id)}
-                      >
-                        <AiFillLock size={20} />
-                      </Button>
-                    )}
-                  </td>
+                      {user?.verified ? (
+                        <Button compact variant="subtle" color="green">
+                          <AiFillCheckCircle size={20} />
+                        </Button>
+                      ) : (
+                        <Button
+                          compact
+                          variant="subtle"
+                          color="yellow"
+                          onClick={() => confirmVerifying(user?.id)}
+                        >
+                          <AiFillLock size={20} />
+                        </Button>
+                      )}
+                    </td>
                   <td>{user?.fio}</td>
                   <td>{user?.bonuses}</td>
                   <td>{user?.balance}</td>
