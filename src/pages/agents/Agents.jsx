@@ -208,7 +208,25 @@ return (
                       key={i}
                       // onClick={() => openChangeModal(user)}
                     >
-                      <td>{user.id}</td>
+                      <td>
+                        <div className="flex items-center gap-2">
+                          {user.id}
+                          {user?.verified ? (
+                            <Button compact variant="subtle" color="green">
+                              <AiFillCheckCircle size={20} />
+                            </Button>
+                          ) : (
+                            <Button
+                              compact
+                              variant="subtle"
+                              color="yellow"
+                              onClick={() => makeAgent(user?.id)} // <- тут вызывается функция верификации
+                            >
+                              <AiFillLock size={20} />
+                            </Button>
+                          )}
+                        </div>
+                      </td>
                       <td>{user?.fio || user?.name}</td>
                       <td>{user?.bonuses}</td>
                       <td>{user?.balance}</td>
