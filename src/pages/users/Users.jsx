@@ -166,6 +166,7 @@ const confirmVerifying = (userId) =>
             message: 'Агент верифицирован, бонусы начислены 🎉',
             color: 'green',
           });
+          window.location.reload();
         } else {
           showNotification({
             title: 'Ошибка',
