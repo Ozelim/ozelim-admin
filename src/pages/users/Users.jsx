@@ -3,6 +3,7 @@ import { Button, LoadingOverlay, Menu, Modal, Pagination, Table, TextInput } fro
 import { openConfirmModal } from "@mantine/modals";
 import dayjs from "dayjs";
 import { pb } from "shared/api";
+import { modals } from '@mantine/modals';
 
 import { AiFillCheckCircle, AiFillLock } from "react-icons/ai";
 import { showNotification } from "@mantine/notifications";
@@ -129,56 +130,61 @@ export const Users = () => {
   //   })
   // }
 
-  const verifyUser = async (userId) => {
-  setLoading(true);
-
-  try {
-    const response = await fetch("https://ozelim-payment.netlify.app/api/agents", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id: userId,
-        collectionName: "agents",
-        pay: {
-          type: "family"
-        }
-      })
-    });
-
-    if (!response.ok) {
-      const error = await response.text();
-      console.error("Ошибка сервера:", error);
-      alert("Ошибка при верификации");
-    } else {
-      const data = await response.json();
-      console.log("Верификация успешна:", data);
-      alert("Агент успешно верифицирован!");
-      window.location.reload(); // или обновить таблицу вручную
-    }
-  } catch (err) {
-    console.error("Ошибка сети:", err);
-    alert("Сетевая ошибка при верификации");
-  }
-
-  setLoading(false);
-};
-
-const confirmVerifying = (userId) =>
-  openConfirmModal({
-    title: "Подтвердить верификацию",
-    centered: true,
-    children: <>Вы уверены, что хотите верифицировать пользователя?</>,
-    labels: { confirm: "Подтвердить", cancel: "Отмена" },
-    confirmProps: { color: "green" },
-    onConfirm: () => verifyUser(userId),
-  });
-
   const [modal, setModal] = React.useState({
     show: false,
     bonuses: {}
   })
+
+
+const confirmVerifying = (userId) =>
+  modals.openConfirmModal({
+    title: 'Подтвердить верификацию',
+    centered: true,
+    children: <>Вы действительно хотите верифицировать пользователя?</>,
+    labels: { confirm: 'Подтверждаю', cancel: 'Отменяю' },
+    confirmProps: { color: 'green', loading },
+    onConfirm: async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("https://ozelim-payment.netlify.app/api/agents", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: userId,
+            collectionName: 'agents',
+            pay: { type: 'family' },
+          }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showNotification({
+            title: 'Успешно',
+            message: 'Агент верифицирован, бонусы начислены 🎉',
+            color: 'green',
+          });
+        } else {
+          showNotification({
+            title: 'Ошибка',
+            message: data.message || 'Что-то пошло не так',
+            color: 'red',
+          });
+        }
+      } catch (error) {
+        console.error('Ошибка при отправке:', error);
+        showNotification({
+          title: 'Ошибка сети',
+          message: 'Сетевая ошибка при верификации. Попробуйте позже.',
+          color: 'red',
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
 
   return (
     <>
