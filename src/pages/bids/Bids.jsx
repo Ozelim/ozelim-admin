@@ -2917,6 +2917,9 @@ export const Bids = () => {
                 try {
                   const res = await fetch('https://ozelim-payment.netlify.app/api/legit', {
                     method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
                   });
 
                   const json = await res.json();
@@ -2931,8 +2934,9 @@ export const Bids = () => {
               color="red"
               variant="outline"
             >
-              Обновить legit у всех
-          </Button>
+              Обновить LEGIT
+            </Button>
+
 
 
         </div>
