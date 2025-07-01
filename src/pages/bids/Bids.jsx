@@ -340,9 +340,9 @@ export const Bids = () => {
     await pb.collection('agents').update(bid?.agent, {
       agent: true,
       agent_date: new Date(),
-      verified: true,
-      verified_date: new Date(),
-      legit: true
+      // verified: true,
+      // verified_date: new Date(),
+      // legit: true
     })
     .then(async (response) => {
 
