@@ -29,6 +29,8 @@ async function getCompanyBids () {
   })
 }
 
+const [legitUpdateInProgress, setLegitUpdateInProgress] = useState(false);
+
 async function getAgentsBids() {
   return await pb
     .collection('agents_bids')
@@ -2906,6 +2908,32 @@ export const Bids = () => {
           >
             Принять в агенты
           </Button>
+
+          <Button
+              loading={legitUpdateInProgress}
+              onClick={async () => {
+                setLegitUpdateInProgress(true);
+                try {
+                  const res = await fetch('https://ozelim-payment.netlify.app/api/legit', {
+                    method: 'POST',
+                  });
+
+                  const json = await res.json();
+                  alert(json.message || json.error);
+                } catch (err) {
+                  alert('Что-то пошло не так при обновлении пользователей');
+                  console.error(err);
+                } finally {
+                  setLegitUpdateInProgress(false);
+                }
+              }}
+              color="red"
+              variant="outline"
+            >
+              Обновить legit у всех
+          </Button>
+
+
         </div>
       </Modal>
     </>
