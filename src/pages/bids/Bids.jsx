@@ -2910,7 +2910,7 @@ export const Bids = () => {
             Принять в агенты
           </Button>
 
-          <Button
+          {/* <Button
               loading={legitUpdateInProgress}
               onClick={async () => {
                 setLegitUpdateInProgress(true);
@@ -2935,9 +2935,7 @@ export const Bids = () => {
               variant="outline"
             >
               Обновить LEGIT
-            </Button>
-
-
+            </Button> */}
 
         </div>
       </Modal>
