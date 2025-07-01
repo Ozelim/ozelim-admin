@@ -2904,7 +2904,7 @@ export const Bids = () => {
             }}
             disabled={comment}
           >
-            Сделать агентом
+            Принять в агенты
           </Button>
         </div>
       </Modal>
