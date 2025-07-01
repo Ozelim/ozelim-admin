@@ -29,7 +29,6 @@ async function getCompanyBids () {
   })
 }
 
-const [legitUpdateInProgress, setLegitUpdateInProgress] = useState(false);
 
 async function getAgentsBids() {
   return await pb
@@ -116,6 +115,8 @@ async function getRightsbids() {
 
 export const Bids = () => {
   const { user } = useAuth()
+
+  const [legitUpdateInProgress, setLegitUpdateInProgress] = React.useState(false);
 
   const [modal, modalHandler] = useDisclosure()
 
