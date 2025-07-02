@@ -2878,33 +2878,43 @@ export const Bids = () => {
             Отказать
           </Button>
           <Button
-              loading={loadiong}
-              onClick={async () => {
-                try {
-                  setGlobalLoading(true);
-                  loading_h.open();
+            loading={loadiong}
+            onClick={async () => {
+              try {
+                setGlobalLoading(true);
+                loading_h.open();
 
-                  await pb.collection('agents_bids').update(bid?.id, {
-                    status: 'confirmed',
-                  });
+                // СНАЧАЛА делаем makeAgent — если он упадёт, дальше не пойдём
+                await makeAgent(bid?.agent);
 
-                  await makeAgent(bid?.agent);
-                } catch (error) {
-                  console.error(error);
-                  showNotification({
-                    title: 'Ошибка',
-                    message: 'Что-то пошло не так',
-                    color: 'red'
-                  });
-                } finally {
-                  loading_h.close();
-                  setGlobalLoading(false);
-                }
-              }}
-              disabled={comment}
-            >
-              Принять в агенты
-            </Button>
+                // ЕСЛИ всё прошло — теперь уже можно менять статус заявки
+                await pb.collection('agents_bids').update(bid?.id, {
+                  status: 'confirmed',
+                });
+
+                showNotification({
+                  title: 'Заявка',
+                  message: 'Пользователь теперь агент!',
+                  color: 'green',
+                });
+
+                window.location.reload();
+              } catch (error) {
+                console.error(error);
+                showNotification({
+                  title: 'Ошибка',
+                  message: 'Что-то пошло не так',
+                  color: 'red',
+                });
+              } finally {
+                loading_h.close();
+                setGlobalLoading(false);
+              }
+            }}
+            disabled={comment}
+          >
+            Принять в агенты
+          </Button>
 
           {/* <Button
               loading={legitUpdateInProgress}
