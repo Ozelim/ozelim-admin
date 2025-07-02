@@ -349,16 +349,10 @@ export const Bids = () => {
 
   try {
 
-    const collections = await pb.send('/api/collections', { method: 'GET' });
-      const agents = collections?.items?.find(col => col.name === 'agents');
-      console.log('Схема коллекции AGENTS:', agents?.schema);
+    await pb.collection("_superusers").authWithPassword("helper@mail.ru", import.meta.env.VITE_APP_PB_PASSWORD);
 
-      const verified = agents?.schema?.fields?.find(f => f.name === 'verified');
-      console.log('Поле VERIFIED:', verified);
-        const bidIsMax = bid?.max === true;
-        const agent = await pb.collection('agents').getOne(bid?.agent);
-        console.log('AGENT RECORD:', agent);
-
+    const bidIsMax = bid?.max === true;
+    const agent = await pb.collection('agents').getOne(bid?.agent);
     if (bid?.max) {
       console.log('Bid is MAX', id);
 
@@ -367,8 +361,7 @@ export const Bids = () => {
         agent_date: new Date(),
         legit: true,
         verified: true,
-        // если verified_date === "" → ставим null, иначе new Date()
-        verified_date: agent.verified_date === "" ? null : new Date(),
+        verified_date: new Date()
       });
     } else {
       console.log('Bid not Max', id);
