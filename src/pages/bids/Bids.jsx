@@ -413,7 +413,7 @@ export const Bids = () => {
       color: 'green',
     });
 
-    window.location.reload();
+    // window.location.reload();
   } catch (error) {
     console.error('Ошибка makeAgent:', error);
     modalHandler.close();
@@ -2898,7 +2898,7 @@ export const Bids = () => {
                   color: 'green',
                 });
 
-                window.location.reload();
+                // window.location.reload();
               } catch (error) {
                 console.error(error);
                 showNotification({
