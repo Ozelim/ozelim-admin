@@ -342,24 +342,39 @@ export const Bids = () => {
     // { label: 'Пользователь', value: 'user-bids' },
   ]
 
+
+
+
   async function makeAgent(id) {
-    console.log('AGENT ID:', id);
-    console.log('BID.agent:', bid?.agent);
+
   try {
-    const agent = await pb.collection('agents').getOne(id);
-    const bidIsMax = bid?.max === true;
+
+    const collections = await pb.send('/api/collections', { method: 'GET' });
+      const agents = collections?.items?.find(col => col.name === 'agents');
+      console.log('Схема коллекции AGENTS:', agents?.schema);
+
+      const verified = agents?.schema?.fields?.find(f => f.name === 'verified');
+      console.log('Поле VERIFIED:', verified);
+        const bidIsMax = bid?.max === true;
+        const agent = await pb.collection('agents').getOne(bid?.agent);
+        console.log('AGENT RECORD:', agent);
+
     if (bid?.max) {
-      await pb.collection('agents').update(id, {
+      console.log('Bid is MAX', id);
+
+      await pb.collection('agents').update(bid?.agent, {
         agent: true,
         agent_date: new Date(),
+        legit: true,
         verified: true,
-        verified_date: new Date(),
-        legit: true
+        // если verified_date === "" → ставим null, иначе new Date()
+        verified_date: agent.verified_date === "" ? null : new Date(),
       });
     } else {
-      await pb.collection('agents').update(id, {
+      console.log('Bid not Max', id);
+      await pb.collection('agents').update(bid?.agent, {
         agent: true,
-        agent_date: new Date()
+        agent_date: new Date(),
       });
     }
 
@@ -404,6 +419,7 @@ export const Bids = () => {
 
       // Переходим к следующему спонсору
       currentSponsorId = sponsor.sponsor;
+      console.log('Начисленный баланс', rewards[i]);
     }
 
     modalHandler.close();
@@ -419,9 +435,10 @@ export const Bids = () => {
     modalHandler.close();
     showNotification({
       title: 'Ошибка',
-      message: 'Что-то пошло не так при обработке заявки',
+      message: 'Что-то пошло не так при выполнений функций',
       color: 'red',
     });
+    throw error;
   }
 }
 
@@ -2892,19 +2909,13 @@ export const Bids = () => {
                   status: 'confirmed',
                 });
 
-                showNotification({
-                  title: 'Заявка',
-                  message: 'Пользователь теперь агент!',
-                  color: 'green',
-                });
-
                 // window.location.reload();
               } catch (error) {
                 console.error(error);
                 showNotification({
                   title: 'Ошибка',
-                  message: 'Что-то пошло не так',
-                  color: 'red',
+                  message: 'Что-то пошло не так в подтверждении',
+                  color: 'yellow',
                 });
               } finally {
                 loading_h.close();
