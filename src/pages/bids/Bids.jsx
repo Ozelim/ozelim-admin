@@ -4,6 +4,8 @@ import {
   Modal,
   Table,
   Tabs,
+  Loader,
+  Overlay,
   TextInput,
   Textarea,
   clsx,
@@ -116,7 +118,9 @@ async function getRightsbids() {
 export const Bids = () => {
   const { user } = useAuth()
 
-  const [legitUpdateInProgress, setLegitUpdateInProgress] = React.useState(false);
+  const [globalLoading, setGlobalLoading] = React.useState(false);
+
+  // const [legitUpdateInProgress, setLegitUpdateInProgress] = React.useState(false);
 
   const [modal, modalHandler] = useDisclosure()
 
@@ -338,123 +342,87 @@ export const Bids = () => {
     // { label: 'Пользователь', value: 'user-bids' },
   ]
 
-  async function makeAgent (id) {
+  async function makeAgent(id) {
+  try {
+    const agent = await pb.collection('agents').getOne(id);
+    const bidIsMax = bid?.max === true;
 
-    await pb.collection('agents').update(bid?.agent, {
+    // Обновляем статус агента
+    const updateFields = {
       agent: true,
       agent_date: new Date(),
-      // verified: true,
-      // verified_date: new Date(),
-      // legit: true
-    })
-    .then(async (response) => {
+    };
 
-      const sponsor = await pb.collection('agents').getOne(response?.sponsor)
-  
-      await pb.collection('agents').update(sponsor?.id, {
-        'balance+': bid?.max ? 6000 : 3000
-      })
-      .then(async res => {
-        await pb.collection('user_bonuses').getOne(sponsor?.id)
-        .then(async (response) => {
-          console.log(response, 'response 1');
-          
-          await pb.collection('user_bonuses').update(response?.id, {
-            referals: [
-              ...response?.referals ?? [],
-              {
-                id: crypto.randomUUID(),
-                created: new Date(),
-                referal: id, 
-                sum: bid?.max ? 6000 : 3000,
-                type: 'agent'
-              }
-            ]
-          })
-        })
+    if (bidIsMax) {
+      updateFields.verified = true;
+      updateFields.verified_date = new Date();
+      updateFields.legit = true;
+    }
 
-        await pb.collection('agents').update(res?.sponsor, {
-          'balance+': bid?.max ? 4100 : 2000
-        })
-        .then(async q => {
-          await pb.collection('user_bonuses').getOne(q?.id)
-          .then(async (response) => { 
-            console.log(response, 'response 2');
+    await pb.collection('agents').update(id, updateFields);
 
-            await pb.collection('user_bonuses').update(response?.id, {
-              referals: [
-                ...response?.referals ?? [],
-                {
-                  id: crypto.randomUUID(),
-                  created: new Date(),
-                  referal: id, 
-                  sum: bid?.max ? 4100 : 2000,
-                  type: 'agent'
-                }
-              ]
-            })
-            .then(async () => {
-              await pb.collection('agents').update(q?.sponsor, {
-                'balance+': bid?.max ? 1900 : 1000
-              })
-              .then(async () => {
-                await pb.collection('user_bonuses').getOne(q?.sponsor)
-                .then(async (response) => {
-                  console.log(response, 'response 3');
-      
-                  await pb.collection('user_bonuses').update(response?.id, {
-                    referals: [
-                      ...response?.referals ?? [],
-                      {
-                        id: crypto.randomUUID(),
-                        created: new Date(),
-                        referal: id, 
-                        sum: bid?.max ? 1900 : 1000,
-                        type: 'agent'
-                      }
-                    ]
-                  })
-                })
-              })
-            })
-          })
-        })
-        .catch(() => {
-          modalHandler.close()
-          showNotification({
-            title: 'Заявка',
-            message: 'Пользователь теперь агент!',
-            color: 'green',
-          })
-        })
-        .catch(() => {
-          modalHandler.close()
-          showNotification({
-            title: 'Заявка',
-            message: 'Пользователь теперь агент!',
-            color: 'green',
-          })
-        })
-      })
-      .catch(() => {
-        modalHandler.close()
-        showNotification({
-          title: 'Заявка',
-          message: 'Пользователь теперь агент!',
-          color: 'green',
-        })
-      })
-  
-      modalHandler.close()
-      showNotification({
-        title: 'Заявка',
-        message: 'Пользователь теперь агент!',
-        color: 'green',
-      })
+    const rewards = bidIsMax
+      ? [6000, 4100, 1900]
+      : [3000, 2000, 1000];
 
-      window.location.reload()
-    })
+    let currentSponsorId = agent?.sponsor;
+
+    for (let i = 0; i < 3; i++) {
+      if (!currentSponsorId) break;
+
+      const sponsor = await pb.collection('agents').getOne(currentSponsorId);
+
+      // Обновляем баланс
+      await pb.collection('agents').update(sponsor.id, {
+        'balance+': rewards[i]
+      });
+
+      // Получаем или создаём бонусную запись
+      let bonusRecord;
+      try {
+        bonusRecord = await pb.collection('user_bonuses').getOne(sponsor.id);
+      } catch {
+        bonusRecord = await pb.collection('user_bonuses').create({
+          id: sponsor.id,
+          referals: []
+        });
+      }
+
+      const newReferral = {
+        id: crypto.randomUUID(),
+        created: new Date(),
+        referal: id,
+        sum: rewards[i],
+        type: 'agent'
+      };
+
+      await pb.collection('user_bonuses').update(bonusRecord.id, {
+        referals: [...(bonusRecord.referals || []), newReferral]
+      });
+
+      // Переходим к следующему спонсору
+      currentSponsorId = sponsor.sponsor;
+    }
+
+    modalHandler.close();
+    showNotification({
+      title: 'Заявка',
+      message: 'Пользователь теперь агент!',
+      color: 'green',
+    });
+
+    window.location.reload();
+  } catch (error) {
+    console.error('Ошибка makeAgent:', error);
+    modalHandler.close();
+    showNotification({
+      title: 'Ошибка',
+      message: 'Что-то пошло не так при обработке заявки',
+      color: 'red',
+    });
   }
+}
+
 
   async function confirmPack (id) {
     openConfirmModal({
@@ -506,6 +474,22 @@ export const Bids = () => {
 
   return (
     <>
+    {globalLoading && (
+      <>
+        <Overlay blur={4} opacity={0.65} color="#000" zIndex={9999} />
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 10000,
+          }}
+        >
+          <Loader color="yellow" size="xl" variant="bars" />
+        </div>
+      </>
+    )}
       <div className="w-full grid grid-cols-[10%_91%] gap-4 -mx-4 -my-4">
         <div className="bg-white ">
           {array.map((q) => {
@@ -2892,23 +2876,33 @@ export const Bids = () => {
             Отказать
           </Button>
           <Button
-            loading={loadiong}
-            onClick={async () => {
-              loading_h.open()
-              await pb
-                .collection('agents_bids')
-                .update(bid?.id, {
-                  status: 'confirmed',
-                })
-                .then(async (res) => {
-                  await makeAgent(bid?.agent)
-                  loading_h.close()
-                })
-            }}
-            disabled={comment}
-          >
-            Принять в агенты
-          </Button>
+              loading={loadiong}
+              onClick={async () => {
+                try {
+                  setGlobalLoading(true);
+                  loading_h.open();
+
+                  await pb.collection('agents_bids').update(bid?.id, {
+                    status: 'confirmed',
+                  });
+
+                  await makeAgent(bid?.agent);
+                } catch (error) {
+                  console.error(error);
+                  showNotification({
+                    title: 'Ошибка',
+                    message: 'Что-то пошло не так',
+                    color: 'red'
+                  });
+                } finally {
+                  loading_h.close();
+                  setGlobalLoading(false);
+                }
+              }}
+              disabled={comment}
+            >
+              Принять в агенты
+            </Button>
 
           {/* <Button
               loading={legitUpdateInProgress}
