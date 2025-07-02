@@ -348,8 +348,8 @@ export const Bids = () => {
   async function makeAgent(id) {
 
   try {
-    console.log('PB_PASSWORD:', import.meta.env.VITE_APP_PB_PASSWORD);
-    await pb.collection("_superusers").authWithPassword("helper@mail.ru", import.meta.env.VITE_APP_PB_PASSWORD);
+    console.log('STARTED');
+    await pb.collection("_superusers").authWithPassword("ozelim.pv@gmail.com", import.meta.env.VITE_APP_PB_PASSWORD);
     const bidIsMax = bid?.max === true;
     const agent = await pb.collection('agents').getOne(bid?.agent);
     if (bid?.max) {
