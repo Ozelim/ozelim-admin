@@ -343,6 +343,8 @@ export const Bids = () => {
   ]
 
   async function makeAgent(id) {
+    console.log('AGENT ID:', id);
+    console.log('BID.agent:', bid?.agent);
   try {
     const agent = await pb.collection('agents').getOne(id);
     const bidIsMax = bid?.max === true;
