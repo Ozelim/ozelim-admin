@@ -348,20 +348,20 @@ export const Bids = () => {
   try {
     const agent = await pb.collection('agents').getOne(id);
     const bidIsMax = bid?.max === true;
-
-    // Обновляем статус агента
-    const updateFields = {
-      agent: true,
-      agent_date: new Date(),
-    };
-
-    if (bidIsMax) {
-      updateFields.verified = true;
-      updateFields.verified_date = new Date();
-      updateFields.legit = true;
+    if (bid?.max) {
+      await pb.collection('agents').update(id, {
+        agent: true,
+        agent_date: new Date(),
+        verified: true,
+        verified_date: new Date(),
+        legit: true
+      });
+    } else {
+      await pb.collection('agents').update(id, {
+        agent: true,
+        agent_date: new Date()
+      });
     }
-
-    await pb.collection('agents').update(id, updateFields);
 
     const rewards = bidIsMax
       ? [6000, 4100, 1900]
