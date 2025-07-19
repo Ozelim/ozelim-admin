@@ -234,8 +234,8 @@ export const Services = () => {
             <Tabs.Tab value='created'>Созданные</Tabs.Tab>
             <Tabs.Tab value='refunded'>Возврат</Tabs.Tab>
             <Tabs.Tab value='succ'>Подтвержденные</Tabs.Tab>
-            <Tabs.Tab value='rejected'>Отклоненные</Tabs.Tab>
-            <Tabs.Tab value='cancelled'>Отмененные</Tabs.Tab>
+            <Tabs.Tab value='rejected'>Отклонен вами</Tabs.Tab>
+            <Tabs.Tab value='cancelled'>Отмена польз.</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value='services'>
             <form className='max-w-md'>
@@ -316,7 +316,7 @@ export const Services = () => {
               {createdServices.map((q, i) => {
                 return (
                   <tr key={i}>
-                    <th>{dayjs(q?.created).format(`DD.MM.YY`)}</th>
+                    <th>{dayjs(q?.created).format(`DD.MM.YY, HH:mm`)}</th>
                     <td 
                       className='cursor-pointer' 
                       onClick={() => setUserData({modal: true, data: q?.expand?.user ?? q?.expand?.agent})}
