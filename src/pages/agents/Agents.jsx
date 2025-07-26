@@ -44,25 +44,32 @@ export const Agents = () => {
 
   const [reportsM, reportsM_h] = useDisclosure(false)
 
-  async function searchByValue() {
-    if (!search) {
-      handleUsers(1)
-      return
-    }
-    const foundUsers = await pb.collection('agents').getFullList({
-      filter: `id = '${search}' || fio ?~ '${search}' || email ?~ '${search}' || phone ?~ '${search}' || village ?~ '${search}'`,
-      sort: '-created'
-    })
-
-    if (foundUsers.length !== 0) {
-      setUsers(foundUsers)
-      showNotification({
-        title: 'Поиск',
-        message: `Найдено ${foundUsers.length} пользователей`,
-        color: 'teal',
-      })
-    }
+async function searchByValue() {
+  if (!search) {
+    handleUsers(1)
+    return
   }
+
+  const foundUsers = await pb.collection('agents').getFullList({
+    filter: `agent = true && (id = '${search}' || fio ?~ '${search}' || email ?~ '${search}' || phone ?~ '${search}' || village ?~ '${search}')`,
+    sort: '-created'
+  })
+
+  if (foundUsers.length !== 0) {
+    setUsers(foundUsers)
+    showNotification({
+      title: 'Поиск',
+      message: `Найдено ${foundUsers.length} пользователей 🎯`,
+      color: 'teal',
+    })
+  } else {
+    showNotification({
+      title: 'Не найдено',
+      message: 'Пользователь с такими данными не найден 😕',
+      color: 'red',
+    })
+  }
+}
 
   React.useEffect(() => {
     getReports().then((res) => {
