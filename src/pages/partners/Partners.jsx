@@ -38,11 +38,17 @@ export const Partners = () => {
     });
 
     if (foundUsers.length !== 0) {
-      setUsers(foundUsers);
+      setUsers(foundUsers)
       showNotification({
         title: 'Поиск',
-        message: 'Не найдено',
-        color: 'teal'
+        message: `Найдено ${foundUsers.length} партнеров`,
+        color: 'teal',
+      })
+    } else {
+      showNotification({
+        title: 'Не найдено',
+        message: 'Партнер с такими данными не найден',
+        color: 'red',
       })
     }
   }

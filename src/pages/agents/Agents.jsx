@@ -59,13 +59,13 @@ async function searchByValue() {
     setUsers(foundUsers)
     showNotification({
       title: 'Поиск',
-      message: `Найдено ${foundUsers.length} пользователей 🎯`,
+      message: `Агентов найдено ${foundUsers.length}`,
       color: 'teal',
     })
   } else {
     showNotification({
       title: 'Не найдено',
-      message: 'Пользователь с такими данными не найден 😕',
+      message: `${search} не является агентом`,
       color: 'red',
     })
   }

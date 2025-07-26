@@ -24,31 +24,32 @@ export const Users = () => {
 
   const [search, setSearch] = React.useState("");
 
-  async function searchByValue() {
-    if (!search) {
-      handleUsers(1);
-      return;
-    }
-    const foundUsers = await pb.collection("users").getFullList({
-      filter: `
-        id = '${search}' ||
-        name ?~ '${search}' ||
-        email ?~ '${search}' ||
-        phone ?~ '${search}' ||
-        city ?~ '${search}'
-      `,
-      sort: '-created',
-    });
-
-    if (foundUsers.length !== 0) {
-      setUsers(foundUsers);
-      showNotification({
-        title: 'Поиск',
-        message: 'Не найдено',
-        color: 'teal'
-      })
-    }
+async function searchByValue() {
+  if (!search) {
+    handleUsers(1)
+    return
   }
+
+  const foundUsers = await pb.collection('agents').getFullList({
+    filter: `agent = false && (id = '${search}' || fio ?~ '${search}' || email ?~ '${search}' || phone ?~ '${search}' || village ?~ '${search}')`,
+    sort: '-created'
+  });
+
+  if (foundUsers.length !== 0) {
+    setUsers(foundUsers)
+    showNotification({
+      title: 'Поиск',
+      message: `Найдено ${foundUsers.length} пользователей`,
+      color: 'teal',
+    })
+  } else {
+    showNotification({
+      title: 'Не найдено',
+      message: 'Пользователь с такими данными не найден',
+      color: 'red',
+    })
+  }
+}
 
   React.useEffect(()  => {
     getUsers().then((res) => {
@@ -205,13 +206,13 @@ const confirmVerifying = (userId) =>
 
           <div className="mx-4 flex items-center gap-2">
             <div className="space-x-2">
-              Количество: {users?.length}
+              Пользователей: {users?.length}
             </div>
             <div>
-              Верифицировано: {users?.filter(q => q?.verified)?.length}
+              Верифицированных: {users?.filter(q => q?.verified)?.length}
             </div>
             <div>
-              Не верифицированы: {users?.filter(q => !q?.verified)?.length}
+              Не верифицированых: {users?.filter(q => !q?.verified)?.length}
             </div>
           </div>
         </div>
